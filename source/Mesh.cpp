@@ -59,10 +59,8 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
 	// Set primitive topology
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	auto worldViewPorjection = pCamera->GetProjectionMatrix() * pCamera->GetViewMatrix();
+	auto worldViewPorjection = pCamera->GetProjectionMatrix() * pCamera->GetViewMatrix() * m_WorldMatrix;
 	m_pMatrial->GetMatWorldViewProjMatrix()->SetMatrix(&worldViewPorjection.data[0][0]);
-	//m_pEffect->GetMatrix()->SetMatrix(&worldViewPorjection.data[0][0]);
-
 
 	// Render a triangle
 	D3DX11_TECHNIQUE_DESC techDesc;
@@ -72,6 +70,16 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
 		m_pMatrial->GetTechnique()->GetPassByIndex(p)->Apply(0, pDeviceContext);
 		pDeviceContext->DrawIndexed(m_AmountIndices, 0, 0);
 	}
+}
+
+FMatrix4 Mesh::GetWorldMatrix() const
+{
+	return m_WorldMatrix;
+}
+
+void Mesh::SetWorldMatrix(const FMatrix4& worldMatrix)
+{
+	m_WorldMatrix = worldMatrix;
 }
 
 void Mesh::Initialize(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)

@@ -53,7 +53,7 @@ static bool ParseOBJ(const std::string& filename, std::vector<Vertex>& vertices,
 			// Vertex Normal
 			float x, y, z;
 			file >> x >> y >> z;
-			normals.push_back(FVector3(x, y, -z));
+			normals.push_back(FVector3(x, y, z));
 		}
 		else if (sCommand == "f")
 		{
@@ -128,7 +128,6 @@ static bool ParseOBJ(const std::string& filename, std::vector<Vertex>& vertices,
 	for (auto& v : vertices)
 	{
 		v.tangent = GetNormalized(Reject(v.tangent, v.normal));
-		v.tangent.z *= -1.f;
 	}
 
 	return true;

@@ -34,6 +34,9 @@ public:
 
 	void Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera);
 
+	FMatrix4 GetWorldMatrix() const;
+	void SetWorldMatrix(const FMatrix4& worldMatrix);
+
 private:
 	// Private member functions		
 	void Initialize(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);

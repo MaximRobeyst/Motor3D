@@ -1,3 +1,6 @@
+#ifndef MATERIAL_HEADER
+#define MATERIAL_HEADER
+
 // Include Files
 #include "MyEngine.h"
 #include "DataTypes.h"
@@ -24,7 +27,7 @@ public:
 
 	void SetDiffuseMap(Texture* pTexture);
 
-	ID3DX11Effect* LoadEffect(ID3D11Device* pDevice, const std::wstring& assertFile);
+	static ID3DX11Effect* LoadEffect(ID3D11Device* pDevice, const std::wstring& assertFile);
 
 protected:
 	// Private member functions								
@@ -40,3 +43,4 @@ protected:
 	std::vector<Texture*> m_pTextures;
 
 };
+#endif

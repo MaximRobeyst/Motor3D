@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "OBJParser.h"
 #include "Material.h"
+#include "LitMaterial.h"
 
 #define MY_ENGINE MyEngine::GetSingleton()
 
@@ -62,6 +63,8 @@ void MyApplication::Paint()
 	// Matrices
 	//MY_ENGINE->GetDeviceContext()->PSSetShaderResources()
 	//MY_ENGINE->GetDevice().(D3DTRANSFORMSTATE_VIEW, &m_pCamera->GetViewMatrix())
+	m_pLitMaterial->GetWorldMatrix()->SetMatrix(&m_pMesh->GetWorldMatrix().data[0][0]);
+	m_pLitMaterial->GetViewInverseMatrix()->SetMatrix(&m_pCamera->GetViewMatrix().data[0][0]);
 
 	// Render
 	m_pMesh->Render(MY_ENGINE->GetDeviceContext(), m_pCamera);
@@ -74,6 +77,11 @@ void MyApplication::Paint()
 void MyApplication::Update(float dt)
 {
 	m_pCamera->Update(dt);
+
+	m_Rotation += (ToRadians(45.f) * dt);
+	FMatrix4 rotationMatrix = MakeRotation(m_Rotation, FVector3{ 0,1,0 });
+
+	m_pMesh->SetWorldMatrix(rotationMatrix);
 }
 
 void MyApplication::Initialize()
@@ -86,11 +94,17 @@ void MyApplication::Initialize()
 	float height = rect.bottom - rect.top;
 	m_pCamera = new Camera(FVector3{ 0,0,0 }, FVector3{ 0,0,1 }, 60.f, static_cast<float>(width) / static_cast<float>(height));
 
-	Material* pMaterial = new Material(MY_ENGINE->GetDevice(), L"Resources/material_unlit.fx");
-	Texture* pTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/uv_grid_2.png");
-	pMaterial->SetDiffuseMap(pTexture);
+	m_pLitMaterial = new LitMaterial(MY_ENGINE->GetDevice(), L"Resources/material_lit.fx");
+	Texture* pDiffuseTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/vehicle_diffuse.png");
+	Texture* pNormalTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/vehicle_normal.png");
+	Texture* pSpecularTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/vehicle_specular.png");
+	Texture* pGlossinessTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/vehicle_gloss.png");
+	m_pLitMaterial->SetDiffuseMap(pDiffuseTexture);
+	m_pLitMaterial->SetNormalMap(pNormalTexture);
+	m_pLitMaterial->SetSpecularMap(pSpecularTexture);
+	m_pLitMaterial->SetGlossinessMap(pGlossinessTexture);
 	
-	m_pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/vehicle.obj", pMaterial);
+	m_pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/vehicle.obj", m_pLitMaterial);
 }
 
 void MyApplication::Unitialize()

@@ -6,6 +6,7 @@
 
 class Mesh;
 class Camera;
+class LitMaterial;
 
 class MyApplication
 {
@@ -43,6 +44,9 @@ private:
 	// Datamembers								
 	//-------------------------------------------------
 	std::vector<POINT> m_PointsVec{};
+
+	LitMaterial* m_pLitMaterial{ nullptr };
+	float m_Rotation{};
 
 	Mesh* m_pMesh;
 	Camera* m_pCamera;

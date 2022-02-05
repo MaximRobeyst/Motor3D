@@ -36,7 +36,7 @@ struct VS_OUTPUT
 RasterizerState gRasterizerState
 {
 	CullMode = back;
-	FrontCounterClockwise = false;
+	FrontCounterClockwise = true;
 };
 
 BlendState gBlendState
