@@ -13,17 +13,17 @@ class Material;
 struct Vertex
 {
 	FVector3 position;
-	FVector2 uv;
 	FVector3 normal;
 	FVector3 tangent;
+	FVector2 uv;
 	//RGBColor color;
 };
 
 class Mesh
 {
 public:
-	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath);				// Constructor
-	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);				// Constructor
+	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Material* pMaterial);				// Constructor
+	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, Material* pMaterial);				// Constructor
 	~Mesh();				// Destructor
 
 	// Copy/move constructors and assignment operators
@@ -36,12 +36,12 @@ public:
 
 private:
 	// Private member functions		
+	void Initialize(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 
 	// Datamembers
 	ID3D11InputLayout* m_pVertexLayout{ nullptr };
 	ID3D11Buffer* m_pVertexBuffer{ nullptr };
 	ID3D11Buffer* m_pIndexBuffer{ nullptr };
-	Texture* m_pTexture{ nullptr };
 
 	Material* m_pMatrial{ nullptr };
 	FMatrix4 m_WorldMatrix{};

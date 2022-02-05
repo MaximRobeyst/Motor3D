@@ -28,6 +28,9 @@ HINSTANCE MyEngine::m_Instance{};
 int MyEngine::m_Show{};
 MyEngine* MyEngine::m_MyEnginePtr{ nullptr };
 
+void StartHeapControl();
+void DumpMemoryLeaks();
+
 // WinMain
 int APIENTRY wWinMain(_In_      HINSTANCE hInstance,
             _In_opt_   HINSTANCE hPrevInstance,
@@ -41,6 +44,27 @@ int APIENTRY wWinMain(_In_      HINSTANCE hInstance,
     delete MyEngine::GetSingleton();
 
     return result;
+}
+
+void StartHeapControl()
+{
+#if defined(DEBUG) | defined(_DEBUG)
+	// Notify user if heap is corrupt
+	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
+
+	// Report detected leaks when the program exits
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+	// Set a breakpoint on the specified object allocation order number
+	//_CrtSetBreakAlloc( 1197 );
+#endif
+}
+
+void DumpMemoryLeaks()
+{
+#if defined(DEBUG) | defined(_DEBUG)
+	_CrtDumpMemoryLeaks();
+#endif
 }
 
 // WndProc function
@@ -242,6 +266,9 @@ LRESULT MyEngine::HandleEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         m_pApplication->LeftMouseButtonAction(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
         InvalidateRect(hWnd, nullptr, true);
         break;
+	case WM_LBUTTONDOWN:
+		m_pApplication->LeftMouseButtonAction(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
+		InvalidateRect(hWnd, nullptr, true);
     case WM_RBUTTONUP:
         m_pApplication->RightMouseButtonAction(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
         InvalidateRect(hWnd, nullptr, true);

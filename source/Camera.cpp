@@ -36,11 +36,12 @@ void Camera::Update(float elapsedSec)
 	m_RelativeTranslation.z = m_InputVel.z * keyboardSpeed * elapsedSec;
 
 	//Mouse Input
-	LPPOINT point{};
-	GetCursorPos(point);
-	int x = point->x;
-	int y = point->y;
-
+	int x{}, y{};
+	//LPPOINT point{};
+	//GetCursorPos(point);
+	//int x = point->x;
+	//int y = point->y;
+	//
 	if (m_LeftMouseButtonPressed)
 	{
 		m_RelativeTranslation.z += y * m_MouseMoveSensitivity * elapsedSec;

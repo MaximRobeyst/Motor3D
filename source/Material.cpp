@@ -11,10 +11,12 @@ Material::Material(ID3D11Device* pDevice, const std::wstring& assertFile)
 	assert(m_pTechnique->IsValid());
 
 	m_pMatWorldViewProjVariable = m_pEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
-	assert(m_pMatWorldViewProjVariable->IsValid());
+	if (!m_pMatWorldViewProjVariable->IsValid())
+		OutputDebugStringW(L"m_pMatWorldViewProjVariable is invalid");
 
 	m_pDiffuseMapVariable = m_pEffect->GetVariableByName("gDiffuseMap")->AsShaderResource();
-	assert(m_pDiffuseMapVariable->IsValid());
+	if(!m_pDiffuseMapVariable->IsValid())
+		OutputDebugStringW(L"m_pDiffuseMapVariable is invalid");
 }
 
 Material::~Material()
@@ -23,6 +25,15 @@ Material::~Material()
 		m_pTechnique->Release();
 	if (m_pEffect)
 		m_pEffect->Release();
+
+	//for (auto i = m_pTextures.begin(); i != m_pTextures.end(); ++i)
+	//{
+	//	delete *i;
+	//}
+
+	for (auto& t : m_pTextures)
+		delete t;
+	m_pTextures.clear();
 }
 
 ID3DX11Effect* Material::GetEffect() const
@@ -42,6 +53,8 @@ ID3DX11EffectMatrixVariable* Material::GetMatWorldViewProjMatrix() const
 
 void Material::SetDiffuseMap(Texture* pTexture)
 {
+	m_pTextures.push_back(pTexture);
+
 	if (m_pDiffuseMapVariable->IsValid())
 		m_pDiffuseMapVariable->SetResource(pTexture->GetTextureShaderResource());
 }

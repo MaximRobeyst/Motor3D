@@ -1,2 +1,4 @@
-﻿  Mesh.cpp
+﻿  MyApplication.cpp
+C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\MyApplication.cpp(85,14): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\MyApplication.cpp(86,15): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
   MyApplication.vcxproj -> C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\x64\Debug\MyApplication.exe

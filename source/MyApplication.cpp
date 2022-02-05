@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "Camera.h"
 #include "OBJParser.h"
+#include "Material.h"
 
 #define MY_ENGINE MyEngine::GetSingleton()
 
@@ -84,7 +85,12 @@ void MyApplication::Initialize()
 	float width = rect.right - rect.left;
 	float height = rect.bottom - rect.top;
 	m_pCamera = new Camera(FVector3{ 0,0,0 }, FVector3{ 0,0,1 }, 60.f, static_cast<float>(width) / static_cast<float>(height));
-	m_pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/vehicle.obj");
+
+	Material* pMaterial = new Material(MY_ENGINE->GetDevice(), L"Resources/material_unlit.fx");
+	Texture* pTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/uv_grid_2.png");
+	pMaterial->SetDiffuseMap(pTexture);
+	
+	m_pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/vehicle.obj", pMaterial);
 }
 
 void MyApplication::Unitialize()

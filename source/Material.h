@@ -28,15 +28,15 @@ public:
 
 protected:
 	// Private member functions								
-
+	
 
 	// Datamembers								
 	ID3DX11Effect* m_pEffect{ nullptr };
 	ID3DX11EffectTechnique* m_pTechnique{ nullptr };
 
 	ID3DX11EffectMatrixVariable* m_pMatWorldViewProjVariable{ nullptr };
-
-	// I think these variables can be used in a map to have multiple textures
 	ID3DX11EffectShaderResourceVariable* m_pDiffuseMapVariable{ nullptr };
+
+	std::vector<Texture*> m_pTextures;
 
 };

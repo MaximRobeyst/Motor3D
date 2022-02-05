@@ -8,10 +8,17 @@ Texture::Texture(ID3D11Device* pDevice, const std::wstring& texturePath, ID3D11D
 {
 	//SDL_Surface* pTexture{ nullptr };
 	//pTexture = IMG_Load(texturePath.c_str());
-	CreateWICTextureFromFile(pDevice, pDeviceContext, texturePath.c_str(), &m_pResource, &m_pTextureResourceView);
 
-	//D3D11_TEXTURE2D_DESC desc;
-	//desc.Width = ;
+	auto hr = CreateWICTextureFromFile(pDevice, pDeviceContext, texturePath.c_str(), &m_pResource, &m_pTextureResourceView);
+	if (FAILED(hr))
+	{
+		OutputDebugStringW(L"Failed to load in : " + *texturePath.c_str());
+	}
+
+	if (pDeviceContext)
+		pDeviceContext->GenerateMips(m_pTextureResourceView);
+	
+	//desc.Width = m_pResource.get;
 	//desc.Height = pTexture->h;
 	//desc.MipLevels = 1;
 	//desc.ArraySize = 1;
@@ -22,7 +29,7 @@ Texture::Texture(ID3D11Device* pDevice, const std::wstring& texturePath, ID3D11D
 	//desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	//desc.CPUAccessFlags = 0;
 	//desc.MiscFlags = 0;
-	//
+
 	//D3D11_SUBRESOURCE_DATA initData;
 	//initData.pSysMem = pTexture->pixels;
 	//initData.SysMemPitch = static_cast<UINT>(pTexture->pitch);
