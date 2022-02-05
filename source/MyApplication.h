@@ -48,6 +48,6 @@ private:
 	LitMaterial* m_pLitMaterial{ nullptr };
 	float m_Rotation{};
 
-	Mesh* m_pMesh;
-	Camera* m_pCamera;
+	Mesh* m_pMesh{nullptr};
+	Camera* m_pCamera{nullptr};
 };

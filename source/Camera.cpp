@@ -8,6 +8,10 @@ Camera::Camera(const FVector3& position, const FVector3& forward, float FOV, flo
 	, m_Far{ cfar }
 	, m_Near{ cnear }
 {
+	RECT windowRect;
+	GetWindowRect(MyEngine::GetSingleton()->GetWindowHandle(), &windowRect);
+	m_PrevMousePos = IVector2{ windowRect.left + ((windowRect.right - windowRect.left) / 2), windowRect.bottom + ((windowRect.top - windowRect.bottom) / 2) };
+
 	MakeProjectionMatrix();
 	UpdateMatrix();
 }
@@ -30,32 +34,25 @@ FMatrix4 Camera::GetProjectionMatrix() const
 void Camera::Update(float elapsedSec)
 {
 	//const uint8_t* pKeyboardState = SDL_GetKeyboardState(0);
-	float keyboardSpeed = (GetKeyState(VK_SHIFT) & 0x8000) ? m_KeyboardMoveSensitivity * m_KeyboardMoveMultiplier : m_KeyboardMoveSensitivity;
-	m_RelativeTranslation.x = m_InputVel.x * keyboardSpeed * elapsedSec;
-	m_RelativeTranslation.y = m_InputVel.y * keyboardSpeed * elapsedSec;;
-	m_RelativeTranslation.z = m_InputVel.z * keyboardSpeed * elapsedSec;
+	float keyboardSpeed = (GetKeyState(VK_SHIFT) & 0x80) ? m_KeyboardMoveSensitivity * m_KeyboardMoveMultiplier : m_KeyboardMoveSensitivity;
+	m_RelativeTranslation.x = (((GetKeyState(0x44) & 0x80) - (GetKeyState(0x41) & 0x80)) / 128) * keyboardSpeed * elapsedSec;
+	m_RelativeTranslation.y =0;
+	m_RelativeTranslation.z = (((GetKeyState(0x57) & 0x80) - (GetKeyState(0x53) & 0x80)) / 128) * keyboardSpeed * elapsedSec;
 
 	//Mouse Input
-	int x{}, y{};
-	//LPPOINT point{};
-	//GetCursorPos(point);
-	//int x = point->x;
-	//int y = point->y;
-	//
-	if (m_LeftMouseButtonPressed)
+	POINT point{};
+	GetCursorPos(&point);
+	int x = point.x;
+	int y = point.y;
+
+	if ((GetKeyState(VK_RBUTTON) & 0x80) != 0)
 	{
-		m_RelativeTranslation.z += y * m_MouseMoveSensitivity * elapsedSec;
-		m_AbsoluteRotation.y -= x * m_MouseRotationSensitivity;
+		m_AbsoluteRotation.x -= Clamp((y - m_PrevMousePos.y),-1,1) * m_MouseRotationSensitivity;
+		m_AbsoluteRotation.y -= Clamp((x - m_PrevMousePos.x),-1,1) * m_MouseRotationSensitivity;
 	}
-	//else if (mouseState == SDL_BUTTON_RMASK)
-	//{
-	//	m_AbsoluteRotation.x -= y * m_MouseRotationSensitivity;
-	//	m_AbsoluteRotation.y -= x * m_MouseRotationSensitivity;
-	//}
-	//else if (mouseState == (SDL_BUTTON_LMASK | SDL_BUTTON_RMASK))
-	//{
-	//	m_RelativeTranslation.y -= y * m_MouseMoveSensitivity * elapsedSec;
-	//}
+
+	m_PrevMousePos.x = x;
+	m_PrevMousePos.y = y;
 
 	//Update LookAt (view2world & world2view matrices)
 	//*************
@@ -80,11 +77,6 @@ void Camera::KeyUp(WPARAM wparam)
 		m_InputVel.z = 0;
 	if (wparam == 0x41 || wparam == 0x44)	// A-Key && D-Key
 		m_InputVel.x = 0;
-}
-
-void Camera::SetLeftMouseButtonPressed(bool b)
-{
-	m_LeftMouseButtonPressed = b;
 }
 
 void Camera::UpdateMatrix()

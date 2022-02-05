@@ -26,11 +26,6 @@ Material::~Material()
 	if (m_pEffect)
 		m_pEffect->Release();
 
-	//for (auto i = m_pTextures.begin(); i != m_pTextures.end(); ++i)
-	//{
-	//	delete *i;
-	//}
-
 	for (auto& t : m_pTextures)
 		delete t;
 	m_pTextures.clear();

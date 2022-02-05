@@ -31,7 +31,6 @@ MyApplication::~MyApplication()
 void MyApplication::LeftMouseButtonAction(int x, int y, bool isUp)
 {
 	if (isUp) m_PointsVec.push_back({ x, y });
-	m_pCamera->SetLeftMouseButtonPressed(isUp);
 }
 
 void MyApplication::RightMouseButtonAction(int x, int y, bool isUp)
@@ -76,12 +75,22 @@ void MyApplication::Paint()
 
 void MyApplication::Update(float dt)
 {
+
 	m_pCamera->Update(dt);
 
 	m_Rotation += (ToRadians(45.f) * dt);
 	FMatrix4 rotationMatrix = MakeRotation(m_Rotation, FVector3{ 0,1,0 });
 
 	m_pMesh->SetWorldMatrix(rotationMatrix);
+
+	// Center Cursor
+	RECT windowRect;
+	GetWindowRect(MY_ENGINE->GetWindowHandle(), &windowRect);
+
+	IVector2 windowCenter{ windowRect.left + ((windowRect.right - windowRect.left) / 2), windowRect.bottom + ((windowRect.top - windowRect.bottom) / 2) };
+
+	//SetCursorPos(windowCenter.x, windowCenter.y);
+
 }
 
 void MyApplication::Initialize()
@@ -92,7 +101,7 @@ void MyApplication::Initialize()
 	GetWindowRect(MY_ENGINE->GetWindowHandle(), &rect);
 	float width = rect.right - rect.left;
 	float height = rect.bottom - rect.top;
-	m_pCamera = new Camera(FVector3{ 0,0,0 }, FVector3{ 0,0,1 }, 60.f, static_cast<float>(width) / static_cast<float>(height));
+	m_pCamera = new Camera(FVector3{ 0,0,-50 }, FVector3{ 0,0,1 }, 60.f, static_cast<float>(width) / static_cast<float>(height));
 
 	m_pLitMaterial = new LitMaterial(MY_ENGINE->GetDevice(), L"Resources/material_lit.fx");
 	Texture* pDiffuseTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/vehicle_diffuse.png");

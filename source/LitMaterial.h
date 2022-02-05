@@ -5,7 +5,6 @@ class LitMaterial : public Material
 {
 public:
 	LitMaterial(ID3D11Device* pDevice, const std::wstring& assertFile);				// Constructor
-	~LitMaterial();
 
 	//Member Fucntions
 	ID3DX11EffectMatrixVariable* GetWorldMatrix() const;

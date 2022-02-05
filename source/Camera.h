@@ -22,8 +22,6 @@ public:
 	void KeyDown(WPARAM wparam);
 	void KeyUp(WPARAM wparam);
 
-	void SetLeftMouseButtonPressed(bool b);
-
 private:
 	// Private member functions		
 	void UpdateMatrix();
@@ -53,5 +51,7 @@ private:
 	FMatrix4 m_ViewToWorld{};
 	FMatrix4 m_ProjectionMatrix{};
 	FMatrix4 m_WorldViewProjectionMatrix{};
+
+	IVector2 m_PrevMousePos{};
 };
 

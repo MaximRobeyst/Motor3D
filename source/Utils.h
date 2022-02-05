@@ -30,3 +30,14 @@ constexpr T ToRadians(const T angle)
 {
 	return angle * (static_cast<T>(G_PI) / static_cast<T>(180.f));
 }
+
+template<typename T>
+constexpr T Clamp(const T a, T min, T max)
+{
+	if (a < min)
+		return min;
+	if (a > max)
+		return max;
+
+	return a;
+}

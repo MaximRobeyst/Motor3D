@@ -32,10 +32,6 @@ LitMaterial::LitMaterial(ID3D11Device* pDevice, const std::wstring& assertFile)
 	m_pLightDirection->SetFloatVector(&lightDirection.x);
 }
 
-LitMaterial::~LitMaterial()
-{
-}
-
 ID3DX11EffectMatrixVariable* LitMaterial::GetWorldMatrix() const
 {
 	return m_pWorldMatrixVariable;
