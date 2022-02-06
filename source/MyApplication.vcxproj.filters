@@ -90,6 +90,9 @@
     <ClInclude Include="LitMaterial.h">
       <Filter>Application Files\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyApplication.cpp">
@@ -115,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="LitMaterial.cpp">
       <Filter>Application Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Engine Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

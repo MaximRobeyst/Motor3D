@@ -114,6 +114,14 @@ void MyApplication::Initialize()
 	m_pLitMaterial->SetGlossinessMap(pGlossinessTexture);
 	
 	m_pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/vehicle.obj", m_pLitMaterial);
+
+	m_pLights.push_back(PointLight{ FVector3{-10.f, 0, 0}, FVector3{1,0,0}, 1.f });
+	m_pLights.push_back(PointLight{ FVector3{10.f, 0, 0}, FVector3{0,0,1}, 1.f });
+
+	for (int i = 0; i < m_pLights.size(); ++i)
+		m_pLitMaterial->SetLight(i, m_pLights[i]);
+
+	m_pLitMaterial->GetNrOfLightsVariable()->SetInt(m_pLights.size());
 }
 
 void MyApplication::Unitialize()

@@ -215,7 +215,7 @@ int MyEngine::Run(MyApplication* applicationPtr)
 		float elapsedSeconds = std::chrono::duration<float>(t2 - t1).count();
 		float maxElapsedSeconds = 0.1f;
 
-		elapsedSeconds = min(elapsedSeconds, 0.1f);
+		elapsedSeconds = elapsedSeconds < 0.1f ? elapsedSeconds : 0.1f;
 
 		// Update current time
 		t1 = t2;

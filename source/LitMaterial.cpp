@@ -1,4 +1,5 @@
 #include "LitMaterial.h"
+#include "Light.h"
 
 LitMaterial::LitMaterial(ID3D11Device* pDevice, const std::wstring& assertFile)
 	: Material(pDevice, assertFile)
@@ -27,6 +28,21 @@ LitMaterial::LitMaterial(ID3D11Device* pDevice, const std::wstring& assertFile)
 	if (!m_pLightDirection->IsValid())
 		OutputDebugStringW(L"m_pLightDirection is invalid");
 
+	m_pNrOfLightsVariable = m_pEffect->GetVariableByName("gNrOfLights")->AsScalar();
+	if (!m_pNrOfLightsVariable->IsValid())
+		OutputDebugStringW(L"m_pNrOfLightsVariable is invalid");
+
+	m_pLightPositionsVariable = m_pEffect->GetVariableByName("gPointLightPositions");
+	if(!m_pNrOfLightsVariable->IsValid())
+		OutputDebugStringW(L"m_pLightPositionsVariable is invalid");
+
+	m_pLightColorsVariable = m_pEffect->GetVariableByName("gPointLightColors");
+	if (!m_pLightColorsVariable->IsValid())
+		OutputDebugStringW(L"m_pLightColorsVariable is invalid");
+
+	m_pLightIntensityVariable = m_pEffect->GetVariableByName("gPointLightsIntensity");
+	if(!m_pLightIntensityVariable->IsValid())
+		OutputDebugStringW(L"m_pLightIntensityVariable is invalid");
 
 	FVector3 lightDirection{ 0.577f, -0.577f, -0.577f };
 	m_pLightDirection->SetFloatVector(&lightDirection.x);
@@ -64,4 +80,16 @@ void LitMaterial::SetGlossinessMap(Texture* pTexture)
 
 	if (m_pGlossinessMapVariable->IsValid())
 		m_pGlossinessMapVariable->SetResource(pTexture->GetTextureShaderResource());
+}
+
+ID3DX11EffectScalarVariable* LitMaterial::GetNrOfLightsVariable() const
+{
+	return m_pNrOfLightsVariable;
+}
+
+void LitMaterial::SetLight(int lightIndex, const PointLight& pointLight)
+{
+	m_pLightPositionsVariable->GetElement(lightIndex)->AsVector()->SetFloatVector(&pointLight.position.x);
+	m_pLightColorsVariable->GetElement(lightIndex)->AsVector()->SetFloatVector(&pointLight.color.x);
+	m_pLightIntensityVariable->GetElement(lightIndex)->AsScalar()->SetFloat(pointLight.intensity);
 }

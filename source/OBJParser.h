@@ -39,7 +39,7 @@ static bool ParseOBJ(const std::string& filename, std::vector<Vertex>& vertices,
 			//Vertex
 			float x, y, z;
 			file >> x >> y >> z;
-			positions.push_back(FVector3(x, y, -z));
+			positions.push_back(FVector3(x, y, z));
 		}
 		else if (sCommand == "vt")
 		{

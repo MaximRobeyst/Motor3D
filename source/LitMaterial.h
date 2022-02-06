@@ -1,6 +1,8 @@
 #pragma once
 #include "Material.h"
 
+struct PointLight;
+
 class LitMaterial : public Material
 {
 public:
@@ -14,6 +16,9 @@ public:
 	void SetSpecularMap(Texture* pTexture);
 	void SetGlossinessMap(Texture* pTexture);
 
+	ID3DX11EffectScalarVariable* GetNrOfLightsVariable() const;
+	void SetLight(int lightIndex, const PointLight& pointLight);
+
 private:
 	//Member functions
 
@@ -26,5 +31,13 @@ private:
 	ID3DX11EffectShaderResourceVariable* m_pNormalMapVariable{ nullptr };
 	ID3DX11EffectShaderResourceVariable* m_pSpecularMapVariable{ nullptr };
 	ID3DX11EffectShaderResourceVariable* m_pGlossinessMapVariable{ nullptr };
+
+	ID3DX11EffectScalarVariable* m_pNrOfLightsVariable{ nullptr };
+
+	ID3DX11EffectVariable* m_pLightPositionsVariable;
+	ID3DX11EffectVariable* m_pLightColorsVariable;
+	ID3DX11EffectVariable* m_pLightIntensityVariable;
+
+	// Start adding multiple light functionality start by finding out how to used arrays and structs in hlsl/the effects framework
 };
 

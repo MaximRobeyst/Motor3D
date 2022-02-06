@@ -3,6 +3,7 @@
 #include "resource.h"
 #include <windows.h>
 #include <vector>
+#include "Light.h"
 
 class Mesh;
 class Camera;
@@ -37,8 +38,6 @@ public:
 
 	void KeyUp(WPARAM wparam);
 	void KeyDown(WPARAM wparam);
-
-
 private:
 	//-------------------------------------------------
 	// Datamembers								
@@ -47,6 +46,8 @@ private:
 
 	LitMaterial* m_pLitMaterial{ nullptr };
 	float m_Rotation{};
+
+	std::vector<PointLight> m_pLights;
 
 	Mesh* m_pMesh{nullptr};
 	Camera* m_pCamera{nullptr};

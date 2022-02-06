@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="LitMaterial.h" />
     <ClInclude Include="WICTextureLoader.h" />
     <ClInclude Include="DataTypes.h" />
@@ -170,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="LitMaterial.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="Material.cpp" />

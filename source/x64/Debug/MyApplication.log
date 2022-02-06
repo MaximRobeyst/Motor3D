@@ -1,2 +1,5 @@
-﻿  Camera.cpp
+﻿  MyApplication.cpp
+C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\MyApplication.cpp(102,14): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\MyApplication.cpp(103,15): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\MyApplication.cpp(124,66): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
   MyApplication.vcxproj -> C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\x64\Debug\MyApplication.exe

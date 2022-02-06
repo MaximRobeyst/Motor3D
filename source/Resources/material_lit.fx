@@ -15,6 +15,23 @@ float gPI = 3.14159f;
 float gLightIntensity = 7.0f;
 float gShininess = 25.0f;
 
+int gNrOfLights = 0;
+const static int gMaxLights = 16;
+
+// This is better done with structs but i cant find a way to fill that in C++
+//struct PointLight
+//{
+//    float3 position;
+//    float3 diffuse;
+//    float intensity;
+//};
+//
+//PointLight gPointLights[gMaxLights];
+
+float3 gPointLightPositions[gMaxLights];
+float3 gPointLightColors[gMaxLights];
+float gPointLightsIntensity[gMaxLights];
+
 struct VS_INPUT
 {
 	float3 Position : POSITION;
@@ -32,11 +49,10 @@ struct VS_OUTPUT
 	float2 TexCoord : TEXCOORD;
 };
 
-
 RasterizerState gRasterizerState
 {
 	CullMode = back;
-	FrontCounterClockwise = true;
+	FrontCounterClockwise = false;
 };
 
 BlendState gBlendState
@@ -93,19 +109,10 @@ VS_OUTPUT VS(VS_INPUT input)
 	return output;
 }
 
-// Pixel Shader
-float4 PS(VS_OUTPUT input) : SV_TARGET
+float4 CalcDirectionalLight(float3 normal, VS_OUTPUT input)
 {
-	// Get normalmap transform matrix
-	float3 binormal = cross(input.Tangent, input.Normal);
-	float3x3 tangentSpaceAxis = float3x3( input.Tangent, binormal, input.Normal );
-	
 	SamplerState samplerState = pointSampler;
-	float4 uvColor = gNormalMap.Sample(samplerState, input.TexCoord);
-    
-	float3 normal = ( 2.f * uvColor - 1.f).xyz;
-	normal = normalize(mul(normal, tangentSpaceAxis));
-	
+
 	// Lambert cosine law
 	float observedArea = saturate(dot(-normal, gLightDirection) / gPI);
 	// sample diffuse texture
@@ -124,6 +131,52 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	float4 diffuse =  gLightIntensity * diffuseMapColor * observedArea;
 	
 	float4 finalColor = diffuse + phongSpecularReflection;
+	return finalColor;
+}
+
+float4 CalcPointLight(int index, float3 normal, VS_OUTPUT input)
+{
+	SamplerState samplerState = pointSampler;
+
+	float3 lightDirection = normalize(gPointLightPositions[index] - input.WorldPosition.xyz);
+	// Lambert cosine law
+	float observedArea = saturate(dot(-normal, lightDirection) / gPI);
+	// sample diffuse texture
+	float4 diffuseMapColor = gDiffuseMap.Sample(samplerState, input.TexCoord);
+	
+	//Phong
+	float3 phongReflect = reflect(-lightDirection, normal);
+	float3 viewDirection = normalize(input.WorldPosition.xyz - gViewInverseMatrix[3].xyz);
+	float cosa = saturate(dot(viewDirection, phongReflect));
+	
+	float4 phongExponent = gGlossinessMap.Sample(samplerState, input.TexCoord);
+	float4 phongReflectance = gSpecularMap.Sample(samplerState, input.TexCoord);
+	
+	float4 phongSpecularReflection = (phongReflectance * (pow(cosa, phongExponent.x * gShininess)));
+	
+	float4 diffuse = float4(gPointLightColors[index],1.f) * gPointLightsIntensity[index] * diffuseMapColor * observedArea;
+	
+	return diffuse + phongSpecularReflection;
+}
+
+// Pixel Shader
+float4 PS(VS_OUTPUT input) : SV_TARGET
+{
+	// Get normalmap transform matrix
+	float3 binormal = cross(input.Tangent, input.Normal);
+	float3x3 tangentSpaceAxis = float3x3( input.Tangent, binormal, input.Normal );
+	
+	SamplerState samplerState = pointSampler;
+	float4 uvColor = gNormalMap.Sample(samplerState, input.TexCoord);
+    
+	float3 normal = ( 2.f * uvColor - 1.f).xyz;
+	normal = normalize(mul(normal, tangentSpaceAxis));
+
+	float4 finalColor;
+	finalColor = CalcDirectionalLight(normal, input);
+	for(int i = 0; i < gNrOfLights; i++)
+		finalColor += CalcPointLight(i, normal, input);
+	
 	return finalColor;
 }
 
