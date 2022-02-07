@@ -47,8 +47,8 @@ void Camera::Update(float elapsedSec)
 
 	if ((GetKeyState(VK_RBUTTON) & 0x80) != 0)
 	{
-		m_AbsoluteRotation.x -= Clamp((y - m_PrevMousePos.y),-1,1) * m_MouseRotationSensitivity;
-		m_AbsoluteRotation.y -= Clamp((x - m_PrevMousePos.x),-1,1) * m_MouseRotationSensitivity;
+		m_AbsoluteRotation.x -= Clamp((m_PrevMousePos.y-y),-1,1) * m_MouseRotationSensitivity;
+		m_AbsoluteRotation.y -= Clamp((m_PrevMousePos.x-x),-1,1) * m_MouseRotationSensitivity;
 	}
 
 	m_PrevMousePos.x = x;

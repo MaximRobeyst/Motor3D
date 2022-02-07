@@ -7,7 +7,8 @@
 // The mesh causes a memory leak that i cant find at the moment and i think it has something to with the material
 // i have been looking for it for a while and i'm gonna move on for not future me should be able to find it 
 Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Material* pMaterial)
-	: m_pMatrial{ pMaterial }
+	: m_pMaterial{ pMaterial }
+	, m_WorldMatrix{FMatrix4::Identity()}
 {
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
@@ -18,7 +19,8 @@ Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Materi
 }
 
 Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, Material* pMaterial)
-	: m_pMatrial{ pMaterial}
+	: m_pMaterial{ pMaterial}
+	, m_WorldMatrix{ FMatrix4::Identity() }
 {
 	Initialize(pDevice, hWnd, vertices, indices);
 }
@@ -40,7 +42,12 @@ Mesh::~Mesh()
 	if (m_pVertexLayout)
 		m_pVertexLayout->Release();
 
-	delete m_pMatrial;
+	//delete m_pMatrial;
+
+	for (auto mat : m_pMaterials)
+		delete mat.second;
+
+	m_pMaterials.clear();
 }
 
 void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
@@ -60,14 +67,14 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	auto worldViewPorjection = pCamera->GetProjectionMatrix() * pCamera->GetViewMatrix() * m_WorldMatrix;
-	m_pMatrial->GetMatWorldViewProjMatrix()->SetMatrix(&worldViewPorjection.data[0][0]);
+	m_pMaterial->GetMatWorldViewProjMatrix()->SetMatrix(&worldViewPorjection.data[0][0]);
 
 	// Render a triangle
 	D3DX11_TECHNIQUE_DESC techDesc;
-	m_pMatrial->GetTechnique()->GetDesc(&techDesc);
+	m_pMaterial->GetTechnique()->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
-		m_pMatrial->GetTechnique()->GetPassByIndex(p)->Apply(0, pDeviceContext);
+		m_pMaterial->GetTechnique()->GetPassByIndex(p)->Apply(0, pDeviceContext);
 		pDeviceContext->DrawIndexed(m_AmountIndices, 0, 0);
 	}
 }
@@ -80,6 +87,11 @@ FMatrix4 Mesh::GetWorldMatrix() const
 void Mesh::SetWorldMatrix(const FMatrix4& worldMatrix)
 {
 	m_WorldMatrix = worldMatrix;
+}
+
+void Mesh::AddMaterial(const std::string& materialName, Material* pMaterial)
+{
+	m_pMaterials[materialName] = pMaterial;
 }
 
 void Mesh::Initialize(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
@@ -115,7 +127,7 @@ void Mesh::Initialize(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex
 
 	// Create the input layout
 	D3DX11_PASS_DESC passDesc;
-	m_pMatrial->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
+	m_pMaterial->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
 	result = pDevice->CreateInputLayout(
 		vertexDesc,
 		numElement,

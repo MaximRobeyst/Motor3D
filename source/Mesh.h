@@ -5,6 +5,7 @@
 #include "RGBColor.h"
 
 #include "MyEngine.h"
+#include <map>
 
 class Texture;
 class Camera;
@@ -37,6 +38,8 @@ public:
 	FMatrix4 GetWorldMatrix() const;
 	void SetWorldMatrix(const FMatrix4& worldMatrix);
 
+	void AddMaterial(const std::string& materialName, Material* pMaterial);
+
 private:
 	// Private member functions		
 	void Initialize(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
@@ -46,7 +49,9 @@ private:
 	ID3D11Buffer* m_pVertexBuffer{ nullptr };
 	ID3D11Buffer* m_pIndexBuffer{ nullptr };
 
-	Material* m_pMatrial{ nullptr };
+	Material* m_pMaterial{ nullptr };
+	std::map<std::string, Material*> m_pMaterials{};
+
 	FMatrix4 m_WorldMatrix{};
 
 	uint32_t m_AmountIndices{};

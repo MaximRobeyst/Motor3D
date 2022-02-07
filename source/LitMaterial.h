@@ -38,6 +38,6 @@ private:
 	ID3DX11EffectVariable* m_pLightColorsVariable;
 	ID3DX11EffectVariable* m_pLightIntensityVariable;
 
-	// Start adding multiple light functionality start by finding out how to used arrays and structs in hlsl/the effects framework
+	// find out how to used arrays and structs in hlsl/the effects framework
 };
 

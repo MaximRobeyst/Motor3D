@@ -7,6 +7,7 @@
 
 class Mesh;
 class Camera;
+class Material;
 class LitMaterial;
 
 class MyApplication
@@ -45,10 +46,13 @@ private:
 	std::vector<POINT> m_PointsVec{};
 
 	LitMaterial* m_pLitMaterial{ nullptr };
+	Material* m_pUnLitMaterial{ nullptr };
 	float m_Rotation{};
 
 	std::vector<PointLight> m_pLights;
 
-	Mesh* m_pMesh{nullptr};
+	//Mesh* m_pMesh{nullptr};
 	Camera* m_pCamera{nullptr};
+
+	std::vector<Mesh*> m_pMeshes{};
 };
