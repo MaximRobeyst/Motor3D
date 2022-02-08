@@ -4,11 +4,13 @@
 #include <windows.h>
 #include <vector>
 #include "Light.h"
+#include <memory>
 
 class Mesh;
 class Camera;
 class Material;
 class LitMaterial;
+class Scene;
 
 class MyApplication
 {
@@ -45,6 +47,11 @@ private:
 	//-------------------------------------------------
 	std::vector<POINT> m_PointsVec{};
 
+	// The application will be even smaller the only thing we will really need is a scene the application will
+	// call the functions of these scenes and wont really do anything else besides except for UI functionallity
+	// later on
+	Scene* m_pScene;
+
 	LitMaterial* m_pLitMaterial{ nullptr };
 	Material* m_pUnLitMaterial{ nullptr };
 	float m_Rotation{};
@@ -54,5 +61,5 @@ private:
 	//Mesh* m_pMesh{nullptr};
 	Camera* m_pCamera{nullptr};
 
-	std::vector<Mesh*> m_pMeshes{};
+	std::vector<Mesh*> m_pMeshes;
 };

@@ -1,0 +1,58 @@
+#pragma once
+#include "DataTypes.h"
+
+class Mesh;
+class Camera;
+
+class IComponent
+{
+public:
+	IComponent(uint8_t componentID);
+	virtual ~IComponent() = default;
+
+	virtual void Render(Camera* pCamera);
+	virtual void Update(float dt);
+protected:
+	uint8_t m_ComponentID;
+};
+
+class TransformComponent : public IComponent
+{
+public:
+	TransformComponent(FVector3 pos = FVector3{}, FVector3 rotation = FVector3{}, FVector3 scale = FVector3{ 1,1,1 });
+
+	void Update(float dt);
+	FMatrix4 GetWorldMatrix() const;
+	
+	FVector3 GetPosition() const;
+	void SetPosition(FVector3 position);
+private:
+	FVector3 m_Position;
+	FVector3 m_Rotation;
+	FVector3 m_Scale;
+};
+
+class RigidBodyComponent : public IComponent
+{
+public:
+	RigidBodyComponent(FVector3 velocity = FVector3{}, FVector3 acceleration = FVector3{}, FVector3 gravity = FVector3{});
+	void Update(float dt) override;
+
+	void UpdateTransform(TransformComponent* tc);	// temp function
+private:
+	FVector3 m_Velocity{};
+	FVector3 m_Acceleration{};
+	FVector3 m_Gravity{};
+};
+
+class MeshComponent : public IComponent
+{
+public:
+	MeshComponent(Mesh* pMesh);
+	~MeshComponent();
+
+	void Render(Camera* pCamera) override;
+	void Update(float dt) override;
+private:
+	Mesh* m_pMesh{};
+};

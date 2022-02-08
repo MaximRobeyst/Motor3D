@@ -146,8 +146,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LitMaterial.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="WICTextureLoader.h" />
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="Material.h" />
@@ -171,8 +174,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LitMaterial.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />

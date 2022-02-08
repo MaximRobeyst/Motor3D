@@ -11,6 +11,50 @@
 #include "Mesh.h"
 #include "Material.h"
 
+static void CreateMesh(std::vector<Mesh*>& pMeshes, size_t& lastStop, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
+{
+	if (vertices.empty() || indices.empty())
+		return;
+
+	for (uint32_t i = static_cast<uint32_t>(lastStop); i < indices.size(); i += 3)
+	{
+		uint32_t index0 = indices[i];
+		uint32_t index1 = indices[i + 1];
+		uint32_t index2 = indices[i + 2];
+
+		const FVector3& p0 = vertices[index0].position;
+		const FVector3& p1 = vertices[index1].position;
+		const FVector3& p2 = vertices[index2].position;
+		const FVector2& uv0 = vertices[index0].uv;
+		const FVector2& uv1 = vertices[index1].uv;
+		const FVector2& uv2 = vertices[index2].uv;
+
+		const FVector3 edge0 = p1 - p0;
+		const FVector3 edge1 = p2 - p0;
+
+		const FVector2 diffX = FVector2(uv1.x - uv0.x, uv2.x - uv0.x);
+		const FVector2 diffY = FVector2(uv1.y - uv0.y, uv2.y - uv0.y);
+		float r = 1.f / Cross(diffX, diffY);
+
+		FVector3 tangent = (edge0 * diffY.y - edge1 * diffY.x) * r;
+		vertices[index0].tangent += tangent;
+		vertices[index1].tangent += tangent;
+		vertices[index2].tangent += tangent;
+	}
+	for (auto& v : vertices)
+	{
+		v.tangent = GetNormalized(Reject(v.tangent, v.normal));
+	}
+	lastStop = indices.size();
+	auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
+
+	Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
+	mat->SetDiffuseMap(pDiffuseTexture);
+
+	Mesh* pMesh = new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), vertices, indices, mat);
+	pMeshes.push_back(pMesh);
+}
+
 static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes)
 {
 	std::ifstream file(filename);
@@ -24,7 +68,7 @@ static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes)
 	std::vector<Vertex> vertices;
 	std::vector<u_int> indices;
 
-	int lastStop = 0;
+	size_t lastStop = 0;
 
 	std::string sCommand;
 	while (!file.eof())
@@ -100,48 +144,14 @@ static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes)
 		}
 		else if (sCommand == "o")
 		{
-			for (uint32_t i = lastStop; i < indices.size(); i += 3)
-			{
-				uint32_t index0 = indices[i];
-				uint32_t index1 = indices[i + 1];
-				uint32_t index2 = indices[i + 2];
-
-				const FVector3& p0 = vertices[index0].position;
-				const FVector3& p1 = vertices[index1].position;
-				const FVector3& p2 = vertices[index2].position;
-				const FVector2& uv0 = vertices[index0].uv;
-				const FVector2& uv1 = vertices[index1].uv;
-				const FVector2& uv2 = vertices[index2].uv;
-
-				const FVector3 edge0 = p1 - p0;
-				const FVector3 edge1 = p2 - p0;
-
-				const FVector2 diffX = FVector2(uv1.x - uv0.x, uv2.x - uv0.x);
-				const FVector2 diffY = FVector2(uv1.y - uv0.y, uv2.y - uv0.y);
-				float r = 1.f / Cross(diffX, diffY);
-
-				FVector3 tangent = (edge0 * diffY.y - edge1 * diffY.x) * r;
-				vertices[index0].tangent += tangent;
-				vertices[index1].tangent += tangent;
-				vertices[index2].tangent += tangent;
-			}
-			for (auto& v : vertices)
-			{
-				v.tangent = GetNormalized(Reject(v.tangent, v.normal));
-			}
-			lastStop = indices.size();
-			auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
-
-			Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
-			mat->SetDiffuseMap(pDiffuseTexture);
-
-			pMeshes.push_back(
-				new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), vertices, indices, mat));
-
+			CreateMesh(pMeshes, lastStop, vertices, indices);
 		}
 		//read till end of line and ignore all remaining chars
 		file.ignore(1000, '\n');
 	}
+	// Create the final mesh
+	CreateMesh(pMeshes, lastStop, vertices, indices);
+
 	return true;
 }
 

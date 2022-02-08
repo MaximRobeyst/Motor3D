@@ -115,9 +115,6 @@ MyEngine::MyEngine()
 
 MyEngine::~MyEngine()
 {
-	if (m_pApplication)
-		delete m_pApplication;
-
 	if (m_pRenderTargetView)
 		m_pRenderTargetView->Release();
 
@@ -142,6 +139,9 @@ MyEngine::~MyEngine()
 
 	if (m_pDevice)
 		m_pDevice->Release();
+
+	if (m_pApplication)
+		delete m_pApplication;
 }
 
 int MyEngine::Run(MyApplication* applicationPtr)
@@ -311,7 +311,7 @@ HRESULT MyEngine::InitializeDirectX(UINT width, UINT height, HWND hWnd)
     D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_0;
     uint32_t createDeviceFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)
-    createDeviceFlags != D3D11_CREATE_DEVICE_DEBUG;
+    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
     HRESULT result = D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, createDeviceFlags, 0, 0, D3D11_SDK_VERSION, &m_pDevice, &featureLevel, &m_pDeviceContext);

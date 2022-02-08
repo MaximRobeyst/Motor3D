@@ -21,14 +21,14 @@ Material::Material(ID3D11Device* pDevice, const std::wstring& assertFile)
 
 Material::~Material()
 {
+	for (auto& t : m_pTextures)
+		delete t;
+	m_pTextures.clear();
+
 	if (m_pTechnique)
 		m_pTechnique->Release();
 	if (m_pEffect)
 		m_pEffect->Release();
-
-	for (auto& t : m_pTextures)
-		delete t;
-	m_pTextures.clear();
 }
 
 ID3DX11Effect* Material::GetEffect() const

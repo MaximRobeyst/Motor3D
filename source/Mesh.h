@@ -20,7 +20,7 @@ struct Vertex
 	//RGBColor color;
 };
 
-class Mesh
+class Mesh final
 {
 public:
 	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Material* pMaterial);				// Constructor
@@ -38,7 +38,7 @@ public:
 	FMatrix4 GetWorldMatrix() const;
 	void SetWorldMatrix(const FMatrix4& worldMatrix);
 
-	void AddMaterial(const std::string& materialName, Material* pMaterial);
+	//void AddMaterial(const std::string& materialName, Material* pMaterial);
 
 private:
 	// Private member functions		
@@ -50,7 +50,7 @@ private:
 	ID3D11Buffer* m_pIndexBuffer{ nullptr };
 
 	Material* m_pMaterial{ nullptr };
-	std::map<std::string, Material*> m_pMaterials{};
+	//std::map<std::string, Material*> m_pMaterials{};
 
 	FMatrix4 m_WorldMatrix{};
 

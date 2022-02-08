@@ -36,7 +36,7 @@ void Camera::Update(float elapsedSec)
 	//const uint8_t* pKeyboardState = SDL_GetKeyboardState(0);
 	float keyboardSpeed = (GetKeyState(VK_SHIFT) & 0x80) ? m_KeyboardMoveSensitivity * m_KeyboardMoveMultiplier : m_KeyboardMoveSensitivity;
 	m_RelativeTranslation.x = (((GetKeyState(0x44) & 0x80) - (GetKeyState(0x41) & 0x80)) / 128) * keyboardSpeed * elapsedSec;
-	m_RelativeTranslation.y =0;
+	m_RelativeTranslation.y = (((GetKeyState(0x45) & 0x80) - (GetKeyState(0x51) & 0x80)) / 128) * keyboardSpeed * elapsedSec;;
 	m_RelativeTranslation.z = (((GetKeyState(0x57) & 0x80) - (GetKeyState(0x53) & 0x80)) / 128) * keyboardSpeed * elapsedSec;
 
 	//Mouse Input

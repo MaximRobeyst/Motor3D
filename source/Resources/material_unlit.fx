@@ -62,8 +62,8 @@ DepthStencilState gDepthStencilState
 SamplerState pointSampler
 {
 	Filter = MIN_MAG_MIP_POINT;
-	AddressU = Border;// or Mirror or Clamp or Border or Wrap
-	AddressV = Clamp;// or Mirror or Clamp or Border or Wrap
+	AddressU = Wrap;// or Mirror or Clamp or Border or Wrap
+	AddressV = Wrap;// or Mirror or Clamp or Border or Wrap
 	BorderColor = float4(0.0f, 0.0f, 1.0f, 1.0f);
 };
 

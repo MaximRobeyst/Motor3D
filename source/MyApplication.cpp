@@ -10,24 +10,31 @@
 #include "OBJParser.h"
 #include "Material.h"
 #include "LitMaterial.h"
+#include "Scene.h"
+#include "GameObject.h"
+#include "Component.h"
 
 #define MY_ENGINE MyEngine::GetSingleton()
 
 MyApplication::MyApplication()
 {
-    MY_ENGINE->SetTitle(L"Triangle");
+    MY_ENGINE->SetTitle(L"Engine");
 }
 
 MyApplication::~MyApplication()
 {
 	// nothing to destroy
 	//delete m_pMesh;
-	for (auto mesh : m_pMeshes)
-		delete mesh;
+	//for (auto& mesh : m_pMeshes)
+	//{
+	//	delete mesh;
+	//	mesh = nullptr;
+	//}
 
 	m_pMeshes.clear();
 
 	delete m_pCamera;
+	delete m_pScene;
 }
 
 //-------------------------------------------------
@@ -72,8 +79,10 @@ void MyApplication::Paint()
 
 	// Render
 	//m_pMesh->Render(MY_ENGINE->GetDeviceContext(), m_pCamera);
-	for (auto mesh : m_pMeshes)
-		mesh->Render(MY_ENGINE->GetDeviceContext(), m_pCamera);
+	//for (auto& mesh : m_pMeshes)
+	//	mesh->Render(MY_ENGINE->GetDeviceContext(), m_pCamera);
+
+	m_pScene->Render(m_pCamera);
 
 	// Present
 	MY_ENGINE->Present();
@@ -89,6 +98,8 @@ void MyApplication::Update(float dt)
 	FMatrix4 rotationMatrix = MakeRotation(m_Rotation, FVector3{ 0,1,0 });
 
 	//m_pMesh->SetWorldMatrix(rotationMatrix);
+
+	m_pScene->Update(dt);
 
 	// Center Cursor
 	RECT windowRect;
@@ -106,9 +117,23 @@ void MyApplication::Initialize()
 
 	RECT rect;
 	GetWindowRect(MY_ENGINE->GetWindowHandle(), &rect);
-	float width = rect.right - rect.left;
-	float height = rect.bottom - rect.top;
+	float width = static_cast<float>(rect.right - rect.left);
+	float height =static_cast<float>( rect.bottom - rect.top);
 	m_pCamera = new Camera(FVector3{ 0,1.f,-2.5 }, FVector3{ 0,0,1 }, 60.f, static_cast<float>(width) / static_cast<float>(height));
+
+
+	for (int i = 0; i < 100; i++)
+	{
+		m_pScene = new Scene();
+		GameObject* cube = new GameObject("Cube");
+		m_pScene->AddGameObject(cube);
+		ParseOBJ("Resources/cube.obj", m_pMeshes);
+
+		cube->AddComponent(new MeshComponent(m_pMeshes[0]));
+		cube->AddComponent(new RigidBodyComponent(FVector3{}, FVector3{}, FVector3{ 0.f,-9.81f, 0.f }));
+	}
+
+	//m_pScene->RemoveEntity(m_pTestEntity2);
 
 	//m_pLitMaterial = new LitMaterial(MY_ENGINE->GetDevice(), L"Resources/material_lit.fx");
 	//m_pUnLitMaterial = new Material(MY_ENGINE->GetDevice(), L"Resources/material_unlit.fx");
@@ -123,7 +148,6 @@ void MyApplication::Initialize()
 	//m_pLitMaterial->SetGlossinessMap(pGlossinessTexture);
 	//m_pUnLitMaterial->SetDiffuseMap(pDiffuseTexture);
 	
-	ParseOBJ("Resources/5Props.obj", m_pMeshes);
 
 	//m_pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/5Props.obj", m_pUnLitMaterial);
 	//m_pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/vehicle.obj", m_pLitMaterial);

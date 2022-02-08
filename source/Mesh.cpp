@@ -13,6 +13,7 @@ Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Materi
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 
+
 	ParseOBJ(filePath, vertices, indices);
 
 	Initialize(pDevice, hWnd, vertices, indices);
@@ -27,27 +28,14 @@ Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices
 
 Mesh::~Mesh()
 {
-	if(m_pIndexBuffer)
-	{
+	delete m_pMaterial;
+
+	if (m_pIndexBuffer)
 		m_pIndexBuffer->Release();
-		m_pIndexBuffer = 0;
-	}
-
-	if(m_pVertexBuffer)
-	{
+	if (m_pVertexBuffer)
 		m_pVertexBuffer->Release();
-		m_pVertexBuffer = 0;
-	}
-
 	if (m_pVertexLayout)
 		m_pVertexLayout->Release();
-
-	//delete m_pMatrial;
-
-	for (auto mat : m_pMaterials)
-		delete mat.second;
-
-	m_pMaterials.clear();
 }
 
 void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
@@ -89,10 +77,10 @@ void Mesh::SetWorldMatrix(const FMatrix4& worldMatrix)
 	m_WorldMatrix = worldMatrix;
 }
 
-void Mesh::AddMaterial(const std::string& materialName, Material* pMaterial)
-{
-	m_pMaterials[materialName] = pMaterial;
-}
+//void Mesh::AddMaterial(const std::string& materialName, Material* pMaterial)
+//{
+//	m_pMaterials[materialName] = pMaterial;
+//}
 
 void Mesh::Initialize(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
 {
@@ -102,7 +90,7 @@ void Mesh::Initialize(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex
 	HRESULT result = S_OK;
 	static const uint32_t numElement{ 4 };
 	//D3D11_INPUT_ELEMENT_DESC vertexDesc[numElement]{};
-	D3D11_INPUT_ELEMENT_DESC* vertexDesc = new D3D11_INPUT_ELEMENT_DESC[numElement]{};
+	D3D11_INPUT_ELEMENT_DESC vertexDesc[numElement]{};
 
 	vertexDesc[0].SemanticName = "POSITION";
 	vertexDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
