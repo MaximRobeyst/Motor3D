@@ -1,6 +1,7 @@
 #pragma once
 #include "DataTypes.h"
 #include <vector>
+#include <memory>
 
 // i know this isn't the best architecture but i wanted a feasable project and programming something like ECS
 // in a week is a bit out of scope seeing as i have never done that before so for now i will use this primitive implementation
@@ -17,22 +18,29 @@ public:
 	~GameObject();
 
 	void AddComponent(IComponent* component);
+	void RemoveComponent(IComponent* component);
+
 	template <typename T>
-	void AddComponent(T component)
+	T* GetComponent() const
 	{
-		m_pComponents.push_back(component);
+		// This can be done way better
+		for (auto& comp : m_pComponents)
+		{
+			T* component = dynamic_cast<T*>(comp);
+			if (component != nullptr)
+				return component;
+		}
 	}
 
-	void RemoveComponent(IComponent* component);
+	//template <typename T>
+	//void AddComponent(T component)
+	//{
+	//	m_pComponents.push_back(component);
+	//}
 
 	void Render(Camera* pCamera);
 	void Update(float dt);
 
-	//template <typename T>
-	//T* GetComponent() const
-	//{
-	//
-	//}
 
 private:
 	uint32_t m_Id;

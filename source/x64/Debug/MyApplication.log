@@ -1,12 +1,2 @@
-﻿  Camera.cpp
-  Component.cpp
-  GameObject.cpp
-  Light.cpp
-  LitMaterial.cpp
-  Scene.cpp
-  Material.cpp
-  Mesh.cpp
-  MyApplication.cpp
-  MyEngine.cpp
-  Generating Code...
+﻿  MyApplication.cpp
   MyApplication.vcxproj -> C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\x64\Debug\MyApplication.exe

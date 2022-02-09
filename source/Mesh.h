@@ -28,9 +28,9 @@ public:
 	~Mesh();				// Destructor
 
 	// Copy/move constructors and assignment operators
-	Mesh(const Mesh& other) = delete;
+	Mesh(const Mesh& other);
 	Mesh(Mesh&& other) noexcept = delete;
-	Mesh& operator=(const Mesh& other) = delete;
+	Mesh& operator=(const Mesh& other) ;
 	Mesh& operator=(Mesh&& other)	noexcept = delete;
 
 	void Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera);

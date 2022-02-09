@@ -31,6 +31,12 @@ Material::~Material()
 		m_pEffect->Release();
 }
 
+Material::Material(const Material& other)
+{
+	m_pTextures.reserve(other.m_pTextures.size());
+	m_pTextures = other.m_pTextures;
+}
+
 ID3DX11Effect* Material::GetEffect() const
 {
 	return m_pEffect;

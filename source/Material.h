@@ -14,7 +14,7 @@ public:
 	virtual ~Material();				// Destructor
 
 	// Copy/move constructors and assignment operators
-	Material(const Material& other) = delete;
+	Material(const Material& other);
 	Material(Material&& other) noexcept = delete;
 	Material& operator=(const Material& other) = delete;
 	Material& operator=(Material&& other)	noexcept  = delete;

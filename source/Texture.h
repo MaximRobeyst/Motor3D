@@ -10,9 +10,9 @@ public:
 	~Texture();				// Destructor
 
 	// Copy/move constructors and assignment operators
-	Texture(const Texture& other) {}
+	Texture(const Texture& other);
 	Texture(Texture&& other) noexcept {}
-	Texture& operator=(const Texture& other) {}
+	Texture& operator=(const Texture& other);
 	Texture& operator=(Texture&& other)	noexcept {}
 
 	// Member functions						

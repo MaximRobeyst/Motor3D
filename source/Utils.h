@@ -41,3 +41,8 @@ constexpr T Clamp(const T a, T min, T max)
 
 	return a;
 }
+
+inline float RandomFloat(float max = 1.f)
+{
+	return (max * float(rand() / RAND_MAX));
+}

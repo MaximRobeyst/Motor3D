@@ -33,16 +33,17 @@ void GameObject::AddComponent(IComponent* component)
 
 void GameObject::RemoveComponent(IComponent* component)
 {
+
 }
 
 void GameObject::Render(Camera* pCamera)
 {
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
-		(*iter)->Render(pCamera);
+		(*iter)->Render(pCamera, this);
 }
 
 void GameObject::Update(float dt)
 {
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
-		(*iter)->Update(dt);
+		(*iter)->Update(dt, this);
 }

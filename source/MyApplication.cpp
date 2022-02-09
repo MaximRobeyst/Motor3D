@@ -121,16 +121,25 @@ void MyApplication::Initialize()
 	float height =static_cast<float>( rect.bottom - rect.top);
 	m_pCamera = new Camera(FVector3{ 0,1.f,-2.5 }, FVector3{ 0,0,1 }, 60.f, static_cast<float>(width) / static_cast<float>(height));
 
+	m_pScene = new Scene();
+	//ParseOBJ("Resources/3DScene.obj", m_pMeshes);
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		m_pScene = new Scene();
-		GameObject* cube = new GameObject("Cube");
-		m_pScene->AddGameObject(cube);
-		ParseOBJ("Resources/cube.obj", m_pMeshes);
+		for (int j = 0; j < 10; j++)
+		{
+			GameObject* cube = new GameObject("Cube", FVector3{  -5 + static_cast<float>(i), 50, -5 + static_cast<float>(j) });
 
-		cube->AddComponent(new MeshComponent(m_pMeshes[0]));
-		cube->AddComponent(new RigidBodyComponent(FVector3{}, FVector3{}, FVector3{ 0.f,-9.81f, 0.f }));
+			m_pScene->AddGameObject(cube);
+
+			Material* mat = new Material(MY_ENGINE->GetDevice(), L"Resources/material_unlit.fx");
+			Texture* pDiffuseTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/uv_grid_2.png");
+			mat->SetDiffuseMap(pDiffuseTexture);
+			Mesh* pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/cube.obj", mat);
+
+			cube->AddComponent(new MeshComponent(pMesh));
+			cube->AddComponent(new RigidBodyComponent(FVector3{}, FVector3{}, FVector3{ 0.f,-9.81f, 0.f }));
+		}
 	}
 
 	//m_pScene->RemoveEntity(m_pTestEntity2);

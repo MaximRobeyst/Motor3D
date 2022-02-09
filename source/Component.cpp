@@ -1,5 +1,6 @@
 #include "Component.h"
 #include "Mesh.h"
+#include "GameObject.h"
 
 TransformComponent::TransformComponent(FVector3 pos, FVector3 rotation, FVector3 scale)
 	: IComponent{0}
@@ -15,7 +16,7 @@ void TransformComponent::Update(float dt)
 
 FMatrix4 TransformComponent::GetWorldMatrix() const
 {
-	return MakeTranslation(m_Position) * FMatrix4 { MakeRotationZYX(m_Rotation.x, m_Rotation.y, m_Rotation.z) } *FMatrix4{ MakeScale(m_Scale.x, m_Scale.y, m_Scale.z) };
+	return MakeTranslation(m_Position); //* FMatrix4 { MakeRotationZYX(m_Rotation.x, m_Rotation.y, m_Rotation.z) } *FMatrix4{ MakeScale(m_Scale.x, m_Scale.y, m_Scale.z) };
 }
 
 FVector3 TransformComponent::GetPosition() const
@@ -33,11 +34,11 @@ IComponent::IComponent(uint8_t componentID)
 {
 }
 
-void IComponent::Render(Camera* pCamera)
+void IComponent::Render(Camera* pCamera, GameObject* pGameobject)
 {
 }
 
-void IComponent::Update(float dt)
+void IComponent::Update(float dt, GameObject* pGameobject)
 {
 }
 
@@ -52,13 +53,14 @@ MeshComponent::~MeshComponent()
 	delete m_pMesh;
 }
 
-void MeshComponent::Render(Camera* pCamera)
+void MeshComponent::Render(Camera* pCamera, GameObject* pGameobject)
 {
 	m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), pCamera);
 }
 
-void MeshComponent::Update(float dt)
+void MeshComponent::Update(float dt, GameObject* pGameobject)
 {
+	m_pMesh->SetWorldMatrix(pGameobject->GetComponent<TransformComponent>()->GetWorldMatrix());
 }
 
 RigidBodyComponent::RigidBodyComponent(FVector3 velocity, FVector3 acceleration, FVector3 gravity)
@@ -69,10 +71,15 @@ RigidBodyComponent::RigidBodyComponent(FVector3 velocity, FVector3 acceleration,
 {
 }
 
-void RigidBodyComponent::Update(float dt)
+void RigidBodyComponent::Update(float dt, GameObject* pGameobject)
 {
 	m_Velocity += m_Acceleration * dt;
 	m_Acceleration = m_Gravity * dt;
+
+	auto pos = pGameobject->GetComponent<TransformComponent>()->GetPosition();
+	pos += m_Velocity;
+
+	pGameobject->GetComponent<TransformComponent>()->SetPosition(pos);
 }
 
 void RigidBodyComponent::UpdateTransform(TransformComponent* tc)

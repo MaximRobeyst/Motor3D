@@ -3,6 +3,7 @@
 
 class Mesh;
 class Camera;
+class GameObject;
 
 class IComponent
 {
@@ -10,8 +11,8 @@ public:
 	IComponent(uint8_t componentID);
 	virtual ~IComponent() = default;
 
-	virtual void Render(Camera* pCamera);
-	virtual void Update(float dt);
+	virtual void Render(Camera* pCamera, GameObject* pGameobject);
+	virtual void Update(float dt, GameObject* pGameobject);
 protected:
 	uint8_t m_ComponentID;
 };
@@ -36,7 +37,7 @@ class RigidBodyComponent : public IComponent
 {
 public:
 	RigidBodyComponent(FVector3 velocity = FVector3{}, FVector3 acceleration = FVector3{}, FVector3 gravity = FVector3{});
-	void Update(float dt) override;
+	void Update(float dt, GameObject* pGameobject) override;
 
 	void UpdateTransform(TransformComponent* tc);	// temp function
 private:
@@ -51,8 +52,8 @@ public:
 	MeshComponent(Mesh* pMesh);
 	~MeshComponent();
 
-	void Render(Camera* pCamera) override;
-	void Update(float dt) override;
+	void Render(Camera* pCamera, GameObject* pGameobject) override;
+	void Update(float dt, GameObject* pGameobject) override;
 private:
 	Mesh* m_pMesh{};
 };

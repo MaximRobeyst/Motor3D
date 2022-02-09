@@ -38,6 +38,36 @@ Mesh::~Mesh()
 		m_pVertexLayout->Release();
 }
 
+Mesh::Mesh(const Mesh& other)
+{
+	if(other.m_pVertexBuffer)
+		MyEngine::GetSingleton()->GetDeviceContext()->CopyResource(m_pVertexBuffer, other.m_pVertexBuffer);
+	if(other.m_pIndexBuffer)
+		MyEngine::GetSingleton()->GetDeviceContext()->CopyResource(m_pIndexBuffer, other.m_pIndexBuffer);
+
+
+	m_pMaterial = other.m_pMaterial;
+
+	m_WorldMatrix = other.m_WorldMatrix;
+	m_AmountIndices = other.m_AmountIndices;
+}
+
+Mesh& Mesh::operator=(const Mesh& other)
+{
+	// TODO: insert return statement here
+
+	MyEngine::GetSingleton()->GetDeviceContext()->CopyResource(m_pIndexBuffer, other.m_pIndexBuffer);
+	MyEngine::GetSingleton()->GetDeviceContext()->CopyResource(m_pVertexBuffer, other.m_pVertexBuffer);
+	m_pVertexLayout = other.m_pVertexLayout;
+
+	m_pMaterial = other.m_pMaterial;
+
+	m_WorldMatrix = other.m_WorldMatrix;
+	m_AmountIndices = other.m_AmountIndices;
+
+	return *this;
+}
+
 void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
 {
 	//Set vertex buffer

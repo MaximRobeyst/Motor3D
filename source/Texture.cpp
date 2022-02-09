@@ -62,6 +62,22 @@ Texture::~Texture()
 		m_pTextureResourceView->Release();
 }
 
+Texture::Texture(const Texture& other)
+{
+	MyEngine::GetSingleton()->GetDeviceContext()->CopyResource(m_pTexture, other.m_pTexture);
+	MyEngine::GetSingleton()->GetDeviceContext()->CopyResource(m_pResource, other.m_pResource);
+
+	//MyEngine::GetSingleton()->GetDeviceContext()->CopyResource(m_pTextureResourceView, other.m_pTextureResourceView);
+}
+
+Texture& Texture::operator=(const Texture& other)
+{
+	MyEngine::GetSingleton()->GetDeviceContext()->CopyResource(m_pTexture, other.m_pTexture);
+	MyEngine::GetSingleton()->GetDeviceContext()->CopyResource(m_pResource, other.m_pResource);
+
+	return *this;
+}
+
 ID3D11ShaderResourceView* Texture::GetTextureShaderResource() const
 {
 	return m_pTextureResourceView;
