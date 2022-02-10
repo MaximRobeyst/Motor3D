@@ -10,24 +10,32 @@
 #include <vector>
 #include "Mesh.h"
 #include "Material.h"
+#include "Scene.h"
 
-static void CreateMesh(std::vector<Mesh*>& pMeshes, size_t& lastStop, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
+struct Mesh_Struct 
 {
-	if (vertices.empty() || indices.empty())
+	std::vector<Vertex> vertices;
+	std::vector<u_int> indices;
+	std::string materialName;
+};
+
+static void CreateMesh(std::vector<Mesh*>& pMeshes,  Mesh_Struct& mesh, Scene* pScene)
+{
+	if (mesh.vertices.empty() || mesh.indices.empty())
 		return;
 
-	for (uint32_t i = static_cast<uint32_t>(lastStop); i < indices.size(); i += 3)
+	for (uint32_t i = 0; i < mesh.indices.size(); i += 3)
 	{
-		uint32_t index0 = indices[i];
-		uint32_t index1 = indices[i + 1];
-		uint32_t index2 = indices[i + 2];
+		uint32_t index0 = mesh.indices[i];
+		uint32_t index1 = mesh.indices[i + 1];
+		uint32_t index2 = mesh.indices[i + 2];
 
-		const FVector3& p0 = vertices[index0].position;
-		const FVector3& p1 = vertices[index1].position;
-		const FVector3& p2 = vertices[index2].position;
-		const FVector2& uv0 = vertices[index0].uv;
-		const FVector2& uv1 = vertices[index1].uv;
-		const FVector2& uv2 = vertices[index2].uv;
+		const FVector3& p0 = mesh.vertices[index0].position;
+		const FVector3& p1 = mesh.vertices[index1].position;
+		const FVector3& p2 = mesh.vertices[index2].position;
+		const FVector2& uv0 = mesh.vertices[index0].uv;
+		const FVector2& uv1 = mesh.vertices[index1].uv;
+		const FVector2& uv2 = mesh.vertices[index2].uv;
 
 		const FVector3 edge0 = p1 - p0;
 		const FVector3 edge1 = p2 - p0;
@@ -37,25 +45,31 @@ static void CreateMesh(std::vector<Mesh*>& pMeshes, size_t& lastStop, std::vecto
 		float r = 1.f / Cross(diffX, diffY);
 
 		FVector3 tangent = (edge0 * diffY.y - edge1 * diffY.x) * r;
-		vertices[index0].tangent += tangent;
-		vertices[index1].tangent += tangent;
-		vertices[index2].tangent += tangent;
+		mesh.vertices[index0].tangent += tangent;
+		mesh.vertices[index1].tangent += tangent;
+		mesh.vertices[index2].tangent += tangent;
 	}
-	for (auto& v : vertices)
+	for (auto& v : mesh.vertices)
 	{
 		v.tangent = GetNormalized(Reject(v.tangent, v.normal));
 	}
-	lastStop = indices.size();
-	auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
 
-	Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
-	mat->SetDiffuseMap(pDiffuseTexture);
+	//auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
+	//
+	//Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
+	//mat->SetDiffuseMap(pDiffuseTexture);
 
-	Mesh* pMesh = new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), vertices, indices, mat);
+	Mesh* pMesh = new Mesh(
+		MyEngine::GetSingleton()->GetDevice(),
+		MyEngine::GetSingleton()->GetWindowHandle(),
+		mesh.vertices,
+		mesh.indices,
+		pScene->GetMaterial(mesh.materialName)
+	);
 	pMeshes.push_back(pMesh);
 }
 
-static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes)
+static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes, Scene* pScene)
 {
 	std::ifstream file(filename);
 	if (!file)
@@ -67,6 +81,8 @@ static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes)
 
 	std::vector<Vertex> vertices;
 	std::vector<u_int> indices;
+	std::vector<Mesh_Struct> meshes;
+	std::vector<std::string> meshmatNames;
 
 	size_t lastStop = 0;
 
@@ -144,13 +160,43 @@ static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes)
 		}
 		else if (sCommand == "o")
 		{
-			CreateMesh(pMeshes, lastStop, vertices, indices);
+			if(!vertices.empty() && !indices.empty())
+				meshes.push_back(Mesh_Struct{ vertices, indices, meshmatNames[meshmatNames.size() -1]});
+			
+			vertices.clear();
+			indices.clear();
 		}
+		else if (sCommand == "usemtl")
+		{
+			std::string name;
+			file >> name;
+
+			meshmatNames.push_back(name);
+
+			if (!indices.empty() && !vertices.empty())
+			{
+				//Create mesh
+				meshes.push_back(Mesh_Struct{ vertices, indices });
+			}
+
+			auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
+
+			Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
+			mat->SetDiffuseMap(pDiffuseTexture);
+			pScene->AddMaterial(name, mat);
+		}
+
 		//read till end of line and ignore all remaining chars
 		file.ignore(1000, '\n');
 	}
+	file.close();
+
 	// Create the final mesh
-	CreateMesh(pMeshes, lastStop, vertices, indices);
+	meshes.push_back(Mesh_Struct{ vertices, indices, meshmatNames[meshmatNames.size()-1] });
+	vertices.clear();
+	indices.clear();
+	for (auto& meshStruct : meshes)
+		CreateMesh(pMeshes, meshStruct, pScene);
 
 	return true;
 }

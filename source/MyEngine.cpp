@@ -11,6 +11,7 @@
 #include <cassert>
 #include <windowsx.h>
 #include <chrono>
+#include <ctime>
 
 #include "MyApplication.h"
 
@@ -37,6 +38,7 @@ int APIENTRY wWinMain(_In_      HINSTANCE hInstance,
             _In_       LPWSTR    lpCmdLine,
             _In_       int       nCmdShow)
 {
+	srand(time(NULL));
     MyEngine::Initialize(hInstance, nCmdShow);
 
     int result = MyEngine::GetSingleton()->Run(new MyApplication());

@@ -39,6 +39,8 @@ public:
 	void SetWorldMatrix(const FMatrix4& worldMatrix);
 
 	//void AddMaterial(const std::string& materialName, Material* pMaterial);
+	void SetMaterial(const std::string& name, Material* m_pMaterial);
+	Material* GetMaterial(const std::string& name) const;
 
 private:
 	// Private member functions		

@@ -28,7 +28,7 @@ Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices
 
 Mesh::~Mesh()
 {
-	delete m_pMaterial;
+	//delete m_pMaterial;
 
 	if (m_pIndexBuffer)
 		m_pIndexBuffer->Release();
@@ -105,6 +105,21 @@ FMatrix4 Mesh::GetWorldMatrix() const
 void Mesh::SetWorldMatrix(const FMatrix4& worldMatrix)
 {
 	m_WorldMatrix = worldMatrix;
+}
+
+void Mesh::SetMaterial(const std::string& name, Material* pMaterial)
+{
+	if (m_pMaterial != nullptr)
+	{
+		delete m_pMaterial;
+	}
+
+	m_pMaterial = pMaterial;
+}
+
+Material* Mesh::GetMaterial(const std::string& name) const
+{
+	return m_pMaterial;
 }
 
 //void Mesh::AddMaterial(const std::string& materialName, Material* pMaterial)
