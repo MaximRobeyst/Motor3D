@@ -11,6 +11,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Scene.h"
+#include "LitMaterial.h"
 
 struct Mesh_Struct 
 {
@@ -183,6 +184,7 @@ static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes, 
 
 			Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
 			mat->SetDiffuseMap(pDiffuseTexture);
+
 			pScene->AddMaterial(name, mat);
 		}
 

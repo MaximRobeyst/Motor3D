@@ -16,7 +16,9 @@ void TransformComponent::Update(float dt)
 
 FMatrix4 TransformComponent::GetWorldMatrix() const
 {
-	return MakeTranslation(m_Position); //* FMatrix4 { MakeRotationZYX(m_Rotation.x, m_Rotation.y, m_Rotation.z) } *FMatrix4{ MakeScale(m_Scale.x, m_Scale.y, m_Scale.z) };
+	auto rotMat = FMatrix4{ MakeRotationZYX(m_Rotation.x, m_Rotation.y, m_Rotation.z) };
+
+	return MakeTranslation(m_Position) * FMatrix4{ MakeRotationZYX(m_Rotation.x, m_Rotation.y, m_Rotation.z) };//*FMatrix4{ MakeScale(m_Scale.x, m_Scale.y, m_Scale.z) };
 }
 
 FVector3 TransformComponent::GetPosition() const
@@ -27,6 +29,16 @@ FVector3 TransformComponent::GetPosition() const
 void TransformComponent::SetPosition(FVector3 position)
 {
 	m_Position = position;
+}
+
+FVector3 TransformComponent::GetRotation() const
+{
+	return m_Rotation;
+}
+
+void TransformComponent::SetRotation(FVector3 rotation)
+{
+	m_Rotation = rotation;
 }
 
 IComponent::IComponent(uint8_t componentID)
@@ -85,4 +97,19 @@ void RigidBodyComponent::Update(float dt, GameObject* pGameobject)
 void RigidBodyComponent::UpdateTransform(TransformComponent* tc)
 {
 	tc->SetPosition(tc->GetPosition());
+}
+
+Rotator::Rotator(float rotationSpeed, FVector3 axis)
+	: IComponent(4)
+	, m_Rotation{}
+	, m_RotationSpeed{rotationSpeed}
+	, m_Axis{axis}
+{
+}
+
+void Rotator::Update(float dt, GameObject* pGameobject)
+{
+	m_Rotation += (ToRadians(m_RotationSpeed) * dt);
+
+	pGameobject->GetComponent<TransformComponent>()->SetRotation(m_Axis * m_Rotation);
 }

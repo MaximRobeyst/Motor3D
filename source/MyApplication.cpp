@@ -149,6 +149,7 @@ void MyApplication::Initialize()
 		m_pScene->AddGameObject(gameobject);
 
 		gameobject->AddComponent(new MeshComponent(mesh));
+		gameobject->AddComponent(new Rotator(45.f, FVector3{ 0,1,0 }));
 	}
 
 	m_pScene->GetMaterial("lambert8SG")->SetDiffuseMap(

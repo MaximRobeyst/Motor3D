@@ -1,4 +1,3 @@
-﻿  Mesh.cpp
-  MyApplication.cpp
-  Generating Code...
+﻿  Component.cpp
+C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\GameObject.h(33): warning C4715: 'GameObject::GetComponent<TransformComponent>': not all control paths return a value
   MyApplication.vcxproj -> C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\x64\Debug\MyApplication.exe

@@ -27,6 +27,9 @@ public:
 	
 	FVector3 GetPosition() const;
 	void SetPosition(FVector3 position);
+
+	FVector3 GetRotation() const;
+	void SetRotation(FVector3 rotation);
 private:
 	FVector3 m_Position;
 	FVector3 m_Rotation;
@@ -56,4 +59,17 @@ public:
 	void Update(float dt, GameObject* pGameobject) override;
 private:
 	Mesh* m_pMesh{};
+};
+
+class Rotator : public IComponent
+{
+public:
+	Rotator(float rotationSpeed, FVector3 axis);
+
+	void Update(float dt, GameObject* pGameobject) override;
+private:
+	float m_Rotation{};
+	float m_RotationSpeed{};
+	FVector3 m_Axis{};
+
 };
