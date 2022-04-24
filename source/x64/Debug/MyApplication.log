@@ -1,3 +1,18 @@
-﻿  Component.cpp
-C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\GameObject.h(33): warning C4715: 'GameObject::GetComponent<TransformComponent>': not all control paths return a value
-  MyApplication.vcxproj -> C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\source\x64\Debug\MyApplication.exe
+﻿  compilation object save succeeded; see D:\Howest\Free\Motor3D\Engine\source\x64\Debug\PixelShader.cso
+  compilation object save succeeded; see D:\Howest\Free\Motor3D\Engine\source\x64\Debug\VertexShader.cso
+  Camera.cpp
+  Component.cpp
+  GameObject.cpp
+  Light.cpp
+  LitMaterial.cpp
+  Scene.cpp
+  WICTextureLoader.cpp
+  Material.cpp
+  Mesh.cpp
+  MyApplication.cpp
+  MyEngine.cpp
+D:\Howest\Free\Motor3D\Engine\source\MyEngine.cpp(41,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Texture.cpp
+  Generating Code...
+D:\Howest\Free\Motor3D\Engine\source\GameObject.h(33): warning C4715: 'GameObject::GetComponent<TransformComponent>': not all control paths return a value
+  MyApplication.vcxproj -> D:\Howest\Free\Motor3D\Engine\source\x64\Debug\MyApplication.exe
