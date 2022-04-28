@@ -33,20 +33,20 @@ void StartHeapControl();
 void DumpMemoryLeaks();
 
 // WinMain
-int APIENTRY wWinMain(_In_      HINSTANCE hInstance,
-            _In_opt_   HINSTANCE hPrevInstance,
-            _In_       LPWSTR    lpCmdLine,
-            _In_       int       nCmdShow)
-{
-	srand(time(NULL));
-    MyEngine::Initialize(hInstance, nCmdShow);
-
-    int result = MyEngine::GetSingleton()->Run(new MyApplication());
-
-    delete MyEngine::GetSingleton();
-
-    return result;
-}
+//int APIENTRY wWinMain(_In_      HINSTANCE hInstance,
+//            _In_opt_   HINSTANCE hPrevInstance,
+//            _In_       LPWSTR    lpCmdLine,
+//            _In_       int       nCmdShow)
+//{
+//	srand(time(NULL));
+//    MyEngine::Initialize(hInstance, nCmdShow);
+//
+//    int result = MyEngine::GetSingleton()->Run(new MyApplication());
+//
+//    delete MyEngine::GetSingleton();
+//
+//    return result;
+//}
 
 void StartHeapControl()
 {

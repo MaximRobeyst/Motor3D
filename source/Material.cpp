@@ -3,6 +3,7 @@
 #include <cassert>
 #include <sstream>
 
+
 Material::Material(ID3D11Device* pDevice, const std::wstring& assertFile)
 {
 	m_pEffect = LoadEffect(pDevice, assertFile);
