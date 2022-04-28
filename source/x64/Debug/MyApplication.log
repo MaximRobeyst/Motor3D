@@ -1,2 +1,6 @@
-﻿  MyApplication.cpp
+﻿  Camera.cpp
+  Mesh.cpp
+  MyApplication.cpp
+  Scene.cpp
+  Generating Code...
   MyApplication.vcxproj -> C:\Users\maxim\Documents\GitHub\Engine\source\Debug\MyApplication.lib

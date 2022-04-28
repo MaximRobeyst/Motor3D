@@ -98,3 +98,16 @@ source/.vs/MyApplication/v17/Browse.VC.opendb
 source/.vs/MyApplication/v17/Browse.VC.db-wal
 source/.vs/MyApplication/v17/Browse.VC.db-shm
 source/.vs/MyApplication/v16/ipch/AutoPCH/2d0dc5bc915ddf6f/MYAPPLICATION.ipch
+source/x64/Debug/Scene.obj
+source/x64/Debug/MyApplication.tlog/CL.write.1.tlog
+source/x64/Debug/MyApplication.tlog/CL.read.1.tlog
+source/x64/Debug/MyApplication.tlog/CL.command.1.tlog
+source/x64/Debug/MyApplication.obj
+source/x64/Debug/MyApplication.log
+source/x64/Debug/Mesh.obj
+source/x64/Debug/Demo.pdb
+source/x64/Debug/Demo.exe
+source/x64/Debug/Camera.obj
+source/Debug/MyApplication.pdb
+source/Debug/MyApplication.lib
+source/Debug/MyApplication.idb

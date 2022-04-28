@@ -33,8 +33,8 @@ private:
 
 	const float m_KeyboardMoveSensitivity{ 15.f };
 	const float m_KeyboardMoveMultiplier{ 10.f };
-	const float m_MouseRotationSensitivity{ .1f };
-	const float m_MouseMoveSensitivity{ 10.f };
+	const float m_MouseRotationSensitivity{ 1.f };
+	const float m_MouseMoveSensitivity{ 200.f };
 	const float m_AspectRatio{};
 	const float m_Far{};
 	const float m_Near{};
