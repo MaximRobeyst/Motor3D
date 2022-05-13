@@ -25,6 +25,9 @@
     <Filter Include="Engine Files\Core">
       <UniqueIdentifier>{09ad66ef-d04e-41c8-b2f5-b84c60ed28b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Rendering">
+      <UniqueIdentifier>{0c30365f-b691-4634-aba6-b4dc758058e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -105,6 +108,15 @@
     <ClInclude Include="Component.h">
       <Filter>Engine Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Engine Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11Renderer.h">
+      <Filter>Engine Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyApplication.cpp">
@@ -142,6 +154,15 @@
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Application Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceLocator.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Engine Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="DX11Renderer.cpp">
+      <Filter>Engine Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

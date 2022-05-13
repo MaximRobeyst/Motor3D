@@ -14,6 +14,8 @@
 #include <ctime>
 
 #include "MyApplication.h"
+#include "ServiceLocator.h"
+#include "DX11Renderer.h"
 
 #ifdef _DEBUG
 	#include <vld.h>
@@ -28,9 +30,6 @@
 HINSTANCE MyEngine::m_Instance{};
 int MyEngine::m_Show{};
 MyEngine* MyEngine::m_MyEnginePtr{ nullptr };
-
-void StartHeapControl();
-void DumpMemoryLeaks();
 
 // WinMain
 //int APIENTRY wWinMain(_In_      HINSTANCE hInstance,
@@ -47,27 +46,6 @@ void DumpMemoryLeaks();
 //
 //    return result;
 //}
-
-void StartHeapControl()
-{
-#if defined(DEBUG) | defined(_DEBUG)
-	// Notify user if heap is corrupt
-	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
-
-	// Report detected leaks when the program exits
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-	// Set a breakpoint on the specified object allocation order number
-	//_CrtSetBreakAlloc( 1197 );
-#endif
-}
-
-void DumpMemoryLeaks()
-{
-#if defined(DEBUG) | defined(_DEBUG)
-	_CrtDumpMemoryLeaks();
-#endif
-}
 
 // WndProc function
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -117,30 +95,7 @@ MyEngine::MyEngine()
 
 MyEngine::~MyEngine()
 {
-	if (m_pRenderTargetView)
-		m_pRenderTargetView->Release();
-
-	if (m_pRenderTargetBuffer)
-		m_pRenderTargetBuffer->Release();
-
-	if (m_pDepthStencilView)
-		m_pDepthStencilView->Release();
-
-	if (m_pDepthStencilBuffer)
-		m_pDepthStencilBuffer->Release();
-
-	if (m_pSwapChain)
-		m_pSwapChain->Release();
-
-	if (m_pDeviceContext)
-	{
-		m_pDeviceContext->ClearState();
-		m_pDeviceContext->Flush();
-		m_pDeviceContext->Release();
-	}
-
-	if (m_pDevice)
-		m_pDevice->Release();
+    delete ServiceLocator::GetRenderer();
 
 	if (m_pApplication)
 		delete m_pApplication;
@@ -156,8 +111,8 @@ int MyEngine::Run(MyApplication* applicationPtr)
                                 WS_OVERLAPPEDWINDOW,    // window style
                                 CW_USEDEFAULT,          // default x
                                 CW_USEDEFAULT,          // default y
-                                CW_USEDEFAULT,          // default width
-                                CW_USEDEFAULT,          // default height
+                                1280,          // default width
+                                720,          // default height
                                 nullptr,
                                 nullptr,
                                 m_Instance,
@@ -178,19 +133,13 @@ int MyEngine::Run(MyApplication* applicationPtr)
     GetWindowRect(hWnd, &rect);
     UINT width = rect.right - rect.left;
     UINT height = rect.bottom - rect.top;
-	
-    HRESULT result = InitializeDirectX(width, height, hWnd);
-	if(SUCCEEDED(result))
-	{
-        m_Initialized = true;
-        OutputDebugString(L"DirectX is initialized\n");
-        m_pApplication->Initialize();
-        SendMessageA(hWnd, WM_PAINT, 0, 0);
-	}
-    else
-    {
-        OutputDebugString(L"Failed to initialize\n");
-    }
+
+    ServiceLocator::ProvideRenderer(new DX11Renderer(m_hWnd, 1280, 720));
+    ServiceLocator::GetRenderer()->Initialize();
+    m_Initialized = true;
+    OutputDebugString(L"DirectX is initialized\n");
+    m_pApplication->Initialize();
+    SendMessageA(hWnd, WM_PAINT, 0, 0);
 
     // (5) load keyboard shortcuts, start the Windows message loop
     HACCEL hAccelTable = LoadAccelerators(m_Instance, MAKEINTRESOURCE(IDC_MYAPPLICATION));
@@ -435,8 +384,8 @@ void MyEngine::SetTitle(const std::wstring& text)
 
 void MyEngine::SetBackground(const RGBColor& color)
 {
-    m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, &color.r);
-    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+    ServiceLocator::GetDX11Renderer()->GetDeviceContext()->ClearRenderTargetView(m_pRenderTargetView, &color.r);
+    ServiceLocator::GetDX11Renderer()->GetDeviceContext()->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }
 
 void MyEngine::Present()

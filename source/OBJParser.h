@@ -12,6 +12,7 @@
 #include "Material.h"
 #include "Scene.h"
 #include "LitMaterial.h"
+#include "ServiceLocator.h"
 
 struct Mesh_Struct 
 {
@@ -61,8 +62,8 @@ static void CreateMesh(std::vector<Mesh*>& pMeshes,  Mesh_Struct& mesh, Scene* p
 	//mat->SetDiffuseMap(pDiffuseTexture);
 
 	Mesh* pMesh = new Mesh(
-		MyEngine::GetSingleton()->GetDevice(),
-		MyEngine::GetSingleton()->GetWindowHandle(),
+		ServiceLocator::GetDX11Renderer()->GetDevice(),
+		ServiceLocator::GetDX11Renderer()->GetWindowHandle(),
 		mesh.vertices,
 		mesh.indices,
 		pScene->GetMaterial(mesh.materialName)
@@ -180,9 +181,9 @@ static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes, 
 				meshes.push_back(Mesh_Struct{ vertices, indices });
 			}
 
-			auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
+			auto mat = new Material(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/material_unlit.fx");
 
-			Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
+			Texture* pDiffuseTexture = new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/uv_grid_2.png");
 			mat->SetDiffuseMap(pDiffuseTexture);
 
 			pScene->AddMaterial(name, mat);

@@ -14,6 +14,8 @@
 #include "GameObject.h"
 #include "Component.h"
 
+#include "ServiceLocator.h"
+
 #define MY_ENGINE MyEngine::GetSingleton()
 
 MyApplication::MyApplication()
@@ -153,15 +155,15 @@ void MyApplication::Initialize()
 	}
 
 	m_pScene->GetMaterial("lambert8SG")->SetDiffuseMap(
-		new Texture(MY_ENGINE->GetDevice(), L"Resources/T_BarrelAndBanjo_BC_01.jpg", MY_ENGINE->GetDeviceContext()));
+		new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/T_BarrelAndBanjo_BC_01.jpg", ServiceLocator::GetDX11Renderer()->GetDeviceContext()));
 	m_pScene->GetMaterial("lambert5SG")->SetDiffuseMap(
-		new Texture(MY_ENGINE->GetDevice(), L"Resources/T_Distillery_BC_01.jpg", MY_ENGINE->GetDeviceContext()));
+		new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/T_Distillery_BC_01.jpg", ServiceLocator::GetDX11Renderer()->GetDeviceContext()));
 	m_pScene->GetMaterial("lambert9SG")->SetDiffuseMap(
-		new Texture(MY_ENGINE->GetDevice(), L"Resources/T_Shotgun_BC_01.jpg", MY_ENGINE->GetDeviceContext()));
+		new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/T_Shotgun_BC_01.jpg", ServiceLocator::GetDX11Renderer()->GetDeviceContext()));
 	m_pScene->GetMaterial("lambert10SG")->SetDiffuseMap(
-		new Texture(MY_ENGINE->GetDevice(), L"Resources/T_ChairAndFirepit_BC_01.jpg", MY_ENGINE->GetDeviceContext()));
-	m_pScene->GetMaterial("DAE2_RickAstley_Assignment1_000_aiStandardSurface1SG1")->SetDiffuseMap(
-		new Texture(MY_ENGINE->GetDevice(), L"Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
+		new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/T_ChairAndFirepit_BC_01.jpg", ServiceLocator::GetDX11Renderer()->GetDeviceContext()));
+		m_pScene->GetMaterial("DAE2_RickAstley_Assignment1_000_aiStandardSurface1SG1")->SetDiffuseMap(
+			new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
 
 	//m_pScene->RemoveEntity(m_pTestEntity2);
 
