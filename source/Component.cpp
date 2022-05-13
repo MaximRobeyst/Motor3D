@@ -1,6 +1,7 @@
 #include "Component.h"
 #include "Mesh.h"
 #include "GameObject.h"
+#include "ServiceLocator.h"
 
 TransformComponent::TransformComponent(FVector3 pos, FVector3 rotation, FVector3 scale)
 	: IComponent{0}
@@ -67,7 +68,7 @@ MeshComponent::~MeshComponent()
 
 void MeshComponent::Render(Camera* pCamera, GameObject* pGameobject)
 {
-	m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), pCamera);
+	m_pMesh->Render(ServiceLocator::GetDX11Renderer()->GetDeviceContext(), pCamera);
 }
 
 void MeshComponent::Update(float dt, GameObject* pGameobject)

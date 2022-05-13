@@ -384,13 +384,15 @@ void MyEngine::SetTitle(const std::wstring& text)
 
 void MyEngine::SetBackground(const RGBColor& color)
 {
-    ServiceLocator::GetDX11Renderer()->GetDeviceContext()->ClearRenderTargetView(m_pRenderTargetView, &color.r);
-    ServiceLocator::GetDX11Renderer()->GetDeviceContext()->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+    ServiceLocator::GetDX11Renderer()->GetDeviceContext()->ClearRenderTargetView(
+        ServiceLocator::GetDX11Renderer()->GetRenderTarget(), &color.r);
+    ServiceLocator::GetDX11Renderer()->GetDeviceContext()->ClearDepthStencilView(
+        ServiceLocator::GetDX11Renderer()->GetStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }
 
 void MyEngine::Present()
 {
-    m_pSwapChain->Present(0, 0);
+    ServiceLocator::GetDX11Renderer()->GetSwapChain()->Present(0, 0);
 }
 
 bool MyEngine::IsDirectXInitialized() const

@@ -54,6 +54,16 @@ ID3D11DepthStencilView* DX11Renderer::GetStencilView() const
     return m_pDepthStencilView;
 }
 
+ID3D11RenderTargetView* DX11Renderer::GetRenderTarget() const
+{
+    return m_pRenderTargetView;
+}
+
+IDXGISwapChain* DX11Renderer::GetSwapChain() const
+{
+    return m_pSwapChain;
+}
+
 HRESULT DX11Renderer::InitializeDirectX()
 {
     D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_0;
