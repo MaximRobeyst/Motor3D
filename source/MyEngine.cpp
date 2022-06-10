@@ -1,9 +1,5 @@
 // MyApplication.cpp : Defines the entry point for the application.
 //
-#pragma comment(lib,"d3d11.lib")    //https://stackoverflow.com/questions/27914309/lnk2001-and-lnk2019-errors-directx-unresolved-external-symbols
-#pragma comment(lib, "dxgi")    //https://social.msdn.microsoft.com/Forums/en-US/d58c51e1-b144-4337-9e00-716eb9087812/linker-error-for-createdxgifactory-function?forum=vcgeneral
-
-
 #include "framework.h"
 #include "MyEngine.h"
 #include "RGBColor.h"
@@ -14,46 +10,33 @@
 #include <ctime>
 
 #include "MyApplication.h"
-#include "ServiceLocator.h"
 #include "DX11Renderer.h"
+
+#include <imgui.h>
+#include <backends\imgui_impl_dx11.h>
+#include <backends\imgui_impl_win32.h>
 
 #ifdef _DEBUG
 	#include <vld.h>
 #endif // _DEBUG
+#include <backends\imgui_impl_win32.cpp>
 
-
-//#ifdef _DEBUG
-//	#include <vld.h>
-//#endif
 
 // initialize statics
 HINSTANCE MyEngine::m_Instance{};
 int MyEngine::m_Show{};
 MyEngine* MyEngine::m_MyEnginePtr{ nullptr };
 
-// WinMain
-//int APIENTRY wWinMain(_In_      HINSTANCE hInstance,
-//            _In_opt_   HINSTANCE hPrevInstance,
-//            _In_       LPWSTR    lpCmdLine,
-//            _In_       int       nCmdShow)
-//{
-//	srand(time(NULL));
-//    MyEngine::Initialize(hInstance, nCmdShow);
-//
-//    int result = MyEngine::GetSingleton()->Run(new MyApplication());
-//
-//    delete MyEngine::GetSingleton();
-//
-//    return result;
-//}
-
 // WndProc function
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
+
     return MyEngine::GetSingleton()->HandleEvent(hWnd, message, wParam, lParam);
 }
 
-void MyEngine::Initialize(HINSTANCE hInstance, int nCmdShow)
+void MyEngine::Initialize(HINSTANCE hInstance, HINSTANCE, int nCmdShow)
 {
     m_Instance = hInstance;
     m_Show = nCmdShow;
@@ -95,7 +78,7 @@ MyEngine::MyEngine()
 
 MyEngine::~MyEngine()
 {
-    delete ServiceLocator::GetRenderer();
+    delete m_pRenderer;
 
 	if (m_pApplication)
 		delete m_pApplication;
@@ -131,19 +114,25 @@ int MyEngine::Run(MyApplication* applicationPtr)
 
     RECT rect;
     GetWindowRect(hWnd, &rect);
-    UINT width = rect.right - rect.left;
-    UINT height = rect.bottom - rect.top;
+    //UINT width = rect.right - rect.left;
+    //UINT height = rect.bottom - rect.top;
 
-    ServiceLocator::ProvideRenderer(new DX11Renderer(m_hWnd, 1280, 720));
-    ServiceLocator::GetRenderer()->Initialize();
-    m_Initialized = true;
+    m_pRenderer = new DX11Renderer(hWnd, 1280, 720);
+    m_pRenderer->Initialize();
+
+    m_pSwapChain = m_pRenderer->GetSwapChain();
+    m_pDevice = m_pRenderer->GetDevice();
+    m_pDeviceContext = m_pRenderer->GetDeviceContext();
+    m_pRenderTargetView = m_pRenderer->GetRenderTarget();
+    m_pDepthStencilView = m_pRenderer->GetStencilView();
+
     OutputDebugString(L"DirectX is initialized\n");
     m_pApplication->Initialize();
     SendMessageA(hWnd, WM_PAINT, 0, 0);
 
     // (5) load keyboard shortcuts, start the Windows message loop
-    HACCEL hAccelTable = LoadAccelerators(m_Instance, MAKEINTRESOURCE(IDC_MYAPPLICATION));
-    MSG msg;
+    //HACCEL hAccelTable = LoadAccelerators(m_Instance, MAKEINTRESOURCE(IDC_MYAPPLICATION));
+    MSG msg{};
 
 	// Set start time
 	std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
@@ -164,7 +153,6 @@ int MyEngine::Run(MyApplication* applicationPtr)
 
 		// Calculate elapsed time
 		float elapsedSeconds = std::chrono::duration<float>(t2 - t1).count();
-		float maxElapsedSeconds = 0.1f;
 
 		elapsedSeconds = elapsedSeconds < 0.1f ? elapsedSeconds : 0.1f;
 
@@ -176,15 +164,8 @@ int MyEngine::Run(MyApplication* applicationPtr)
 		Render();
 	}
 
-    //while (GetMessage(&msg, nullptr, 0, 0))
-    //{
-    //    if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-    //    {
-    //    }
-    //}
-
     // (6) Close with received Quit message information
-    return (int)msg.wParam;
+    return static_cast<int>(msg.wParam);
 }
 
 LRESULT MyEngine::HandleEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -209,8 +190,6 @@ LRESULT MyEngine::HandleEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         break;
 
     case WM_ACTIVATE:
-        if (wParam == WA_INACTIVE) m_pApplication->Activate(false);
-        else m_pApplication->Activate(true);
         break;
 
     case WM_LBUTTONUP:
@@ -230,119 +209,24 @@ LRESULT MyEngine::HandleEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_KEYUP:
 		m_pApplication->KeyUp(wParam);
 		break;
-
-    //case WM_PAINT:
-    //    {
-    //        PAINTSTRUCT ps;
-    //        m_hDC = BeginPaint(hWnd, &ps);
-	//
-    //        m_MyApplicationPtr->Paint();
-	//
-    //        EndPaint(hWnd, &ps);
-    //    }
-    //    break;
-
     case WM_DESTROY:
-        //delete m_MyApplicationPtr;
-	
         PostQuitMessage(0);
         break;
 
+    case WM_DPICHANGED:
+        if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DpiEnableScaleViewports)
+        {
+            //const int dpi = HIWORD(wParam);
+            //printf("WM_DPICHANGED to %d (%.0f%%)\n", dpi, (float)dpi / 96.0f * 100.0f);
+            const RECT* suggested_rect = (RECT*)lParam;
+            ::SetWindowPos(hWnd, NULL, suggested_rect->left, suggested_rect->top, suggested_rect->right - suggested_rect->left, suggested_rect->bottom - suggested_rect->top, SWP_NOZORDER | SWP_NOACTIVATE);
+        }
+        break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
     return 0;
-}
-
-HRESULT MyEngine::InitializeDirectX(UINT width, UINT height, HWND hWnd)
-{
-    //assert(m_Instance == nullptr);
-	
-    D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_0;
-    uint32_t createDeviceFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-    HRESULT result = D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, createDeviceFlags, 0, 0, D3D11_SDK_VERSION, &m_pDevice, &featureLevel, &m_pDeviceContext);
-    if (FAILED(result))
-        result;
-
-    result = CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&m_pDXGIFactory));
-    if (FAILED(result))
-        result;
-
-    DXGI_SWAP_CHAIN_DESC swapChainDesc{};
-    swapChainDesc.BufferDesc.Width = width;
-    swapChainDesc.BufferDesc.Height = height;
-    swapChainDesc.BufferDesc.RefreshRate.Numerator = 1;
-    swapChainDesc.BufferDesc.RefreshRate.Denominator = 60;
-    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-    swapChainDesc.SampleDesc.Count = 1;
-    swapChainDesc.SampleDesc.Quality = 0;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.BufferCount = 1;
-    swapChainDesc.Windowed = true;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    swapChainDesc.Flags = 0;
-
-    //Get the handle HWND from the SDL backbuffer
-    swapChainDesc.OutputWindow = hWnd;
-
-    //Create SwapChain and hook it into the handle of the SDL window
-    result = m_pDXGIFactory->CreateSwapChain(m_pDevice, &swapChainDesc, &m_pSwapChain);
-    if (FAILED(result))
-        return result;
-
-    D3D11_TEXTURE2D_DESC depthStencilDesc{};
-    depthStencilDesc.Width = width;
-    depthStencilDesc.Height = height;
-    depthStencilDesc.MipLevels = 1;
-    depthStencilDesc.ArraySize = 1;
-    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthStencilDesc.SampleDesc.Count = 1;
-    depthStencilDesc.SampleDesc.Quality = 0;
-    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthStencilDesc.CPUAccessFlags = 0;
-    depthStencilDesc.MiscFlags = 0;
-
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
-    depthStencilViewDesc.Format = depthStencilDesc.Format;
-    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    depthStencilViewDesc.Texture2D.MipSlice = 0;
-
-    result = m_pDevice->CreateTexture2D(&depthStencilDesc, 0, &m_pDepthStencilBuffer);
-    if (FAILED(result))
-        return result;
-
-    result = m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer, &depthStencilViewDesc, &m_pDepthStencilView);
-    if (FAILED(result))
-        return result;
-
-    //Create the RenderTargetView
-    result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&m_pRenderTargetBuffer));
-    if (FAILED(result))
-        return result;
-    result = m_pDevice->CreateRenderTargetView(m_pRenderTargetBuffer, 0, &m_pRenderTargetView);
-    if (FAILED(result))
-        return result;
-
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
-
-    D3D11_VIEWPORT viewPort{};
-    viewPort.Width = static_cast<float>(width);
-    viewPort.Height = static_cast<float>(height);
-    viewPort.TopLeftX = 0.f;
-    viewPort.TopLeftY = 0.f;
-    viewPort.MinDepth = 0.f;
-    viewPort.MaxDepth = 1.f;
-    m_pDeviceContext->RSSetViewports(1, &viewPort);
-
-    return result;
 }
 
 void MyEngine::SetColor(COLORREF color)
@@ -373,31 +257,13 @@ void MyEngine::DrawLine(int x1, int y1, int x2, int y2)
     DeleteObject(pen);
 }
 
-void MyEngine::DrawString(const std::wstring& text, int left, int bottom, int width, int height)
+void MyEngine::DrawString(const std::wstring& , int , int , int , int )
 {
 }
 
 void MyEngine::SetTitle(const std::wstring& text)
 {
     SendMessage(m_hWnd, WM_SETTEXT, 0, (LPARAM) text.c_str());
-}
-
-void MyEngine::SetBackground(const RGBColor& color)
-{
-    ServiceLocator::GetDX11Renderer()->GetDeviceContext()->ClearRenderTargetView(
-        ServiceLocator::GetDX11Renderer()->GetRenderTarget(), &color.r);
-    ServiceLocator::GetDX11Renderer()->GetDeviceContext()->ClearDepthStencilView(
-        ServiceLocator::GetDX11Renderer()->GetStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
-}
-
-void MyEngine::Present()
-{
-    ServiceLocator::GetDX11Renderer()->GetSwapChain()->Present(0, 0);
-}
-
-bool MyEngine::IsDirectXInitialized() const
-{
-    return m_Initialized;
 }
 
 ID3D11Device* MyEngine::GetDevice() const
@@ -410,6 +276,11 @@ ID3D11DeviceContext* MyEngine::GetDeviceContext() const
     return m_pDeviceContext;
 }
 
+DX11Renderer* MyEngine::GetRenderer() const
+{
+    return m_pRenderer;
+}
+
 HWND MyEngine::GetWindowHandle() const
 {
     return m_hWnd;
@@ -417,12 +288,32 @@ HWND MyEngine::GetWindowHandle() const
 
 void MyEngine::Render()
 {
-	PAINTSTRUCT ps;
-	m_hDC = BeginPaint(m_hWnd, &ps);
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+    m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, clear_color_with_alpha);
+    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+    m_pApplication->Render();
 
-	m_pApplication->Paint();
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
 
-	EndPaint(m_hWnd, &ps);
+    ImGui::ShowDemoWindow();
+    m_pApplication->RenderGUI();
+
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+    // Update and Render additional Platform Windows
+    if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+    }
+
+
+    m_pSwapChain->Present(0, 0);
 }
 
 void MyEngine::Update(float dt)

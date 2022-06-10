@@ -30,7 +30,8 @@ public:
 	//-------------------------------------------------
 	void Initialize();
 
-	void Paint();
+	void Render();
+	void RenderGUI();
 	void Update(float dt);
 
 	void Unitialize();

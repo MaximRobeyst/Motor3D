@@ -12,6 +12,7 @@
 
 class MyApplication;
 struct RGBColor;
+class DX11Renderer;
 
 class MyEngine
 {
@@ -32,8 +33,7 @@ public:
 	int Run(MyApplication* m_MyGamePtr);
 	LRESULT HandleEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-	HRESULT InitializeDirectX(UINT width, UINT height, HWND hWnd);
-	static void Initialize(HINSTANCE hInstance, int nCmdShow);
+	static void Initialize(HINSTANCE hInstance, HINSTANCE,  int nCmdShow);
 	static MyEngine* GetSingleton();
 
 	//-------------------------------------------------
@@ -46,13 +46,9 @@ public:
 
 	void SetTitle(const std::wstring& text);
 
-	void SetBackground(const RGBColor& color);
-	void Present();
-
-	bool IsDirectXInitialized() const;
-
 	ID3D11Device* GetDevice() const;
 	ID3D11DeviceContext* GetDeviceContext() const;
+	DX11Renderer* GetRenderer() const;
 
 	HWND GetWindowHandle() const;
 
@@ -73,16 +69,14 @@ private:
 	static int m_Show;
 	static MyEngine* m_MyEnginePtr;
 
+	DX11Renderer* m_pRenderer{};
+
 	ID3D11Device* m_pDevice;
 	ID3D11DeviceContext* m_pDeviceContext;
-	IDXGIFactory* m_pDXGIFactory;
 	IDXGISwapChain* m_pSwapChain;
 	ID3D11Resource* m_pRenderTargetBuffer;
 	ID3D11RenderTargetView* m_pRenderTargetView;
-	ID3D11Texture2D* m_pDepthStencilBuffer;
 	ID3D11DepthStencilView* m_pDepthStencilView;
-
-	bool m_Initialized{false};
 
 	COLORREF m_Color{ RGB(255, 255, 255) };
 };

@@ -1,7 +1,10 @@
 #pragma once
 #include <vector>
 
+#pragma warning (push, 0)
 #include "DataTypes.h"
+#pragma warning(pop)
+
 #include "RGBColor.h"
 
 #include "MyEngine.h"

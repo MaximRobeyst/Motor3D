@@ -1,7 +1,6 @@
 #include "Component.h"
 #include "Mesh.h"
 #include "GameObject.h"
-#include "ServiceLocator.h"
 
 TransformComponent::TransformComponent(FVector3 pos, FVector3 rotation, FVector3 scale)
 	: IComponent{0}
@@ -11,7 +10,7 @@ TransformComponent::TransformComponent(FVector3 pos, FVector3 rotation, FVector3
 {
 }
 
-void TransformComponent::Update(float dt)
+void TransformComponent::Update(float /*dt*/)
 {
 }
 
@@ -47,11 +46,11 @@ IComponent::IComponent(uint8_t componentID)
 {
 }
 
-void IComponent::Render(Camera* pCamera, GameObject* pGameobject)
+void IComponent::Render(Camera* /*pCamera*/, GameObject* /*pGameobject*/)
 {
 }
 
-void IComponent::Update(float dt, GameObject* pGameobject)
+void IComponent::Update(float /*dt*/, GameObject* /*pGameobject*/)
 {
 }
 
@@ -66,12 +65,12 @@ MeshComponent::~MeshComponent()
 	delete m_pMesh;
 }
 
-void MeshComponent::Render(Camera* pCamera, GameObject* pGameobject)
+void MeshComponent::Render(Camera* pCamera, GameObject* /*pGameobject*/)
 {
-	m_pMesh->Render(ServiceLocator::GetDX11Renderer()->GetDeviceContext(), pCamera);
+	m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), pCamera);
 }
 
-void MeshComponent::Update(float dt, GameObject* pGameobject)
+void MeshComponent::Update(float, GameObject* pGameobject)
 {
 	m_pMesh->SetWorldMatrix(pGameobject->GetComponent<TransformComponent>()->GetWorldMatrix());
 }

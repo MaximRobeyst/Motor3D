@@ -11,9 +11,9 @@ public:
 
 	// Copy/move constructors and assignment operators
 	Texture(const Texture& other);
-	Texture(Texture&& other) noexcept {}
+	Texture(Texture&& other) noexcept;
 	Texture& operator=(const Texture& other);
-	Texture& operator=(Texture&& other)	noexcept {}
+	Texture& operator=(Texture&& other)	noexcept;
 
 	// Member functions						
 	ID3D11ShaderResourceView* GetTextureShaderResource() const;

@@ -4,17 +4,20 @@
 #include "MyApplication.h"
 
 #include "MyEngine.h"
+
+#pragma warning (push, 0)
 #include "DataTypes.h"
+#include "OBJParser.h"
+#pragma warning(pop)
+
 #include "Mesh.h"
 #include "Camera.h"
-#include "OBJParser.h"
 #include "Material.h"
 #include "LitMaterial.h"
 #include "Scene.h"
 #include "GameObject.h"
 #include "Component.h"
-
-#include "ServiceLocator.h"
+#include <imgui.h>
 
 #define MY_ENGINE MyEngine::GetSingleton()
 
@@ -25,14 +28,6 @@ MyApplication::MyApplication()
 
 MyApplication::~MyApplication()
 {
-	// nothing to destroy
-	//delete m_pMesh;
-	//for (auto& mesh : m_pMeshes)
-	//{
-	//	delete mesh;
-	//	mesh = nullptr;
-	//}
-
 	m_pMeshes.clear();
 
 	delete m_pCamera;
@@ -47,7 +42,7 @@ void MyApplication::LeftMouseButtonAction(int x, int y, bool isUp)
 	if (isUp) m_PointsVec.push_back({ x, y });
 }
 
-void MyApplication::RightMouseButtonAction(int x, int y, bool isUp)
+void MyApplication::RightMouseButtonAction(int , int , bool isUp)
 {
 	if (isUp) m_PointsVec.clear();
 }
@@ -62,33 +57,22 @@ void MyApplication::KeyDown(WPARAM wparam)
 	m_pCamera->KeyDown(wparam);
 }
 
-void MyApplication::Paint()
+void MyApplication::Render()
 {
-	//if (!m_initialized)
-	//	return;
-	
-	if (!MY_ENGINE->IsDirectXInitialized())
-		return;
-	
-	// Clear Buffers
-	MY_ENGINE->SetBackground(RGBColor{ 0.f, 0.f ,0.3f });
+	m_pScene->Render(m_pCamera);	
+}
 
-	// Matrices
-	//MY_ENGINE->GetDeviceContext()->PSSetShaderResources()
-	//MY_ENGINE->GetDevice().(D3DTRANSFORMSTATE_VIEW, &m_pCamera->GetViewMatrix())
-	//m_pLitMaterial->GetWorldMatrix()->SetMatrix(&m_pMesh->GetWorldMatrix().data[0][0]);
-	//m_pLitMaterial->GetViewInverseMatrix()->SetMatrix(&m_pCamera->GetViewMatrix().data[0][0]);
+void MyApplication::RenderGUI()
+{
+	ImGui::Begin("Application");
 
-	// Render
-	//m_pMesh->Render(MY_ENGINE->GetDeviceContext(), m_pCamera);
-	//for (auto& mesh : m_pMeshes)
-	//	mesh->Render(MY_ENGINE->GetDeviceContext(), m_pCamera);
+	if (ImGui::CollapsingHeader("Scene"))
+	{
+		m_pScene->RenderGUI();
+	}
 
-	m_pScene->Render(m_pCamera);
 
-	// Present
-	MY_ENGINE->Present();
-	
+	ImGui::End();
 }
 
 void MyApplication::Update(float dt)
@@ -155,42 +139,15 @@ void MyApplication::Initialize()
 	}
 
 	m_pScene->GetMaterial("lambert8SG")->SetDiffuseMap(
-		new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/T_BarrelAndBanjo_BC_01.jpg", ServiceLocator::GetDX11Renderer()->GetDeviceContext()));
+		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_BarrelAndBanjo_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
 	m_pScene->GetMaterial("lambert5SG")->SetDiffuseMap(
-		new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/T_Distillery_BC_01.jpg", ServiceLocator::GetDX11Renderer()->GetDeviceContext()));
+		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_Distillery_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
 	m_pScene->GetMaterial("lambert9SG")->SetDiffuseMap(
-		new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/T_Shotgun_BC_01.jpg", ServiceLocator::GetDX11Renderer()->GetDeviceContext()));
+		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_Shotgun_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
 	m_pScene->GetMaterial("lambert10SG")->SetDiffuseMap(
-		new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/T_ChairAndFirepit_BC_01.jpg", ServiceLocator::GetDX11Renderer()->GetDeviceContext()));
+		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_ChairAndFirepit_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
 		m_pScene->GetMaterial("DAE2_RickAstley_Assignment1_000_aiStandardSurface1SG1")->SetDiffuseMap(
-			new Texture(ServiceLocator::GetDX11Renderer()->GetDevice(), L"Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
-
-	//m_pScene->RemoveEntity(m_pTestEntity2);
-
-	//m_pLitMaterial = new LitMaterial(MY_ENGINE->GetDevice(), L"Resources/material_lit.fx");
-	//m_pUnLitMaterial = new Material(MY_ENGINE->GetDevice(), L"Resources/material_unlit.fx");
-
-	//Texture* pDiffuseTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/uv_grid_2.png");
-	//Texture* pNormalTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/vehicle_normal.png");
-	//Texture* pSpecularTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/vehicle_specular.png");
-	//Texture* pGlossinessTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/vehicle_gloss.png");
-	//m_pLitMaterial->SetDiffuseMap(pDiffuseTexture);
-	//m_pLitMaterial->SetNormalMap(pNormalTexture);
-	//m_pLitMaterial->SetSpecularMap(pSpecularTexture);
-	//m_pLitMaterial->SetGlossinessMap(pGlossinessTexture);
-	//m_pUnLitMaterial->SetDiffuseMap(pDiffuseTexture);
-	
-
-	//m_pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/5Props.obj", m_pUnLitMaterial);
-	//m_pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/vehicle.obj", m_pLitMaterial);
-
-	//m_pLights.push_back(PointLight{ FVector3{-10.f, 0, 0}, FVector3{1,0,0}, 1.f });
-	//m_pLights.push_back(PointLight{ FVector3{10.f, 0, 0}, FVector3{0,0,1}, 1.f });
-	//
-	//for (int i = 0; i < m_pLights.size(); ++i)
-	//	m_pLitMaterial->SetLight(i, m_pLights[i]);
-	//
-	//m_pLitMaterial->GetNrOfLightsVariable()->SetInt(m_pLights.size());
+			new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
 
 	m_pUnLitMaterial = nullptr;
 }

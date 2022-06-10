@@ -4,7 +4,7 @@
 uint32_t GameObject::m_AmountOfGameObjects{};
 
 GameObject::GameObject(const std::string& name, FVector3 position, FVector3 rotation, FVector3 scale)
-	: GameObject(new TransformComponent(position, rotation, scale))
+	: GameObject(new TransformComponent(position, rotation, scale), name)
 {
 }
 
@@ -33,7 +33,7 @@ void GameObject::AddComponent(IComponent* component)
 
 void GameObject::RemoveComponent(IComponent* component)
 {
-
+	m_pComponents.erase(std::remove(m_pComponents.begin(), m_pComponents.end(), component));
 }
 
 void GameObject::Render(Camera* pCamera)
@@ -46,4 +46,9 @@ void GameObject::Update(float dt)
 {
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
 		(*iter)->Update(dt, this);
+}
+
+std::string GameObject::GetName() const
+{
+	return m_Name;
 }

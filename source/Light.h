@@ -1,5 +1,7 @@
 #pragma once
+#pragma warning (push, 0)
 #include "DataTypes.h"
+#pragma warning(pop)
 
 struct DirectionalLight
 {

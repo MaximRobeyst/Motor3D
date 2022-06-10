@@ -1,5 +1,9 @@
 #pragma once
+
+#pragma warning (push, 0)
 #include "DataTypes.h"
+#pragma warning(pop)
+
 #include <vector>
 #include <memory>
 
@@ -30,17 +34,14 @@ public:
 			if (component != nullptr)
 				return component;
 		}
-	}
 
-	//template <typename T>
-	//void AddComponent(T component)
-	//{
-	//	m_pComponents.push_back(component);
-	//}
+		return nullptr;
+	}
 
 	void Render(Camera* pCamera);
 	void Update(float dt);
 
+	std::string GetName() const;
 
 private:
 	uint32_t m_Id;

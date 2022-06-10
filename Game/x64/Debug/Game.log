@@ -1,7 +1,0 @@
-﻿  Main.cpp
-C:\Users\maxim\Documents\GitHub\Engine\Game\Main.cpp(14,14): error C2146: syntax error: missing ';' before identifier 'wWinMain'
-C:\Users\maxim\Documents\GitHub\Engine\Game\Main.cpp(14,43): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-C:\Users\maxim\Documents\GitHub\Engine\Game\Main.cpp(14,33): error C2065: 'HINSTANCE': undeclared identifier
-C:\Users\maxim\Documents\GitHub\Engine\Game\Main.cpp(14,43): error C2146: syntax error: missing ')' before identifier 'hInstance'
-C:\Users\maxim\Documents\GitHub\Engine\Game\Main.cpp(18,1): error C2143: syntax error: missing ';' before '{'
-C:\Users\maxim\Documents\GitHub\Engine\Game\Main.cpp(18,1): error C2447: '{': missing function header (old-style formal list?)

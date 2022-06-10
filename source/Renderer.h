@@ -14,7 +14,7 @@ public:
 	UINT GetWindowWidth() const;
 
 protected:
-	HWND m_hWnd;
+	HWND m_hWnd{};
 	UINT m_Width{};
 	UINT m_Height{};
 

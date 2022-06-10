@@ -1,5 +1,11 @@
 #include "DX11Renderer.h"
 
+#include <imgui.h>
+#include <backends\imgui_impl_dx11.h>
+#include <backends\imgui_impl_win32.h>
+
+#include <io.h>
+
 DX11Renderer::DX11Renderer(HWND hwnd, UINT width, UINT height)
     : Renderer(hwnd, width, height)
 {
@@ -7,6 +13,10 @@ DX11Renderer::DX11Renderer(HWND hwnd, UINT width, UINT height)
 
 DX11Renderer::~DX11Renderer()
 {
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
+
     if (m_pRenderTargetView)
         m_pRenderTargetView->Release();
 
@@ -37,6 +47,25 @@ DX11Renderer::~DX11Renderer()
 void DX11Renderer::Initialize()
 {
     InitializeDirectX();
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+    ImGui::StyleColorsDark();
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
+    ImGui_ImplWin32_Init(m_hWnd);
+    ImGui_ImplDX11_Init(m_pDevice, m_pDeviceContext);
 }
 
 ID3D11Device* DX11Renderer::GetDevice() const
@@ -150,6 +179,4 @@ HRESULT DX11Renderer::InitializeDirectX()
     m_pDeviceContext->RSSetViewports(1, &viewPort);
 
     return result;
-
-    return E_NOTIMPL;
 }

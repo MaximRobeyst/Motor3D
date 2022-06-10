@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "Camera.h"
 
+#include <imgui.h>
+
 Scene::Scene()
 {
 }
@@ -50,6 +52,14 @@ void Scene::Render(Camera* pCamera)
 	for (auto iter = m_pGameObjects.begin(); iter != m_pGameObjects.end(); iter++)
 	{
 		(*iter)->Render(pCamera);
+	}
+}
+
+void Scene::RenderGUI()
+{
+	for (int i = 0; i < m_pGameObjects.size(); ++i)
+	{
+		ImGui::Text(m_pGameObjects[i]->GetName().c_str());
 	}
 }
 

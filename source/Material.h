@@ -3,7 +3,10 @@
 
 // Include Files
 #include "MyEngine.h"
+#pragma warning (push, 0)
 #include "DataTypes.h"
+#pragma warning(pop)
+
 #include "Mesh.h"
 
 // Material Class									

@@ -21,6 +21,8 @@ public:
 	Material* GetLatestMaterial();
 
 	void Render(Camera* pCamera);
+	void RenderGUI();
+
 	void Update(float dt);
 
 private:

@@ -1,7 +1,9 @@
 #include "Mesh.h"
 #include "Camera.h"
 #include "Material.h"
+#pragma warning (push, 0)
 #include "OBJParser.h"
+#pragma warning (pop)
 
 
 // The mesh causes a memory leak that i cant find at the moment and i think it has something to with the material
@@ -107,7 +109,7 @@ void Mesh::SetWorldMatrix(const FMatrix4& worldMatrix)
 	m_WorldMatrix = worldMatrix;
 }
 
-void Mesh::SetMaterial(const std::string& name, Material* pMaterial)
+void Mesh::SetMaterial(const std::string&, Material* pMaterial)
 {
 	if (m_pMaterial != nullptr)
 	{
@@ -117,7 +119,7 @@ void Mesh::SetMaterial(const std::string& name, Material* pMaterial)
 	m_pMaterial = pMaterial;
 }
 
-Material* Mesh::GetMaterial(const std::string& name) const
+Material* Mesh::GetMaterial(const std::string&) const
 {
 	return m_pMaterial;
 }
@@ -127,7 +129,7 @@ Material* Mesh::GetMaterial(const std::string& name) const
 //	m_pMaterials[materialName] = pMaterial;
 //}
 
-void Mesh::Initialize(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
+void Mesh::Initialize(ID3D11Device* pDevice, HWND, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
 {
 	// http://www.rastertek.com/dx11tut04.html
 

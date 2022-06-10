@@ -1,1 +1,12 @@
-﻿  MyApplication.vcxproj -> C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\Debug\MyApplication.lib
+﻿  MyEngine.cpp
+d3dcompiler.lib(D3DCOMPILER_47.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in d3d11.lib(d3d11.dll); second definition ignored
+dxgi.lib(dxgi.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in d3d11.lib(d3d11.dll); second definition ignored
+imgui_impl_win32.obj : warning LNK4006: "bool __cdecl ImGui_ImplWin32_Init(void *)" (?ImGui_ImplWin32_Init@@YA_NPEAX@Z) already defined in MyEngine.obj; second definition ignored
+imgui_impl_win32.obj : warning LNK4006: "void __cdecl ImGui_ImplWin32_Shutdown(void)" (?ImGui_ImplWin32_Shutdown@@YAXXZ) already defined in MyEngine.obj; second definition ignored
+imgui_impl_win32.obj : warning LNK4006: "void __cdecl ImGui_ImplWin32_NewFrame(void)" (?ImGui_ImplWin32_NewFrame@@YAXXZ) already defined in MyEngine.obj; second definition ignored
+imgui_impl_win32.obj : warning LNK4006: "void __cdecl ImGui_ImplWin32_EnableDpiAwareness(void)" (?ImGui_ImplWin32_EnableDpiAwareness@@YAXXZ) already defined in MyEngine.obj; second definition ignored
+imgui_impl_win32.obj : warning LNK4006: "float __cdecl ImGui_ImplWin32_GetDpiScaleForHwnd(void *)" (?ImGui_ImplWin32_GetDpiScaleForHwnd@@YAMPEAX@Z) already defined in MyEngine.obj; second definition ignored
+imgui_impl_win32.obj : warning LNK4006: "float __cdecl ImGui_ImplWin32_GetDpiScaleForMonitor(void *)" (?ImGui_ImplWin32_GetDpiScaleForMonitor@@YAMPEAX@Z) already defined in MyEngine.obj; second definition ignored
+imgui_impl_win32.obj : warning LNK4006: "void __cdecl ImGui_ImplWin32_EnableAlphaCompositing(void *)" (?ImGui_ImplWin32_EnableAlphaCompositing@@YAXPEAX@Z) already defined in MyEngine.obj; second definition ignored
+imgui_impl_win32.obj : warning LNK4006: "__int64 __cdecl ImGui_ImplWin32_WndProcHandler(struct HWND__ *,unsigned int,unsigned __int64,__int64)" (?ImGui_ImplWin32_WndProcHandler@@YA_JPEAUHWND__@@I_K_J@Z) already defined in MyEngine.obj; second definition ignored
+  MyApplication.vcxproj -> C:\Users\maxim\OneDrive - Hogeschool West-Vlaanderen\Howest\SEM3_Programming3\Free\Engine\Debug\MyApplication.lib
