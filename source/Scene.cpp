@@ -59,8 +59,16 @@ void Scene::RenderGUI()
 {
 	for (int i = 0; i < m_pGameObjects.size(); ++i)
 	{
-		ImGui::Text(m_pGameObjects[i]->GetName().c_str());
+		if (ImGui::Button(m_pGameObjects[i]->GetName().c_str()))
+		{
+			m_pSelectedGameobject = m_pGameObjects[i];
+		}
 	}
+
+	if (m_pSelectedGameobject == nullptr) return;
+	ImGui::BeginChild(m_pSelectedGameobject->GetName().c_str());
+	m_pSelectedGameobject->RenderGUI();
+	ImGui::EndChild();
 }
 
 void Scene::Update(float dt)

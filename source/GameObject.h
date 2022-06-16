@@ -41,12 +41,29 @@ public:
 	void Render(Camera* pCamera);
 	void Update(float dt);
 
+	void RenderGUI();
+
 	std::string GetName() const;
+	TransformComponent* GetTransform();
+
+	GameObject* GetParent() const;
+	void SetParent(GameObject* parent);
+
+	int GetChildCount() const;
+	GameObject* GetChild(int index) const;
 
 private:
+	void AddChild(GameObject* child);
+	void RemoveChild(GameObject* child);
+
+	TransformComponent* m_pTransform;
+
 	uint32_t m_Id;
 	static uint32_t m_AmountOfGameObjects;
 
 	std::vector<IComponent*> m_pComponents;
 	std::string m_Name;
+
+	GameObject* m_pParent;
+	std::vector<GameObject*> m_pChildren;
 };

@@ -3,6 +3,8 @@
 #include "DataTypes.h"
 #pragma warning(pop)
 
+#include <vector>
+
 
 class Mesh;
 class Camera;
@@ -16,8 +18,11 @@ public:
 
 	virtual void Render(Camera* pCamera, GameObject* pGameobject);
 	virtual void Update(float dt, GameObject* pGameobject);
+
+	virtual void RenderGUI() {};
 protected:
 	uint8_t m_ComponentID;
+	GameObject* m_pGameobject;
 };
 
 class TransformComponent : public IComponent
@@ -26,6 +31,9 @@ public:
 	TransformComponent(FVector3 pos = FVector3{}, FVector3 rotation = FVector3{}, FVector3 scale = FVector3{ 1,1,1 });
 
 	void Update(float dt);
+
+	void RenderGUI() override;
+
 	FMatrix4 GetWorldMatrix() const;
 	
 	FVector3 GetPosition() const;
@@ -33,6 +41,8 @@ public:
 
 	FVector3 GetRotation() const;
 	void SetRotation(FVector3 rotation);
+
+	void SetParent(TransformComponent* pTransformComponent);
 private:
 	FVector3 m_Position;
 	FVector3 m_Rotation;
@@ -70,7 +80,10 @@ public:
 	Rotator(float rotationSpeed, FVector3 axis);
 
 	void Update(float dt, GameObject* pGameobject) override;
+
+	void RenderGUI() override;
 private:
+	bool m_Enabled{false};
 	float m_Rotation{};
 	float m_RotationSpeed{};
 	FVector3 m_Axis{};

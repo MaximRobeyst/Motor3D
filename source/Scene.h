@@ -28,5 +28,7 @@ public:
 private:
 	std::vector<GameObject*> m_pGameObjects{};
 	std::map<std::string, Material*> m_pMaterials{};
+
+	GameObject* m_pSelectedGameobject{};
 };
 

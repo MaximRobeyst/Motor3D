@@ -36,9 +36,6 @@
     <ClInclude Include="framework.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyApplication.h">
-      <Filter>Application Files</Filter>
-    </ClInclude>
     <ClInclude Include="MyEngine.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
@@ -141,11 +138,11 @@
     <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_dx11.h">
       <Filter>imgui</Filter>
     </ClInclude>
+    <ClInclude Include="MyApplication.h">
+      <Filter>Engine Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MyApplication.cpp">
-      <Filter>Application Files</Filter>
-    </ClCompile>
     <ClCompile Include="MyEngine.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
@@ -173,12 +170,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Engine Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Application Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>Application Files</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Engine Files\Rendering</Filter>
     </ClCompile>
@@ -205,6 +196,15 @@
     </ClCompile>
     <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_dx11.cpp">
       <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Engine Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Engine Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MyApplication.cpp">
+      <Filter>Engine Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

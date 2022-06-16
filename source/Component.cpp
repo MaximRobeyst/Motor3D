@@ -2,6 +2,8 @@
 #include "Mesh.h"
 #include "GameObject.h"
 
+#include <imgui.h>
+
 TransformComponent::TransformComponent(FVector3 pos, FVector3 rotation, FVector3 scale)
 	: IComponent{0}
 	, m_Position{pos}
@@ -12,6 +14,34 @@ TransformComponent::TransformComponent(FVector3 pos, FVector3 rotation, FVector3
 
 void TransformComponent::Update(float /*dt*/)
 {
+}
+
+void TransformComponent::RenderGUI()
+{
+	float position[] = { m_Position.x, m_Position.y, m_Position.z };
+	if (ImGui::InputFloat3("Position", position))
+	{
+		m_Position.x = position[0];
+		m_Position.y = position[1];
+		m_Position.z = position[2];
+	}
+
+	float rotation[] = { m_Rotation.x, m_Rotation.y, m_Rotation.z };
+	if (ImGui::InputFloat3("Rotation", rotation))
+	{
+		m_Rotation.x = rotation[0];
+		m_Rotation.y = rotation[1];
+		m_Rotation.z = rotation[2];
+	}
+
+	float scale[] = { m_Scale.x, m_Scale.y, m_Scale.z };
+	if (ImGui::InputFloat3("Scale", scale))
+	{
+		m_Scale.x = scale[0];
+		m_Scale.y = scale[1];
+		m_Scale.z = scale[2];
+	}
+
 }
 
 FMatrix4 TransformComponent::GetWorldMatrix() const
@@ -39,6 +69,10 @@ FVector3 TransformComponent::GetRotation() const
 void TransformComponent::SetRotation(FVector3 rotation)
 {
 	m_Rotation = rotation;
+}
+
+void TransformComponent::SetParent(TransformComponent* /*pTransformComponent*/)
+{
 }
 
 IComponent::IComponent(uint8_t componentID)
@@ -109,7 +143,14 @@ Rotator::Rotator(float rotationSpeed, FVector3 axis)
 
 void Rotator::Update(float dt, GameObject* pGameobject)
 {
+	if (!m_Enabled) return;
+
 	m_Rotation += (ToRadians(m_RotationSpeed) * dt);
 
 	pGameobject->GetComponent<TransformComponent>()->SetRotation(m_Axis * m_Rotation);
+}
+
+void Rotator::RenderGUI()
+{
+	ImGui::Checkbox("Enabled", &m_Enabled);
 }
