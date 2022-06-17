@@ -128,14 +128,19 @@ void MyApplication::Initialize()
 	//	}
 	//}
 
+	int i{};
+	std::vector<GameObject*> gameobjects{};
 	for (auto& mesh : m_pMeshes)
 	{
-		GameObject* gameobject = new GameObject("Cube");
+		gameobjects.emplace_back(new GameObject("Cube" + std::to_string(i)));
 		
-		m_pScene->AddGameObject(gameobject);
+		m_pScene->AddGameObject(gameobjects[i]);
+		gameobjects[i]->SetParent(gameobjects[0]);
 
-		gameobject->AddComponent(new MeshComponent(mesh));
-		gameobject->AddComponent(new Rotator(45.f, FVector3{ 0,1,0 }));
+		gameobjects[i]->AddComponent(new MeshComponent(mesh));
+		gameobjects[i]->AddComponent(new Rotator(45.f, FVector3{0,1,0}));
+
+		++i;
 	}
 
 	m_pScene->GetMaterial("lambert8SG")->SetDiffuseMap(

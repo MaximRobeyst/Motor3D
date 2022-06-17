@@ -4,11 +4,11 @@
 #pragma warning(pop)
 
 #include <vector>
+#include "GameObject.h"
 
 
 class Mesh;
 class Camera;
-class GameObject;
 
 class IComponent
 {
@@ -20,9 +20,12 @@ public:
 	virtual void Update(float dt, GameObject* pGameobject);
 
 	virtual void RenderGUI() {};
+
+	void SetGameobject(GameObject* pGameobject);
+
 protected:
 	uint8_t m_ComponentID;
-	GameObject* m_pGameobject;
+	GameObject* m_pGameobject{};
 };
 
 class TransformComponent : public IComponent

@@ -14,7 +14,7 @@ GameObject::GameObject(TransformComponent* pTransformComponent, const std::strin
 	: m_Id{m_AmountOfGameObjects}
 	, m_Name{name}
 {
-	m_pComponents.push_back(pTransformComponent);
+	AddComponent(pTransformComponent);
 	++m_AmountOfGameObjects;
 }
 
@@ -30,6 +30,7 @@ GameObject::~GameObject()
 
 void GameObject::AddComponent(IComponent* component)
 {
+	component->SetGameobject(this);
 	m_pComponents.push_back(component);
 }
 
@@ -83,6 +84,8 @@ GameObject* GameObject::GetParent() const
 
 void GameObject::SetParent(GameObject* parent)
 {
+	if (parent == this) return;
+
 	if (m_pParent != nullptr)
 		m_pParent->RemoveChild(this);
 
