@@ -46,9 +46,23 @@ void TransformComponent::RenderGUI()
 
 FMatrix4 TransformComponent::GetWorldMatrix() const
 {
-	auto rotMat = FMatrix4{ MakeRotationZYX(m_Rotation.x, m_Rotation.y, m_Rotation.z) };
+	FVector3 position{};
+	FVector3 rotation{};
 
-	return MakeTranslation(m_Position) * FMatrix4{ MakeRotationZYX(m_Rotation.x, m_Rotation.y, m_Rotation.z) };//*FMatrix4{ MakeScale(m_Scale.x, m_Scale.y, m_Scale.z) };
+	if (m_pGameobject->GetParent() != nullptr)
+	{
+		position = m_Position + m_pGameobject->GetParent()->GetTransform()->GetPosition();
+		rotation = m_Rotation + m_pGameobject->GetParent()->GetTransform()->GetRotation();
+	}
+	else
+	{
+		position = m_Position;
+		rotation = m_Rotation;
+
+	}
+
+
+	return MakeTranslation(position) * FMatrix4{ MakeRotationZYX(rotation.x, rotation.y, rotation.z) };//*FMatrix4{ MakeScale(m_Scale.x, m_Scale.y, m_Scale.z) };
 }
 
 FVector3 TransformComponent::GetPosition() const
@@ -86,6 +100,11 @@ void IComponent::Render(Camera* /*pCamera*/, GameObject* /*pGameobject*/)
 
 void IComponent::Update(float /*dt*/, GameObject* /*pGameobject*/)
 {
+}
+
+void IComponent::SetGameobject(GameObject* gameobject)
+{
+	m_pGameobject = gameobject;
 }
 
 MeshComponent::MeshComponent(Mesh* pMesh)
