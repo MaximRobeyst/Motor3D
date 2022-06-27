@@ -13,6 +13,11 @@ void Scene::AddGameObject(GameObject* pGameObject)
 	m_pGameObjects.push_back(pGameObject);
 }
 
+void Scene::RemoveGameobject(GameObject* pGameobject)
+{
+	m_pGameObjects.erase(std::remove(m_pGameObjects.begin(), m_pGameObjects.end(), pGameobject));
+}
+
 Scene::~Scene()
 {
 	for (auto iter = m_pGameObjects.begin(); iter < m_pGameObjects.end(); ++iter)
@@ -57,12 +62,34 @@ void Scene::Render(Camera* pCamera)
 
 void Scene::RenderGUI()
 {
+	static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+
+	static bool test_drag_and_drop = false;
+	static int selection_mask = (1 << 2);
+	int node_clicked = -1;
+
+
 	for (int i = 0; i < m_pGameObjects.size(); ++i)
 	{
-		if (ImGui::Button(m_pGameObjects[i]->GetName().c_str()))
-		{
-			m_pSelectedGameobject = m_pGameObjects[i];
-		}
+		ImGuiTreeNodeFlags node_flags = base_flags;
+		const bool is_selected = (selection_mask & (1 << i)) != 0;
+		if (is_selected)
+			node_flags |= ImGuiTreeNodeFlags_Selected;
+
+		RenderGameobjectSceneGraph(m_pGameObjects[i], i, base_flags, node_clicked, test_drag_and_drop);
+
+		//if (ImGui::Button(m_pGameObjects[i]->GetName().c_str()))
+		//{
+		//	m_pSelectedGameobject = m_pGameObjects[i];
+		//}
+	}
+
+	if (node_clicked != -1)
+	{
+		if (ImGui::GetIO().KeyCtrl)
+			selection_mask ^= (1 << node_clicked);
+		else
+			selection_mask = (1 << node_clicked);
 	}
 
 	if (m_pSelectedGameobject == nullptr) return;
@@ -76,5 +103,48 @@ void Scene::Update(float dt)
 	for (auto iter = m_pGameObjects.begin(); iter != m_pGameObjects.end(); iter++)
 	{
 		(*iter)->Update(dt);
+	}
+}
+
+void Scene::RenderGameobjectSceneGraph(GameObject* pGameobject, int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop)
+{
+	if (pGameobject->GetChildCount() > 0)
+	{
+		bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, pGameobject->GetName().c_str(), i);
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+		{
+			node_clicked = i;
+			m_pSelectedGameobject = pGameobject;
+		}
+		if (test_drag_and_drop && ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
+			ImGui::Text("This is a drag and drop source");
+			ImGui::EndDragDropSource();
+		}
+		if (node_open)
+		{
+			for (int childIndex = 0; childIndex < pGameobject->GetChildCount(); ++childIndex)
+			{
+				RenderGameobjectSceneGraph(pGameobject->GetChild(childIndex),childIndex, node_flags, node_clicked, test_drag_and_drop);
+			}
+			ImGui::TreePop();
+		}
+	}
+	else
+	{
+		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+		ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, pGameobject->GetName().c_str(), i);
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+		{
+			node_clicked = i;
+			m_pSelectedGameobject = pGameobject;
+		}
+		if (test_drag_and_drop && ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
+			ImGui::Text("This is a drag and drop source");
+			ImGui::EndDragDropSource();
+		}
 	}
 }

@@ -134,7 +134,8 @@ void MyApplication::Initialize()
 	{
 		gameobjects.emplace_back(new GameObject("Cube" + std::to_string(i)));
 		
-		m_pScene->AddGameObject(gameobjects[i]);
+		if(i == 0)
+			m_pScene->AddGameObject(gameobjects[i]);
 		gameobjects[i]->SetParent(gameobjects[0]);
 
 		gameobjects[i]->AddComponent(new MeshComponent(mesh));

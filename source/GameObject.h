@@ -13,6 +13,7 @@
 class TransformComponent;
 class IComponent;
 class Camera;
+class Scene;
 
 class GameObject
 {
@@ -52,6 +53,9 @@ public:
 	int GetChildCount() const;
 	GameObject* GetChild(int index) const;
 
+	void SetScene(Scene* pScene);
+	Scene* GetScene() const;
+
 private:
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
@@ -62,6 +66,7 @@ private:
 	static uint32_t m_AmountOfGameObjects;
 
 	std::vector<IComponent*> m_pComponents;
+	Scene* m_pScene;
 	std::string m_Name;
 
 	GameObject* m_pParent;

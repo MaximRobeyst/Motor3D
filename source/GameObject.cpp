@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Component.h"
+#include "Scene.h"
 
 #include <imgui.h>
 
@@ -43,12 +44,18 @@ void GameObject::Render(Camera* pCamera)
 {
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
 		(*iter)->Render(pCamera, this);
+
+	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
+		(*iter)->Render(pCamera);
 }
 
 void GameObject::Update(float dt)
 {
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
 		(*iter)->Update(dt, this);
+
+	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
+		(*iter)->Update(dt);
 }
 
 void GameObject::RenderGUI()
@@ -85,16 +92,25 @@ GameObject* GameObject::GetParent() const
 void GameObject::SetParent(GameObject* parent)
 {
 	if (parent == this) return;
+	if (parent == m_pParent) return;
 
 	if (m_pParent != nullptr)
 		m_pParent->RemoveChild(this);
+
+	if (m_pParent == nullptr && m_pScene != nullptr)
+		m_pScene->RemoveGameobject(parent);
 
 	m_pParent = parent;
 
 	if (m_pParent != nullptr)
 		m_pParent->AddChild(this);
 
+	if (m_pParent == nullptr)
+		m_pScene->AddGameObject(this);
+
 	GetTransform()->SetParent(m_pParent->GetTransform());
+	m_pScene = m_pParent->GetScene();
+
 }
 
 int GameObject::GetChildCount() const
@@ -105,6 +121,16 @@ int GameObject::GetChildCount() const
 GameObject* GameObject::GetChild(int index) const
 {
 	return m_pChildren[index];
+}
+
+void GameObject::SetScene(Scene* pScene)
+{
+	m_pScene = pScene;
+}
+
+Scene* GameObject::GetScene() const
+{
+	return m_pScene;
 }
 
 void GameObject::AddChild(GameObject* child)
