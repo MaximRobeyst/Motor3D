@@ -5,7 +5,7 @@
 
 #include <vector>
 #include "GameObject.h"
-
+#include "FieldBinder.h"
 
 class Mesh;
 class Camera;
@@ -16,10 +16,14 @@ public:
 	IComponent(uint8_t componentID);
 	virtual ~IComponent() = default;
 
+	virtual void Start() {};
 	virtual void Render(Camera* pCamera, GameObject* pGameobject);
 	virtual void Update(float dt, GameObject* pGameobject);
 
 	virtual void RenderGUI() {};
+
+	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& ) {};
+	virtual void Deserialize(const rapidjson::Value&) {};
 
 	void SetGameobject(GameObject* pGameobject);
 
@@ -36,6 +40,9 @@ public:
 	void Update(float dt);
 
 	void RenderGUI() override;
+
+	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);
+	virtual void Deserialize(const rapidjson::Value&);
 
 	FMatrix4 GetWorldMatrix() const;
 	
@@ -58,7 +65,11 @@ public:
 	RigidBodyComponent(FVector3 velocity = FVector3{}, FVector3 acceleration = FVector3{}, FVector3 gravity = FVector3{});
 	void Update(float dt, GameObject* pGameobject) override;
 
+	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>&);
+	virtual void Deserialize(const rapidjson::Value&);
+
 	void UpdateTransform(TransformComponent* tc);	// temp function
+
 private:
 	FVector3 m_Velocity{};
 	FVector3 m_Acceleration{};
@@ -68,11 +79,14 @@ private:
 class MeshComponent : public IComponent
 {
 public:
-	MeshComponent(Mesh* pMesh);
+	MeshComponent(Mesh* pMesh = nullptr);
 	~MeshComponent();
 
 	void Render(Camera* pCamera, GameObject* pGameobject) override;
 	void Update(float dt, GameObject* pGameobject) override;
+
+	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>&);
+	virtual void Deserialize(const rapidjson::Value&);
 private:
 	Mesh* m_pMesh{};
 };
@@ -80,11 +94,15 @@ private:
 class Rotator : public IComponent
 {
 public:
-	Rotator(float rotationSpeed, FVector3 axis);
+	Rotator(float rotationSpeed = 45.f, FVector3 axis = FVector3{ 0, 1, 0 } );
 
 	void Update(float dt, GameObject* pGameobject) override;
 
 	void RenderGUI() override;
+
+	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);
+	virtual void Deserialize(const rapidjson::Value&);
+
 private:
 	bool m_Enabled{false};
 	float m_Rotation{};

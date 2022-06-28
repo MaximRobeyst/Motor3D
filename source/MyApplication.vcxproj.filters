@@ -34,6 +34,12 @@
     <Filter Include="Engine Files\Engine Components">
       <UniqueIdentifier>{cc435024-f2ca-48b2-a80c-63be8fad0b19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Serialaztion">
+      <UniqueIdentifier>{a893d7be-5e32-46f9-af99-0478e9234311}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Managers">
+      <UniqueIdentifier>{4dbe0b3b-6255-4a3f-97e7-9fdf9d7aa552}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -144,6 +150,18 @@
     <ClInclude Include="Component.h">
       <Filter>Engine Files\Engine Components</Filter>
     </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Engine Files\Serialaztion</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldBinder.h">
+      <Filter>Engine Files\Serialaztion</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialManager.h">
+      <Filter>Engine Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyEngine.cpp">
@@ -208,6 +226,18 @@
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Engine Files\Engine Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Factory.cpp">
+      <Filter>Engine Files\Serialaztion</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldBinder.cpp">
+      <Filter>Engine Files\Serialaztion</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialManager.cpp">
+      <Filter>Engine Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Application Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

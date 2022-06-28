@@ -1,0 +1,284 @@
+{
+    "SceneName": "New_File",
+    "Gameobjects": [
+        {
+            "Name": "Cube0",
+            "Components": [
+                {
+                    "Name": "class TransformComponent",
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "Name": "class MeshComponent",
+                    "MeshPath": "Resources/5Props.obj",
+                    "SubmeshId": 0
+                },
+                {
+                    "Name": "class Rotator",
+                    "Enabled": false,
+                    "RotationSpeed": 45.0,
+                    "Axis": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "Cube1",
+                    "Components": [
+                        {
+                            "Name": "class TransformComponent",
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Rotation": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "Name": "class MeshComponent",
+                            "MeshPath": "Resources/5Props.obj",
+                            "SubmeshId": 1
+                        },
+                        {
+                            "Name": "class Rotator",
+                            "Enabled": false,
+                            "RotationSpeed": 45.0,
+                            "Axis": [
+                                0.0,
+                                1.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "Name": "Cube2",
+                            "Components": [
+                                {
+                                    "Name": "class TransformComponent",
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Rotation": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ]
+                                },
+                                {
+                                    "Name": "class MeshComponent",
+                                    "MeshPath": "Resources/5Props.obj",
+                                    "SubmeshId": 2
+                                },
+                                {
+                                    "Name": "class Rotator",
+                                    "Enabled": false,
+                                    "RotationSpeed": 45.0,
+                                    "Axis": [
+                                        0.0,
+                                        1.0,
+                                        0.0
+                                    ]
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "Cube3",
+                                    "Components": [
+                                        {
+                                            "Name": "class TransformComponent",
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Rotation": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ]
+                                        },
+                                        {
+                                            "Name": "class MeshComponent",
+                                            "MeshPath": "Resources/5Props.obj",
+                                            "SubmeshId": 3
+                                        },
+                                        {
+                                            "Name": "class Rotator",
+                                            "Enabled": false,
+                                            "RotationSpeed": 45.0,
+                                            "Axis": [
+                                                0.0,
+                                                1.0,
+                                                0.0
+                                            ]
+                                        }
+                                    ],
+                                    "Children": [
+                                        {
+                                            "Name": "Cube4",
+                                            "Components": [
+                                                {
+                                                    "Name": "class TransformComponent",
+                                                    "Position": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                                    "Rotation": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                                    "Scale": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ]
+                                                },
+                                                {
+                                                    "Name": "class MeshComponent",
+                                                    "MeshPath": "Resources/5Props.obj",
+                                                    "SubmeshId": 4
+                                                },
+                                                {
+                                                    "Name": "class Rotator",
+                                                    "Enabled": false,
+                                                    "RotationSpeed": 45.0,
+                                                    "Axis": [
+                                                        0.0,
+                                                        1.0,
+                                                        0.0
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": [
+                                                {
+                                                    "Name": "Cube5",
+                                                    "Components": [
+                                                        {
+                                                            "Name": "class TransformComponent",
+                                                            "Position": [
+                                                                0.0,
+                                                                0.0,
+                                                                0.0
+                                                            ],
+                                                            "Rotation": [
+                                                                0.0,
+                                                                0.0,
+                                                                0.0
+                                                            ],
+                                                            "Scale": [
+                                                                0.0,
+                                                                0.0,
+                                                                0.0
+                                                            ]
+                                                        },
+                                                        {
+                                                            "Name": "class MeshComponent",
+                                                            "MeshPath": "Resources/5Props.obj",
+                                                            "SubmeshId": 5
+                                                        },
+                                                        {
+                                                            "Name": "class Rotator",
+                                                            "Enabled": false,
+                                                            "RotationSpeed": 45.0,
+                                                            "Axis": [
+                                                                0.0,
+                                                                1.0,
+                                                                0.0
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "Cube6",
+                                                            "Components": [
+                                                                {
+                                                                    "Name": "class TransformComponent",
+                                                                    "Position": [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ],
+                                                                    "Rotation": [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ],
+                                                                    "Scale": [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "Name": "class MeshComponent",
+                                                                    "MeshPath": "Resources/5Props.obj",
+                                                                    "SubmeshId": 6
+                                                                },
+                                                                {
+                                                                    "Name": "class Rotator",
+                                                                    "Enabled": false,
+                                                                    "RotationSpeed": 45.0,
+                                                                    "Axis": [
+                                                                        0.0,
+                                                                        1.0,
+                                                                        0.0
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "Children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

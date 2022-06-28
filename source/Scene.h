@@ -12,8 +12,6 @@ class Scene
 {
 public:
 	Scene();
-	Scene(std::string fileName); // this is the function that will load in the scene save file
-
 	~Scene();
 
 	void AddGameObject(GameObject* pGameObject);
@@ -22,15 +20,18 @@ public:
 	void AddMaterial(const std::string& name, Material* pMaterial);
 	Material* GetMaterial(const std::string& name);
 	Material* GetLatestMaterial();
-
+	
+	void Start();
 	void Render(Camera* pCamera);
 	void RenderGUI();
 
 	void Update(float dt);
 
+	void Serialize(const std::string& filename);
+	void Deserialize(const std::string& filename);
+
 private:
 	void RenderGameobjectSceneGraph(GameObject* pGameobject,int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop);
-
 
 	std::vector<GameObject*> m_pGameObjects{};
 	std::map<std::string, Material*> m_pMaterials{};

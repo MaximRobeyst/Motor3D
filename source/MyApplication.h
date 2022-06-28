@@ -43,6 +43,9 @@ public:
 	void KeyUp(WPARAM wparam);
 	void KeyDown(WPARAM wparam);
 private:
+	void SaveFile();
+	void LoadFile();
+
 	//-------------------------------------------------
 	// Datamembers								
 	//-------------------------------------------------

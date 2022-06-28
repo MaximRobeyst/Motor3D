@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)include\vld;$(SolutionDir)\3rdParty\imgui;$(SolutionDir)include\dx11effects</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\rapidjson;$(SolutionDir)include\vld;$(SolutionDir)\3rdParty\imgui;$(SolutionDir)include\dx11effects</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -185,10 +185,14 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="DX11Renderer.h" />
+    <ClInclude Include="Factory.h" />
+    <ClInclude Include="FieldBinder.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LitMaterial.h" />
+    <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="WICTextureLoader.h" />
     <ClInclude Include="DataTypes.h" />
@@ -222,10 +226,14 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DX11Renderer.cpp" />
+    <ClCompile Include="Factory.cpp" />
+    <ClCompile Include="FieldBinder.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LitMaterial.cpp" />
+    <ClCompile Include="MaterialManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="Material.cpp" />

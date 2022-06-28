@@ -1,8 +1,16 @@
+
+#include <fstream>
+#include <stringbuffer.h>
+#include <prettywriter.h>
+#include <istreamwrapper.h>
+#include <document.h>
+
 #include "Scene.h"
 #include "GameObject.h"
 #include "Camera.h"
 
 #include <imgui.h>
+
 
 Scene::Scene()
 {
@@ -50,6 +58,14 @@ Material* Scene::GetMaterial(const std::string& name)
 Material* Scene::GetLatestMaterial()
 {
 	return m_pMaterials.rbegin()->second;
+}
+
+void Scene::Start()
+{
+	for (auto iter = m_pGameObjects.begin(); iter != m_pGameObjects.end(); iter++)
+	{
+		(*iter)->Start();
+	}
 }
 
 void Scene::Render(Camera* pCamera)
@@ -103,6 +119,57 @@ void Scene::Update(float dt)
 	for (auto iter = m_pGameObjects.begin(); iter != m_pGameObjects.end(); iter++)
 	{
 		(*iter)->Update(dt);
+	}
+}
+
+void Scene::Serialize(const std::string& filename)
+{
+	std::ofstream levelFile{ filename + ".json" };
+	if (!levelFile.is_open())
+	{
+		return;
+	}
+	rapidjson::StringBuffer outputFile{};
+	rapidjson::PrettyWriter< rapidjson::StringBuffer> writer(outputFile);
+
+	writer.StartObject();
+
+	writer.Key("SceneName");
+	writer.String(filename.c_str());
+
+	writer.Key("Gameobjects");
+	writer.StartArray();
+
+	for (auto& pGameobject : m_pGameObjects)
+	{
+		writer.StartObject();
+		pGameobject->Serialize(writer);
+		writer.EndObject();
+	}
+	writer.EndArray();
+	writer.EndObject();
+
+	levelFile << outputFile.GetString();
+
+	levelFile.close();
+}
+
+void Scene::Deserialize(const std::string& filename)
+{
+	m_pGameObjects.clear();
+
+	std::ifstream levelFile{ filename + ".json" };
+	if (!levelFile.is_open())
+	{
+		return;
+	}
+	rapidjson::IStreamWrapper isw{ levelFile };
+	rapidjson::Document levelDocument{};
+	levelDocument.ParseStream(isw);
+
+	for (auto& gameobject : levelDocument["Gameobjects"].GetArray())
+	{
+		AddGameObject(GameObject::Deserialize(this, gameobject));
 	}
 }
 

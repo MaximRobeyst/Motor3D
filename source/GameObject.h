@@ -6,9 +6,12 @@
 
 #include <vector>
 #include <memory>
+#include <stringbuffer.h>
+#include <prettywriter.h>
 
-// i know this isn't the best architecture but i wanted a feasable project and programming something like ECS
-// in a week is a bit out of scope seeing as i have never done that before so for now i will use this primitive implementation
+#undef max
+#undef min
+#include <document.h>
 
 class TransformComponent;
 class IComponent;
@@ -39,6 +42,7 @@ public:
 		return nullptr;
 	}
 
+	void Start();
 	void Render(Camera* pCamera);
 	void Update(float dt);
 
@@ -55,6 +59,9 @@ public:
 
 	void SetScene(Scene* pScene);
 	Scene* GetScene() const;
+
+	void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);
+	static GameObject* Deserialize(Scene* pScene, const rapidjson::Value& value);
 
 private:
 	void AddChild(GameObject* child);

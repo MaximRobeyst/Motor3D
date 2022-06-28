@@ -27,7 +27,7 @@ class Mesh final
 {
 public:
 	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Material* pMaterial);				// Constructor
-	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, Material* pMaterial);				// Constructor
+	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& filePath, int submeshId, Material* pMaterial);				// Constructor
 	~Mesh();				// Destructor
 
 	// Copy/move constructors and assignment operators
@@ -44,6 +44,10 @@ public:
 	//void AddMaterial(const std::string& materialName, Material* pMaterial);
 	void SetMaterial(const std::string& name, Material* m_pMaterial);
 	Material* GetMaterial(const std::string& name) const;
+	Mesh* GetSubMesh(int index);
+
+	std::string GetFilename();
+	int GetSubmeshID();
 
 private:
 	// Private member functions		
@@ -54,8 +58,11 @@ private:
 	ID3D11Buffer* m_pVertexBuffer{ nullptr };
 	ID3D11Buffer* m_pIndexBuffer{ nullptr };
 
+	std::string m_Filename;
+	std::vector<Mesh*> m_pSubmeshes{};
+	int m_SubmeshId;
+
 	Material* m_pMaterial{ nullptr };
-	//std::map<std::string, Material*> m_pMaterials{};
 
 	FMatrix4 m_WorldMatrix{};
 

@@ -11,19 +11,22 @@
 Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Material* pMaterial)
 	: m_pMaterial{ pMaterial }
 	, m_WorldMatrix{FMatrix4::Identity()}
+	, m_Filename{filePath}
 {
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 
 
-	ParseOBJ(filePath, vertices, indices);
+	ParseOBJ(filePath, m_pSubmeshes);
 
 	Initialize(pDevice, hWnd, vertices, indices);
 }
 
-Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, Material* pMaterial)
+Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& filePath, int submeshId, Material* pMaterial)
 	: m_pMaterial{ pMaterial}
 	, m_WorldMatrix{ FMatrix4::Identity() }
+	, m_Filename{filePath}
+	, m_SubmeshId{submeshId}
 {
 	Initialize(pDevice, hWnd, vertices, indices);
 }
@@ -122,6 +125,21 @@ void Mesh::SetMaterial(const std::string&, Material* pMaterial)
 Material* Mesh::GetMaterial(const std::string&) const
 {
 	return m_pMaterial;
+}
+
+Mesh* Mesh::GetSubMesh(int index)
+{
+	return m_pSubmeshes[index];
+}
+
+std::string Mesh::GetFilename()
+{
+	return m_Filename;
+}
+
+int Mesh::GetSubmeshID()
+{
+	return m_SubmeshId;
 }
 
 //void Mesh::AddMaterial(const std::string& materialName, Material* pMaterial)

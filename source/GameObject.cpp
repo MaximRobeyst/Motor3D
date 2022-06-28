@@ -2,7 +2,10 @@
 #include "Component.h"
 #include "Scene.h"
 
+#include "Factory.h"
+
 #include <imgui.h>
+
 
 uint32_t GameObject::m_AmountOfGameObjects{};
 
@@ -26,6 +29,9 @@ GameObject::~GameObject()
 
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
 		delete* iter;
+	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
+		delete* iter;
+
 	m_pComponents.clear();
 }
 
@@ -38,6 +44,15 @@ void GameObject::AddComponent(IComponent* component)
 void GameObject::RemoveComponent(IComponent* component)
 {
 	m_pComponents.erase(std::remove(m_pComponents.begin(), m_pComponents.end(), component));
+}
+
+void GameObject::Start()
+{
+	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
+		(*iter)->Start();
+
+	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
+		(*iter)->Start();
 }
 
 void GameObject::Render(Camera* pCamera)
@@ -130,7 +145,64 @@ void GameObject::SetScene(Scene* pScene)
 
 Scene* GameObject::GetScene() const
 {
+	if (m_pScene == nullptr && m_pParent != nullptr) return m_pParent->GetScene();
+
 	return m_pScene;
+}
+
+void GameObject::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
+{
+	writer.Key("Name");
+	writer.String(m_Name.c_str());
+
+	writer.Key("Components");
+	writer.StartArray();
+
+	for (auto& pComponent : m_pComponents)
+	{
+		writer.StartObject();
+
+		writer.Key("Name");
+		writer.String(typeid(*pComponent).name());
+
+		pComponent->Serialize(writer);
+		
+		writer.EndObject();
+	}
+	writer.EndArray();
+
+	writer.Key("Children");
+	writer.StartArray();
+
+	for (auto& pGameobject : m_pChildren)
+	{
+		writer.StartObject();
+
+		pGameobject->Serialize(writer);
+
+		writer.EndObject();
+	}
+	writer.EndArray();
+}
+
+GameObject* GameObject::Deserialize(Scene* pScene, const rapidjson::Value& value)
+{
+	GameObject* pGameobject = new GameObject(value["Name"].GetString());
+
+	for (auto& component : value["Components"].GetArray())
+	{
+		auto pComponent = Factory<IComponent>::GetInstance().Create(component["Name"].GetString());
+		pGameobject->AddComponent(pComponent);
+		pComponent->Deserialize(component);
+	}
+
+	for (auto& gameobject : value["Children"].GetArray())
+	{
+		auto pChild = GameObject::Deserialize(pScene, gameobject);
+		pChild->SetParent(pGameobject);
+	}
+
+	return pGameobject;
 }
 
 void GameObject::AddChild(GameObject* child)

@@ -18,6 +18,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include <imgui.h>
+#include "ResourceManager.h"
 
 #define MY_ENGINE MyEngine::GetSingleton()
 
@@ -29,6 +30,9 @@ MyApplication::MyApplication()
 MyApplication::~MyApplication()
 {
 	m_pMeshes.clear();
+
+	delete MaterialManager::GetInstance();
+	delete ResourceManager::GetInstance();
 
 	delete m_pCamera;
 	delete m_pScene;
@@ -57,6 +61,15 @@ void MyApplication::KeyDown(WPARAM wparam)
 	m_pCamera->KeyDown(wparam);
 }
 
+void MyApplication::SaveFile()
+{
+}
+
+void MyApplication::LoadFile()
+{
+	
+}
+
 void MyApplication::Render()
 {
 	m_pScene->Render(m_pCamera);	
@@ -64,7 +77,40 @@ void MyApplication::Render()
 
 void MyApplication::RenderGUI()
 {
-	ImGui::Begin("Application");
+	ImGuiWindowFlags windowFlags = 0;
+	windowFlags |= ImGuiWindowFlags_MenuBar;
+
+	ImGui::Begin("Application", 0, windowFlags);
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::BeginMenu("Save as..."))
+			{
+				static char filename[128] = "New_File";
+				ImGui::InputText("Filename:", filename, 128);
+				if (ImGui::Button("Save"))
+				{
+					m_pScene->Serialize(filename);
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Load"))
+			{
+				static char filename[128] = "New_File";
+				ImGui::InputText("Filename:", filename, 128);
+				if (ImGui::Button("Load"))
+				{
+					m_pScene->Deserialize(filename);
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
 
 	if (ImGui::CollapsingHeader("Scene"))
 	{
@@ -108,7 +154,7 @@ void MyApplication::Initialize()
 	m_pCamera = new Camera(FVector3{ 0,1.f,-2.5 }, FVector3{ 0,0,1 }, 60.f, static_cast<float>(width) / static_cast<float>(height));
 
 	m_pScene = new Scene();
-	ParseOBJ("Resources/5Props.obj", m_pMeshes, m_pScene);
+	ParseOBJ("Resources/5Props.obj", m_pMeshes);
 
 	//for (int i = 0; i < 10; i++)
 	//{
@@ -136,23 +182,26 @@ void MyApplication::Initialize()
 		
 		if(i == 0)
 			m_pScene->AddGameObject(gameobjects[i]);
-		gameobjects[i]->SetParent(gameobjects[0]);
+		else
+			gameobjects[i]->SetParent(gameobjects[i - 1]);
 
 		gameobjects[i]->AddComponent(new MeshComponent(mesh));
 		gameobjects[i]->AddComponent(new Rotator(45.f, FVector3{0,1,0}));
 
 		++i;
 	}
+	
+	auto pMaterialManager = MaterialManager::GetInstance();
 
-	m_pScene->GetMaterial("lambert8SG")->SetDiffuseMap(
+	pMaterialManager->GetMaterial("lambert8SG")->SetDiffuseMap(
 		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_BarrelAndBanjo_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
-	m_pScene->GetMaterial("lambert5SG")->SetDiffuseMap(
+	pMaterialManager->GetMaterial("lambert5SG")->SetDiffuseMap(
 		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_Distillery_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
-	m_pScene->GetMaterial("lambert9SG")->SetDiffuseMap(
+	pMaterialManager->GetMaterial("lambert9SG")->SetDiffuseMap(
 		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_Shotgun_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
-	m_pScene->GetMaterial("lambert10SG")->SetDiffuseMap(
+	pMaterialManager->GetMaterial("lambert10SG")->SetDiffuseMap(
 		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_ChairAndFirepit_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
-		m_pScene->GetMaterial("DAE2_RickAstley_Assignment1_000_aiStandardSurface1SG1")->SetDiffuseMap(
+	pMaterialManager->GetMaterial("DAE2_RickAstley_Assignment1_000_aiStandardSurface1SG1")->SetDiffuseMap(
 			new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
 
 	m_pUnLitMaterial = nullptr;

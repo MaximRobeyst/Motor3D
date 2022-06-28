@@ -198,3 +198,16 @@ source/x64/Debug/Texture.obj
 source/x64/Debug/WICTextureLoader.obj
 x64/Debug/Demo.exe
 x64/Debug/Demo.pdb
+.vs/MyApplication/v17/ipch/AutoPCH/277d97958fe688c0/RESOURCEMANAGER.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/2e9e5fabc06a3594/CAMERA.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/579fc304766ab616/MATERIAL.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/684e1d8f889740f7/FIELDBINDER.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/74d0a32f5831c32f/SCENE.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/7a277abd9620263b/IMGUI.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/8e09f40aa3c3e925/FACTORY.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/9fec7d480f62a36e/DX11RENDERER.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/bc48b7832a87f7a7/MATERIALMANAGER.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/c1901cd693143b1f/MYAPPLICATION.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/c4a414991f11a764/COMPONENT.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/d2c143521e96964a/MESH.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/e8d5d5029420ee96/GAMEOBJECT.ipch
