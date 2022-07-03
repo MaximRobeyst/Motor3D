@@ -12,6 +12,7 @@
 #include "Material.h"
 #include "Scene.h"
 #include "LitMaterial.h"
+#include "Texture.h"
 
 #include "MaterialManager.h"
 
@@ -33,28 +34,53 @@ static void CreateMesh(std::vector<Mesh*>& pMeshes,  Mesh_Struct& mesh, Scene* p
 		uint32_t index1 = mesh.indices[i + 1];
 		uint32_t index2 = mesh.indices[i + 2];
 
-		const FVector3& p0 = mesh.vertices[index0].position;
-		const FVector3& p1 = mesh.vertices[index1].position;
-		const FVector3& p2 = mesh.vertices[index2].position;
-		const FVector2& uv0 = mesh.vertices[index0].uv;
-		const FVector2& uv1 = mesh.vertices[index1].uv;
-		const FVector2& uv2 = mesh.vertices[index2].uv;
+		const DirectX::XMVECTOR& p0 = DirectX::XMLoadFloat3( &mesh.vertices[index0].position);
+		const DirectX::XMVECTOR& p1 = DirectX::XMLoadFloat3( &mesh.vertices[index1].position);
+		const DirectX::XMVECTOR& p2 = DirectX::XMLoadFloat3( &mesh.vertices[index2].position);
+		const DirectX::XMFLOAT2& uv0 = mesh.vertices[index0].uv;
+		const DirectX::XMFLOAT2& uv1 = mesh.vertices[index1].uv;
+		const DirectX::XMFLOAT2& uv2 = mesh.vertices[index2].uv;
 
-		const FVector3 edge0 = p1 - p0;
-		const FVector3 edge1 = p2 - p0;
+		const DirectX::XMVECTOR edge0 = DirectX::XMVectorSubtract(p1 , p0);
+		const DirectX::XMVECTOR edge1 = DirectX::XMVectorSubtract(p2 , p0);
 
-		const FVector2 diffX = FVector2(uv1.x - uv0.x, uv2.x - uv0.x);
-		const FVector2 diffY = FVector2(uv1.y - uv0.y, uv2.y - uv0.y);
-		float r = 1.f / Cross(diffX, diffY);
+		const auto diffx = DirectX::XMFLOAT2(uv1.x - uv0.x, uv2.x - uv0.x);
+		const auto diffy = DirectX::XMFLOAT2(uv1.y - uv0.y, uv2.y - uv0.y);
 
-		FVector3 tangent = (edge0 * diffY.y - edge1 * diffY.x) * r;
-		mesh.vertices[index0].tangent += tangent;
-		mesh.vertices[index1].tangent += tangent;
-		mesh.vertices[index2].tangent += tangent;
+		const DirectX::XMVECTOR diffX = DirectX::XMLoadFloat2(&diffx);
+		const DirectX::XMVECTOR diffY = DirectX::XMLoadFloat2(&diffy);
+
+		float one = 1.0f;
+		auto oneVector = DirectX::XMLoadFloat(&one);
+		auto r = DirectX::XMVectorDivide( oneVector , DirectX::XMVector3Cross(diffX, diffY));
+
+		DirectX::XMFLOAT2 storedDiff;
+		DirectX::XMStoreFloat2(&storedDiff, diffY);
+
+		DirectX::XMVECTOR tangent0 = DirectX::XMLoadFloat3(&mesh.vertices[index0].tangent);
+		DirectX::XMVECTOR tangent1 = DirectX::XMLoadFloat3(&mesh.vertices[index1].tangent);
+		DirectX::XMVECTOR tangent2 = DirectX::XMLoadFloat3(&mesh.vertices[index2].tangent);
+
+		DirectX::XMVECTOR tangent = DirectX::XMVectorMultiply( DirectX::XMVectorSubtract( DirectX::XMVectorMultiply(edge0 , DirectX::XMLoadFloat(&storedDiff.y)) , DirectX::XMVectorMultiply(edge1 , DirectX::XMLoadFloat(&storedDiff.x))) , r);
+
+		DirectX::XMVectorAdd(tangent0, tangent);
+		DirectX::XMVectorAdd(tangent1, tangent);
+		DirectX::XMVectorAdd(tangent2, tangent);
+
+		DirectX::XMStoreFloat3(&mesh.vertices[index0].tangent, tangent0);
+		DirectX::XMStoreFloat3(&mesh.vertices[index1].tangent, tangent1);
+		DirectX::XMStoreFloat3(&mesh.vertices[index2].tangent, tangent2);
 	}
 	for (auto& v : mesh.vertices)
 	{
-		v.tangent = GetNormalized(Reject(v.tangent, v.normal));
+		auto tangent = DirectX::XMLoadFloat3(&v.tangent);
+		auto normal = DirectX::XMLoadFloat3(&v.normal);
+
+		auto project = DirectX::XMVectorMultiply(normal , DirectX::XMVectorDivide(DirectX::XMVector3Dot(normal, tangent) , DirectX::XMVectorSqrt(normal) ) ) ;
+
+		tangent = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(tangent, project));
+
+		DirectX::XMStoreFloat3(&v.tangent, tangent);
 	}
 
 	//auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
@@ -85,28 +111,53 @@ static void CreateMesh(std::vector<Mesh*>& pMeshes, Mesh_Struct& mesh, const std
 		uint32_t index1 = mesh.indices[i + 1];
 		uint32_t index2 = mesh.indices[i + 2];
 
-		const FVector3& p0 = mesh.vertices[index0].position;
-		const FVector3& p1 = mesh.vertices[index1].position;
-		const FVector3& p2 = mesh.vertices[index2].position;
-		const FVector2& uv0 = mesh.vertices[index0].uv;
-		const FVector2& uv1 = mesh.vertices[index1].uv;
-		const FVector2& uv2 = mesh.vertices[index2].uv;
+		const DirectX::XMVECTOR& p0 = DirectX::XMLoadFloat3(&mesh.vertices[index0].position);
+		const DirectX::XMVECTOR& p1 = DirectX::XMLoadFloat3(&mesh.vertices[index1].position);
+		const DirectX::XMVECTOR& p2 = DirectX::XMLoadFloat3(&mesh.vertices[index2].position);
+		const DirectX::XMFLOAT2& uv0 = mesh.vertices[index0].uv;
+		const DirectX::XMFLOAT2& uv1 = mesh.vertices[index1].uv;
+		const DirectX::XMFLOAT2& uv2 = mesh.vertices[index2].uv;
 
-		const FVector3 edge0 = p1 - p0;
-		const FVector3 edge1 = p2 - p0;
+		const DirectX::XMVECTOR edge0 = DirectX::XMVectorSubtract(p1, p0);
+		const DirectX::XMVECTOR edge1 = DirectX::XMVectorSubtract(p2, p0);
 
-		const FVector2 diffX = FVector2(uv1.x - uv0.x, uv2.x - uv0.x);
-		const FVector2 diffY = FVector2(uv1.y - uv0.y, uv2.y - uv0.y);
-		float r = 1.f / Cross(diffX, diffY);
+		const auto diffx = DirectX::XMFLOAT2(uv1.x - uv0.x, uv2.x - uv0.x);
+		const auto diffy = DirectX::XMFLOAT2(uv1.y - uv0.y, uv2.y - uv0.y);
 
-		FVector3 tangent = (edge0 * diffY.y - edge1 * diffY.x) * r;
-		mesh.vertices[index0].tangent += tangent;
-		mesh.vertices[index1].tangent += tangent;
-		mesh.vertices[index2].tangent += tangent;
+		const DirectX::XMVECTOR diffX = DirectX::XMLoadFloat2(&diffx);
+		const DirectX::XMVECTOR diffY = DirectX::XMLoadFloat2(&diffy);
+
+		float one = 1.0f;
+		auto oneVector = DirectX::XMLoadFloat(&one);
+		auto r = DirectX::XMVectorDivide(oneVector, DirectX::XMVector3Cross(diffX, diffY));
+
+		DirectX::XMFLOAT2 storedDiff;
+		DirectX::XMStoreFloat2(&storedDiff, diffY);
+
+		DirectX::XMVECTOR tangent0 = DirectX::XMLoadFloat3(&mesh.vertices[index0].tangent);
+		DirectX::XMVECTOR tangent1 = DirectX::XMLoadFloat3(&mesh.vertices[index1].tangent);
+		DirectX::XMVECTOR tangent2 = DirectX::XMLoadFloat3(&mesh.vertices[index2].tangent);
+
+		DirectX::XMVECTOR tangent = DirectX::XMVectorMultiply(DirectX::XMVectorSubtract(DirectX::XMVectorMultiply(edge0, DirectX::XMLoadFloat(&storedDiff.y)), DirectX::XMVectorMultiply(edge1, DirectX::XMLoadFloat(&storedDiff.x))), r);
+
+		DirectX::XMVectorAdd(tangent0, tangent);
+		DirectX::XMVectorAdd(tangent1, tangent);
+		DirectX::XMVectorAdd(tangent2, tangent);
+
+		DirectX::XMStoreFloat3(&mesh.vertices[index0].tangent, tangent0);
+		DirectX::XMStoreFloat3(&mesh.vertices[index1].tangent, tangent1);
+		DirectX::XMStoreFloat3(&mesh.vertices[index2].tangent, tangent2);
 	}
 	for (auto& v : mesh.vertices)
 	{
-		v.tangent = GetNormalized(Reject(v.tangent, v.normal));
+		auto tangent = DirectX::XMLoadFloat3(&v.tangent);
+		auto normal = DirectX::XMLoadFloat3(&v.normal);
+
+		auto project = DirectX::XMVectorMultiply(normal, DirectX::XMVectorDivide(DirectX::XMVector3Dot(normal, tangent), DirectX::XMVectorSqrt(normal)));
+
+		tangent = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(tangent, project));
+
+		DirectX::XMStoreFloat3(&v.tangent, tangent);
 	}
 
 	//auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
@@ -132,9 +183,9 @@ static bool ParseOBJ(const std::string& filename, std::vector<Mesh*>& m_pMeshes)
 	if (!file)
 		return false;
 
-	std::vector<FVector3> positions;
-	std::vector<FVector3> normals;
-	std::vector<FVector2> UVs;
+	std::vector<DirectX::XMFLOAT3> positions;
+	std::vector<DirectX::XMFLOAT3> normals;
+	std::vector<DirectX::XMFLOAT2> UVs;
 
 	std::vector<Vertex> vertices;
 	std::vector<u_int> indices;
@@ -156,21 +207,21 @@ static bool ParseOBJ(const std::string& filename, std::vector<Mesh*>& m_pMeshes)
 			//Vertex
 			float x, y, z;
 			file >> x >> y >> z;
-			positions.push_back(FVector3(x, y, -z));
+			positions.push_back(DirectX::XMFLOAT3(x, y, -z));
 		}
 		else if (sCommand == "vt")
 		{
 			// Vertex TexCoord
 			float u, v;
 			file >> u >> v;
-			UVs.push_back(FVector2(u, 1 - v));
+			UVs.push_back(DirectX::XMFLOAT2(u, 1 - v));
 		}
 		else if (sCommand == "vn")
 		{
 			// Vertex Normal
 			float x, y, z;
 			file >> x >> y >> z;
-			normals.push_back(FVector3(x, y, z));
+			normals.push_back(DirectX::XMFLOAT3(x, y, z));
 		}
 		else if (sCommand == "f")
 		{
@@ -265,9 +316,9 @@ static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes, 
 	if (!file)
 		return false;
 
-	std::vector<FVector3> positions;
-	std::vector<FVector3> normals;
-	std::vector<FVector2> UVs;
+	std::vector<DirectX::XMFLOAT3> positions;
+	std::vector<DirectX::XMFLOAT3> normals;
+	std::vector<DirectX::XMFLOAT2> UVs;
 
 	std::vector<Vertex> vertices;
 	std::vector<u_int> indices;
@@ -290,21 +341,21 @@ static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes, 
 			//Vertex
 			float x, y, z;
 			file >> x >> y >> z;
-			positions.push_back(FVector3(x, y, -z));
+			positions.push_back(DirectX::XMFLOAT3(x, y, -z));
 		}
 		else if (sCommand == "vt")
 		{
 			// Vertex TexCoord
 			float u, v;
 			file >> u >> v;
-			UVs.push_back(FVector2(u, 1 - v));
+			UVs.push_back(DirectX::XMFLOAT2(u, 1 - v));
 		}
 		else if (sCommand == "vn")
 		{
 			// Vertex Normal
 			float x, y, z;
 			file >> x >> y >> z;
-			normals.push_back(FVector3(x, y, z));
+			normals.push_back(DirectX::XMFLOAT3(x, y, z));
 		}
 		else if (sCommand == "f")
 		{
@@ -397,9 +448,9 @@ static bool ParseOBJ(const std::string& filename, std::vector<Vertex>& vertices,
 	if (!file)
 		return false;
 
-	std::vector<FVector3> positions;
-	std::vector<FVector3> normals;
-	std::vector<FVector2> UVs;
+	std::vector<DirectX::XMFLOAT3> positions;
+	std::vector<DirectX::XMFLOAT3> normals;
+	std::vector<DirectX::XMFLOAT2> UVs;
 
 	vertices.clear();
 	indices.clear();
@@ -420,21 +471,21 @@ static bool ParseOBJ(const std::string& filename, std::vector<Vertex>& vertices,
 			//Vertex
 			float x, y, z;
 			file >> x >> y >> z;
-			positions.push_back(FVector3(x, y, z));
+			positions.push_back(DirectX::XMFLOAT3(x, y, z));
 		}
 		else if (sCommand == "vt")
 		{
 			// Vertex TexCoord
 			float u, v;
 			file >> u >> v;
-			UVs.push_back(FVector2(u, 1 - v));
+			UVs.push_back(DirectX::XMFLOAT2(u, 1 - v));
 		}
 		else if (sCommand == "vn")
 		{
 			// Vertex Normal
 			float x, y, z;
 			file >> x >> y >> z;
-			normals.push_back(FVector3(x, y, z));
+			normals.push_back(DirectX::XMFLOAT3(x, y, z));
 		}
 		else if (sCommand == "f")
 		{
@@ -487,28 +538,53 @@ static bool ParseOBJ(const std::string& filename, std::vector<Vertex>& vertices,
 		uint32_t index1 = indices[i + 1];
 		uint32_t index2 = indices[i + 2];
 
-		const FVector3& p0 = vertices[index0].position;
-		const FVector3& p1 = vertices[index1].position;
-		const FVector3& p2 = vertices[index2].position;
-		const FVector2& uv0 = vertices[index0].uv;
-		const FVector2& uv1 = vertices[index1].uv;
-		const FVector2& uv2 = vertices[index2].uv;
+		const DirectX::XMVECTOR& p0 = DirectX::XMLoadFloat3(&vertices[index0].position);
+		const DirectX::XMVECTOR& p1 = DirectX::XMLoadFloat3(&vertices[index1].position);
+		const DirectX::XMVECTOR& p2 = DirectX::XMLoadFloat3(&vertices[index2].position);
+		const DirectX::XMFLOAT2& uv0 = vertices[index0].uv;
+		const DirectX::XMFLOAT2& uv1 = vertices[index1].uv;
+		const DirectX::XMFLOAT2& uv2 = vertices[index2].uv;
 
-		const FVector3 edge0 = p1 - p0;
-		const FVector3 edge1 = p2 - p0;
+		const DirectX::XMVECTOR edge0 = DirectX::XMVectorSubtract(p1, p0);
+		const DirectX::XMVECTOR edge1 = DirectX::XMVectorSubtract(p2, p0);
 
-		const FVector2 diffX = FVector2(uv1.x - uv0.x, uv2.x - uv0.x);
-		const FVector2 diffY = FVector2(uv1.y - uv0.y, uv2.y - uv0.y);
-		float r = 1.f / Cross(diffX, diffY);
+		const auto diffx = DirectX::XMFLOAT2(uv1.x - uv0.x, uv2.x - uv0.x);
+		const auto diffy = DirectX::XMFLOAT2(uv1.y - uv0.y, uv2.y - uv0.y);
 
-		FVector3 tangent = (edge0 * diffY.y - edge1 * diffY.x) * r;
-		vertices[index0].tangent += tangent;
-		vertices[index1].tangent += tangent;
-		vertices[index2].tangent += tangent;
+		const DirectX::XMVECTOR diffX = DirectX::XMLoadFloat2(&diffx);
+		const DirectX::XMVECTOR diffY = DirectX::XMLoadFloat2(&diffy);
+
+		float one = 1.0f;
+		auto oneVector = DirectX::XMLoadFloat(&one);
+		auto r = DirectX::XMVectorDivide(oneVector, DirectX::XMVector3Cross(diffX, diffY));
+
+		DirectX::XMFLOAT2 storedDiff;
+		DirectX::XMStoreFloat2(&storedDiff, diffY);
+
+		DirectX::XMVECTOR tangent0 = DirectX::XMLoadFloat3(&vertices[index0].tangent);
+		DirectX::XMVECTOR tangent1 = DirectX::XMLoadFloat3(&vertices[index1].tangent);
+		DirectX::XMVECTOR tangent2 = DirectX::XMLoadFloat3(&vertices[index2].tangent);
+
+		DirectX::XMVECTOR tangent = DirectX::XMVectorMultiply(DirectX::XMVectorSubtract(DirectX::XMVectorMultiply(edge0, DirectX::XMLoadFloat(&storedDiff.y)), DirectX::XMVectorMultiply(edge1, DirectX::XMLoadFloat(&storedDiff.x))), r);
+
+		DirectX::XMVectorAdd(tangent0, tangent);
+		DirectX::XMVectorAdd(tangent1, tangent);
+		DirectX::XMVectorAdd(tangent2, tangent);
+
+		DirectX::XMStoreFloat3(&vertices[index0].tangent, tangent0);
+		DirectX::XMStoreFloat3(&vertices[index1].tangent, tangent1);
+		DirectX::XMStoreFloat3(&vertices[index2].tangent, tangent2);
 	}
 	for (auto& v : vertices)
 	{
-		v.tangent = GetNormalized(Reject(v.tangent, v.normal));
+		auto tangent = DirectX::XMLoadFloat3(&v.tangent);
+		auto normal = DirectX::XMLoadFloat3(&v.normal);
+
+		auto project = DirectX::XMVectorMultiply(normal, DirectX::XMVectorDivide(DirectX::XMVector3Dot(normal, tangent), DirectX::XMVectorSqrt(normal)));
+
+		tangent = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(tangent, project));
+
+		DirectX::XMStoreFloat3(&v.tangent, tangent);
 	}
 
 	return true;

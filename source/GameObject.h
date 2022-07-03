@@ -13,6 +13,9 @@
 #undef min
 #include <document.h>
 
+#include <string>
+#include <DirectXMath.h>
+
 class TransformComponent;
 class IComponent;
 class Camera;
@@ -21,7 +24,7 @@ class Scene;
 class GameObject
 {
 public:
-	GameObject(const std::string& name = "new Entity", FVector3 position = FVector3{}, FVector3 rotation = FVector3{}, FVector3 scale = {});
+	GameObject(const std::string& name = "new Entity", DirectX::XMFLOAT3 position = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 scale = {});
 	GameObject(TransformComponent* pTransformComponent, const std::string& name = "New Entity");
 	~GameObject();
 

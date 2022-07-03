@@ -5,21 +5,21 @@
 #include "DataTypes.h"
 #pragma warning(pop)
 
-#include "RGBColor.h"
-
 #include "MyEngine.h"
+#include <DirectXMath.h>
 #include <map>
 
 class Texture;
 class Camera;
 class Material;
+class CameraComponent;
 
 struct Vertex
 {
-	FVector3 position;
-	FVector3 normal;
-	FVector3 tangent;
-	FVector2 uv;
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 normal;
+	DirectX::XMFLOAT3 tangent;
+	DirectX::XMFLOAT2 uv;
 	//RGBColor color;
 };
 
@@ -36,10 +36,10 @@ public:
 	Mesh& operator=(const Mesh& other) ;
 	Mesh& operator=(Mesh&& other)	noexcept = delete;
 
-	void Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera);
+	void Render(ID3D11DeviceContext* pDeviceContext, CameraComponent* pCamera);
 
-	FMatrix4 GetWorldMatrix() const;
-	void SetWorldMatrix(const FMatrix4& worldMatrix);
+	DirectX::XMFLOAT4X4 GetWorldMatrix() const;
+	void SetWorldMatrix(const DirectX::XMFLOAT4X4& worldMatrix);
 
 	//void AddMaterial(const std::string& materialName, Material* pMaterial);
 	void SetMaterial(const std::string& name, Material* m_pMaterial);
@@ -64,7 +64,7 @@ private:
 
 	Material* m_pMaterial{ nullptr };
 
-	FMatrix4 m_WorldMatrix{};
+	DirectX::XMFLOAT4X4 m_WorldMatrix{};
 
 	uint32_t m_AmountIndices{};
 };

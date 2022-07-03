@@ -1,34 +1,24 @@
 #include "Camera.h"
+#include <DirectXMath.h>
+#include "MyEngine.h"
+#include "Utils.h"
 
-Camera::Camera(const FVector3& position, const FVector3& forward, float FOV, float aspectRatio, float cfar, float cnear)
+Camera::Camera(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& forward, float FOV, float aspectRatio, float cfar, float cnear)
 	: m_Position{ position }
-	, m_Forward{ GetNormalized(forward) }
+	, m_Forward{  }
 	, m_FOV{ tanf( ToRadians(FOV) / 2.f) }
 	, m_AspectRatio{ aspectRatio }
 	, m_Far{ cfar }
 	, m_Near{ cnear }
 {
+	DirectX::XMStoreFloat3(&m_Forward, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&forward)));
+
 	RECT windowRect;
 	GetWindowRect(MyEngine::GetSingleton()->GetWindowHandle(), &windowRect);
-	m_PrevMousePos = IVector2{ windowRect.left + ((windowRect.right - windowRect.left) / 2), windowRect.bottom + ((windowRect.top - windowRect.bottom) / 2) };
+	m_PrevMousePos = DirectX::XMFLOAT2{ static_cast<float>(windowRect.left + ((windowRect.right - windowRect.left) / 2)), static_cast<float>(windowRect.bottom + ((windowRect.top - windowRect.bottom) / 2)) };
 
 	MakeProjectionMatrix();
 	UpdateMatrix();
-}
-
-FMatrix4 Camera::GetViewMatrix() const
-{
-	return m_WorldToView;
-}
-
-FMatrix4 Camera::GetWorldMatrix() const
-{
-	return m_ViewToWorld;
-}
-
-FMatrix4 Camera::GetProjectionMatrix() const
-{
-	return m_ProjectionMatrix;
 }
 
 void Camera::Update(float elapsedSec)
@@ -47,12 +37,12 @@ void Camera::Update(float elapsedSec)
 
 	if ((GetKeyState(VK_RBUTTON) & 0x80) != 0)
 	{
-		m_AbsoluteRotation.x -= Clamp((m_PrevMousePos.y-y),-1,1) * m_MouseRotationSensitivity;
-		m_AbsoluteRotation.y -= Clamp((m_PrevMousePos.x-x),-1,1) * m_MouseRotationSensitivity;
+		m_AbsoluteRotation.x -= Clamp((m_PrevMousePos.y-y),-1.f,1.f) * m_MouseRotationSensitivity;
+		m_AbsoluteRotation.y -= Clamp((m_PrevMousePos.x-x),-1.f,1.f) * m_MouseRotationSensitivity;
 	}
 
-	m_PrevMousePos.x = x;
-	m_PrevMousePos.y = y;
+	m_PrevMousePos.x = static_cast<float>(x);
+	m_PrevMousePos.y = static_cast<float>(y);
 
 	//Update LookAt (view2world & world2view matrices)
 	//*************
@@ -82,46 +72,58 @@ void Camera::KeyUp(WPARAM wparam)
 void Camera::UpdateMatrix()
 {
 	//FORWARD (zAxis) with YAW applied
-	FMatrix3 yawRotation = MakeRotationY(m_AbsoluteRotation.y * float(TO_RADIANS));
-	FVector3 zAxis = yawRotation * m_Forward;
+	DirectX::XMVECTOR forward = DirectX::XMLoadFloat3(&m_Forward);
+	DirectX::XMMATRIX yawRotation = DirectX::XMMatrixRotationY(m_AbsoluteRotation.y * float(TO_RADIANS));
+	DirectX::XMVECTOR zAxis = DirectX::XMVector3Transform(forward, yawRotation);
+
+	DirectX::XMFLOAT3 upVector = DirectX::XMFLOAT3{ 0, 1,0 };
+	DirectX::XMVECTOR upVetor = DirectX::XMLoadFloat3(&upVector);
 
 	//Calculate RIGHT (xAxis) based on transformed FORWARD
-	FVector3 xAxis = GetNormalized(Cross(FVector3{ 0.f,1.f,0.f }, zAxis));
+	DirectX::XMVECTOR xAxis = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(upVetor, zAxis));
 
 	//FORWARD with PITCH applied (based on xAxis)
-	FMatrix3 pitchRotation = MakeRotation(m_AbsoluteRotation.x * float(TO_RADIANS), xAxis);
-	zAxis = pitchRotation * zAxis;
+	DirectX::XMMATRIX pitchRotation = DirectX::XMMatrixRotationZ(m_AbsoluteRotation.x * float(TO_RADIANS));
+	zAxis = DirectX::XMVector3Transform(zAxis, pitchRotation);
 
 	//Calculate UP (yAxis)
-	FVector3 yAxis = Cross(zAxis, xAxis);
+	DirectX::XMVECTOR yAxis = DirectX::XMVector3Cross(zAxis, xAxis);
 
 	//Translate based on transformed axis
-	m_Position += m_RelativeTranslation.x * xAxis;
-	m_Position += m_RelativeTranslation.y * yAxis;
-	m_Position += m_RelativeTranslation.z * zAxis;
+	auto position = DirectX::XMLoadFloat3(&m_Position);
+	DirectX::XMVectorAdd(position , DirectX::XMVectorMultiply(DirectX::XMLoadFloat(&m_RelativeTranslation.x) , xAxis));
+	DirectX::XMVectorAdd(position , DirectX::XMVectorMultiply(DirectX::XMLoadFloat(&m_RelativeTranslation.y) , yAxis));
+	DirectX::XMVectorAdd(position , DirectX::XMVectorMultiply(DirectX::XMLoadFloat(&m_RelativeTranslation.z) , zAxis));
+	DirectX::XMStoreFloat3(&m_Position, position);
+
+	auto posfloat4 = DirectX::XMFLOAT4{ m_Position.x, m_Position.y, m_Position.z, 1.f };
+	position = DirectX::XMLoadFloat4(&posfloat4);
 
 	//Construct View2World Matrix
-	m_ViewToWorld =
+	DirectX::XMMATRIX viewToWorld
 	{
-		FVector4{xAxis},
-		FVector4{yAxis},
-		FVector4{zAxis},
-		FVector4{m_Position.x,m_Position.y,m_Position.z,1.f}
+		xAxis,
+		yAxis,
+		zAxis,
+		position
 	};
 
 	//Construct World2View Matrix || viewMatrix
-	m_WorldToView = Inverse(m_ViewToWorld);
+	DirectX::XMVECTOR viewToWorldDeterminant = DirectX::XMMatrixDeterminant(viewToWorld);
+	viewToWorld = DirectX::XMMatrixInverse(&viewToWorldDeterminant, viewToWorld);
+	DirectX::XMStoreFloat4x4(&m_ViewToWorld, viewToWorld);
 
 	// WorldViewProjectionMatrix = ProjectionMatrix * ViewMatrix * WorldMatrix
-	m_WorldViewProjectionMatrix = m_ProjectionMatrix * m_ViewToWorld;
+	auto worldViewProjectionationMatrix = DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&m_ProjectionMatrix) , viewToWorld);
+	DirectX::XMStoreFloat4x4(&m_WorldViewProjectionMatrix, worldViewProjectionationMatrix);
 }
 
 void Camera::MakeProjectionMatrix()
 {
-	m_ProjectionMatrix = FMatrix4{
-		FVector4{ 1 / (m_AspectRatio * m_FOV),0,0, 0 },
-		FVector4{ 0,1 / m_FOV,0, 0 },
-		FVector4{ 0,0, m_Far / (m_Far - m_Near), 1.f},
-		FVector4{ 0, 0,-(m_Far * m_Near) / (m_Far - m_Near),0 }
+	m_ProjectionMatrix = DirectX::XMFLOAT4X4{
+		1 / (m_AspectRatio * m_FOV),0,0, 0 ,
+		0,1 / m_FOV,0, 0 ,
+		0,0, m_Far / (m_Far - m_Near), 1.f,
+		0, 0,-(m_Far * m_Near) / (m_Far - m_Near),0 
 	};
 }

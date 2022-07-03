@@ -2,7 +2,6 @@
 //
 #include "framework.h"
 #include "MyEngine.h"
-#include "RGBColor.h"
 
 #include <cassert>
 #include <windowsx.h>
@@ -139,6 +138,8 @@ int MyEngine::Run(MyApplication* applicationPtr)
 
 
 	bool running = true;
+    Start();
+
 	while (running)
 	{
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -284,6 +285,11 @@ DX11Renderer* MyEngine::GetRenderer() const
 HWND MyEngine::GetWindowHandle() const
 {
     return m_hWnd;
+}
+
+void MyEngine::Start()
+{
+    m_pApplication->Start();
 }
 
 void MyEngine::Render()

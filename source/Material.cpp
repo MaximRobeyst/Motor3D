@@ -3,6 +3,8 @@
 #include <cassert>
 #include <sstream>
 
+#include "Texture.h"
+
 
 Material::Material(ID3D11Device* pDevice, const std::wstring& assertFile)
 {

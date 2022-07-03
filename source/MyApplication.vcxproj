@@ -194,26 +194,17 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="WICTextureLoader.h" />
-    <ClInclude Include="DataTypes.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Matrix.h" />
-    <ClInclude Include="Matrix3.h" />
-    <ClInclude Include="Matrix4.h" />
-    <ClInclude Include="OBJParser.h" />
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="Vector.h" />
-    <ClInclude Include="Vector2.h" />
-    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="WICTextureLoader.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="OBJParser.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MyApplication.h" />
     <ClInclude Include="MyEngine.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="RGBColor.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_dx11.cpp" />

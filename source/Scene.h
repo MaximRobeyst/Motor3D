@@ -8,6 +8,7 @@ typedef int ImGuiTreeNodeFlags;
 // The scene keeps track of all the components and entities it will also be able to load in save files and save to files
 class GameObject;
 class Camera;
+class CameraComponent;
 class Scene
 {
 public:
@@ -30,6 +31,9 @@ public:
 	void Serialize(const std::string& filename);
 	void Deserialize(const std::string& filename);
 
+	void SetCamera(CameraComponent* pCameraComponent);
+	CameraComponent* GetCamera() const;
+
 private:
 	void RenderGameobjectSceneGraph(GameObject* pGameobject,int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop);
 
@@ -37,5 +41,6 @@ private:
 	std::map<std::string, Material*> m_pMaterials{};
 
 	GameObject* m_pSelectedGameobject{};
+	CameraComponent* m_pCameraComponent;
 };
 

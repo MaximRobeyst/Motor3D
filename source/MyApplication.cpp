@@ -19,6 +19,7 @@
 #include "Component.h"
 #include <imgui.h>
 #include "ResourceManager.h"
+#include "Utils.h"
 
 #define MY_ENGINE MyEngine::GetSingleton()
 
@@ -51,14 +52,14 @@ void MyApplication::RightMouseButtonAction(int , int , bool isUp)
 	if (isUp) m_PointsVec.clear();
 }
 
-void MyApplication::KeyUp(WPARAM wparam)
+void MyApplication::KeyUp(WPARAM )
 {
-	m_pCamera->KeyUp(wparam);
+	//m_pCamera->KeyUp(wparam);
 }
 
-void MyApplication::KeyDown(WPARAM wparam)
+void MyApplication::KeyDown(WPARAM )
 {
-	m_pCamera->KeyDown(wparam);
+	//m_pCamera->KeyDown(wparam);
 }
 
 void MyApplication::SaveFile()
@@ -68,6 +69,11 @@ void MyApplication::SaveFile()
 void MyApplication::LoadFile()
 {
 	
+}
+
+void MyApplication::Start()
+{
+	m_pScene->Start();
 }
 
 void MyApplication::Render()
@@ -124,10 +130,7 @@ void MyApplication::RenderGUI()
 void MyApplication::Update(float dt)
 {
 
-	m_pCamera->Update(dt);
-
-	m_Rotation += (ToRadians(45.f) * dt);
-	FMatrix4 rotationMatrix = MakeRotation(m_Rotation, FVector3{ 0,1,0 });
+	//m_pCamera->Update(dt);
 
 	//m_pMesh->SetWorldMatrix(rotationMatrix);
 
@@ -137,7 +140,7 @@ void MyApplication::Update(float dt)
 	RECT windowRect;
 	GetWindowRect(MY_ENGINE->GetWindowHandle(), &windowRect);
 
-	IVector2 windowCenter{ windowRect.left + ((windowRect.right - windowRect.left) / 2), windowRect.bottom + ((windowRect.top - windowRect.bottom) / 2) };
+	DirectX::XMFLOAT2 windowCenter{ static_cast<float>( windowRect.left + ((windowRect.right - windowRect.left) / 2)), static_cast<float>(windowRect.bottom + ((windowRect.top - windowRect.bottom) / 2)) };
 
 	//SetCursorPos(windowCenter.x, windowCenter.y);
 
@@ -151,9 +154,14 @@ void MyApplication::Initialize()
 	GetWindowRect(MY_ENGINE->GetWindowHandle(), &rect);
 	float width = static_cast<float>(rect.right - rect.left);
 	float height =static_cast<float>( rect.bottom - rect.top);
-	m_pCamera = new Camera(FVector3{ 0,1.f,-2.5 }, FVector3{ 0,0,1 }, 60.f, static_cast<float>(width) / static_cast<float>(height));
+	//m_pCamera = new Camera(DirectX::XMFLOAT3{ 0,1.f,-2.5 }, DirectX::XMFLOAT3{ 0,0,1 }, 60.f, static_cast<float>(width) / static_cast<float>(height));
 
 	m_pScene = new Scene();
+	auto pCamera = new GameObject("Camera", DirectX::XMFLOAT3{ 0, 1.f, -2.5f });
+	pCamera->AddComponent(new CameraComponent(60, static_cast<float>(width) / static_cast<float>(height), 2500.f, 0.1f));
+	m_pScene->AddGameObject(pCamera);
+
+
 	ParseOBJ("Resources/5Props.obj", m_pMeshes);
 
 	//for (int i = 0; i < 10; i++)
@@ -186,7 +194,7 @@ void MyApplication::Initialize()
 			gameobjects[i]->SetParent(gameobjects[i - 1]);
 
 		gameobjects[i]->AddComponent(new MeshComponent(mesh));
-		gameobjects[i]->AddComponent(new Rotator(45.f, FVector3{0,1,0}));
+		gameobjects[i]->AddComponent(new Rotator(45.f, DirectX::XMFLOAT3{0,1,0}));
 
 		++i;
 	}

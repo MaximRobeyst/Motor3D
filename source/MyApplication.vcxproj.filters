@@ -12,9 +12,6 @@
     <Filter Include="Shader Files">
       <UniqueIdentifier>{c3383be9-05f6-4727-bdbc-e3dec206c4d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DataTypes">
-      <UniqueIdentifier>{1d469660-46fc-49a8-8467-ae12ccbc0302}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Application Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -60,38 +57,8 @@
     <ClInclude Include="Texture.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
-    <ClInclude Include="RGBColor.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Engine Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="DataTypes.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix4.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix3.h">
-      <Filter>DataTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector4.h">
-      <Filter>DataTypes</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Engine Files</Filter>
@@ -160,6 +127,9 @@
       <Filter>Engine Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
   </ItemGroup>

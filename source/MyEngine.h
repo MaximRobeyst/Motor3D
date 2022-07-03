@@ -53,6 +53,7 @@ public:
 	HWND GetWindowHandle() const;
 
 private:
+	void Start();
 	void Render();
 	void Update(float dt);
 

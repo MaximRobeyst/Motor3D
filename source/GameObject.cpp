@@ -9,7 +9,7 @@
 
 uint32_t GameObject::m_AmountOfGameObjects{};
 
-GameObject::GameObject(const std::string& name, FVector3 position, FVector3 rotation, FVector3 scale)
+GameObject::GameObject(const std::string& name, DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
 	: GameObject(new TransformComponent(position, rotation, scale), name)
 {
 }
@@ -67,7 +67,7 @@ void GameObject::Render(Camera* pCamera)
 void GameObject::Update(float dt)
 {
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
-		(*iter)->Update(dt, this);
+		(*iter)->Update(dt);
 
 	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
 		(*iter)->Update(dt);

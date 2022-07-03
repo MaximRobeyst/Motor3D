@@ -30,6 +30,7 @@ public:
 	//-------------------------------------------------
 	void Initialize();
 
+	void Start();
 	void Render();
 	void RenderGUI();
 	void Update(float dt);

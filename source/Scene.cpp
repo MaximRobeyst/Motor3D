@@ -10,6 +10,7 @@
 #include "Camera.h"
 
 #include <imgui.h>
+#include "Component.h"
 
 
 Scene::Scene()
@@ -19,6 +20,7 @@ Scene::Scene()
 void Scene::AddGameObject(GameObject* pGameObject)
 {
 	m_pGameObjects.push_back(pGameObject);
+	pGameObject->SetScene(this);
 }
 
 void Scene::RemoveGameobject(GameObject* pGameobject)
@@ -171,6 +173,16 @@ void Scene::Deserialize(const std::string& filename)
 	{
 		AddGameObject(GameObject::Deserialize(this, gameobject));
 	}
+}
+
+void Scene::SetCamera(CameraComponent* pCameraComponent)
+{
+	m_pCameraComponent = pCameraComponent;
+}
+
+CameraComponent* Scene::GetCamera() const
+{
+	return m_pCameraComponent;
 }
 
 void Scene::RenderGameobjectSceneGraph(GameObject* pGameobject, int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop)

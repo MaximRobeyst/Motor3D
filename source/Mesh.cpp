@@ -5,17 +5,20 @@
 #include "OBJParser.h"
 #pragma warning (pop)
 
+#include "Component.h"
+
 
 // The mesh causes a memory leak that i cant find at the moment and i think it has something to with the material
 // i have been looking for it for a while and i'm gonna move on for not future me should be able to find it 
 Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Material* pMaterial)
 	: m_pMaterial{ pMaterial }
-	, m_WorldMatrix{FMatrix4::Identity()}
 	, m_Filename{filePath}
 {
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 
+	auto worldmatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMStoreFloat4x4(&m_WorldMatrix, worldmatrix);
 
 	ParseOBJ(filePath, m_pSubmeshes);
 
@@ -24,10 +27,13 @@ Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Materi
 
 Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& filePath, int submeshId, Material* pMaterial)
 	: m_pMaterial{ pMaterial}
-	, m_WorldMatrix{ FMatrix4::Identity() }
 	, m_Filename{filePath}
 	, m_SubmeshId{submeshId}
 {
+
+	auto worldmatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMStoreFloat4x4(&m_WorldMatrix, worldmatrix);
+
 	Initialize(pDevice, hWnd, vertices, indices);
 }
 
@@ -73,7 +79,7 @@ Mesh& Mesh::operator=(const Mesh& other)
 	return *this;
 }
 
-void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
+void Mesh::Render(ID3D11DeviceContext* pDeviceContext, CameraComponent* pCamera)
 {
 	//Set vertex buffer
 	UINT stride = sizeof(Vertex);
@@ -89,8 +95,16 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
 	// Set primitive topology
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	auto worldViewPorjection = pCamera->GetProjectionMatrix() * pCamera->GetViewMatrix() * m_WorldMatrix;
-	m_pMaterial->GetMatWorldViewProjMatrix()->SetMatrix(&worldViewPorjection.data[0][0]);
+	auto viewProjectionMat = pCamera->GetViewProjection();
+
+	auto viewProjection = DirectX::XMLoadFloat4x4(&viewProjectionMat);
+	auto worldMatrix = DirectX::XMLoadFloat4x4(&m_WorldMatrix);
+
+	auto worldViewPorjection = viewProjection * worldMatrix;
+	DirectX::XMFLOAT4X4 worldViewPorjectionMatrix;
+	DirectX::XMStoreFloat4x4(&worldViewPorjectionMatrix, worldViewPorjection);
+
+	m_pMaterial->GetMatWorldViewProjMatrix()->SetMatrix(&worldViewPorjectionMatrix.m[0][0]);
 
 	// Render a triangle
 	D3DX11_TECHNIQUE_DESC techDesc;
@@ -102,12 +116,12 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
 	}
 }
 
-FMatrix4 Mesh::GetWorldMatrix() const
+DirectX::XMFLOAT4X4 Mesh::GetWorldMatrix() const
 {
 	return m_WorldMatrix;
 }
 
-void Mesh::SetWorldMatrix(const FMatrix4& worldMatrix)
+void Mesh::SetWorldMatrix(const DirectX::XMFLOAT4X4& worldMatrix)
 {
 	m_WorldMatrix = worldMatrix;
 }

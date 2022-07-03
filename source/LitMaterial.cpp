@@ -1,5 +1,6 @@
 #include "LitMaterial.h"
 #include "Light.h"
+#include "Texture.h"
 
 LitMaterial::LitMaterial(ID3D11Device* pDevice, const std::wstring& assertFile)
 	: Material(pDevice, assertFile)
@@ -44,7 +45,7 @@ LitMaterial::LitMaterial(ID3D11Device* pDevice, const std::wstring& assertFile)
 	if(!m_pLightIntensityVariable->IsValid())
 		OutputDebugStringW(L"m_pLightIntensityVariable is invalid");
 
-	FVector3 lightDirection{ 0.577f, -0.577f, -0.577f };
+	DirectX::XMFLOAT3 lightDirection{ 0.577f, -0.577f, -0.577f };
 	m_pLightDirection->SetFloatVector(&lightDirection.x);
 }
 
