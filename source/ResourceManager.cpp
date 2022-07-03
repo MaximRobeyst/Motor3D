@@ -24,8 +24,8 @@ void ResourceManager::AddMesh(const std::string& name, Mesh* pMesh)
 
 Mesh* ResourceManager::GetMesh(const std::string& name)
 {
-	if (m_pMeshes[name] == nullptr) m_pMeshes[name] =
-		new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), name, new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx"));
+	if (m_pMeshes[name] == nullptr) 
+		m_pMeshes[name] = new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), name, new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx"));
 
 	return m_pMeshes[name];
 }

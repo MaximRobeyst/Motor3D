@@ -108,7 +108,11 @@ void MyApplication::RenderGUI()
 				ImGui::InputText("Filename:", filename, 128);
 				if (ImGui::Button("Load"))
 				{
+					delete m_pScene;
+
+					m_pScene = new Scene();
 					m_pScene->Deserialize(filename);
+					m_pScene->Start();
 				}
 				ImGui::EndMenu();
 			}
