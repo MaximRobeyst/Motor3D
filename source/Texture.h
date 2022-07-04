@@ -6,7 +6,7 @@
 class Texture final
 {
 public:
-	Texture(ID3D11Device* pDevice, const std::wstring& texturePath, ID3D11DeviceContext* pDeviceContext = nullptr);				// Constructor
+	Texture(ID3D11Device* pDevice, const std::string& texturePath, ID3D11DeviceContext* pDeviceContext = nullptr);				// Constructor
 	~Texture();				// Destructor
 
 	// Copy/move constructors and assignment operators
@@ -17,11 +17,14 @@ public:
 
 	// Member functions						
 	ID3D11ShaderResourceView* GetTextureShaderResource() const;
+	std::string GetPath() const;
 private:
 	// Private member functions								
 
 
 	// Datamembers
+	std::string m_Path{};
+
 	ID3D11Resource* m_pResource{ nullptr };
 	ID3D11Texture2D* m_pTexture{ nullptr };
 	ID3D11ShaderResourceView* m_pTextureResourceView{ nullptr };

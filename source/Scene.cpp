@@ -11,6 +11,7 @@
 
 #include <imgui.h>
 #include "Component.h"
+#include "MaterialManager.h"
 
 
 Scene::Scene()
@@ -134,7 +135,9 @@ void Scene::Serialize(const std::string& filename)
 	rapidjson::StringBuffer outputFile{};
 	rapidjson::PrettyWriter< rapidjson::StringBuffer> writer(outputFile);
 
+
 	writer.StartObject();
+	MaterialManager::GetInstance()->Serialize(writer);
 
 	writer.Key("SceneName");
 	writer.String(filename.c_str());
@@ -168,6 +171,8 @@ void Scene::Deserialize(const std::string& filename)
 	rapidjson::IStreamWrapper isw{ levelFile };
 	rapidjson::Document levelDocument{};
 	levelDocument.ParseStream(isw);
+
+	MaterialManager::GetInstance()->Deserialize(this, levelDocument);
 
 	for (auto& gameobject : levelDocument["Gameobjects"].GetArray())
 	{

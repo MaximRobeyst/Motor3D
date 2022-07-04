@@ -4,11 +4,15 @@
 #include <sstream>
 
 #include "Texture.h"
+#include "Scene.h"
+#include "MaterialManager.h"
 
-
-Material::Material(ID3D11Device* pDevice, const std::wstring& assertFile)
+Material::Material(ID3D11Device* pDevice, const std::string& assertFile, const std::string& name)
+	: m_Name{name}
+	, m_AssertFile{assertFile}
 {
-	m_pEffect = LoadEffect(pDevice, assertFile);
+	std::wstring file{ m_AssertFile.begin(), m_AssertFile.end() };
+	m_pEffect = LoadEffect(pDevice, file);
 
 	m_pTechnique = m_pEffect->GetTechniqueByName("DefaultTechnique");
 	assert(m_pTechnique->IsValid());
@@ -24,9 +28,8 @@ Material::Material(ID3D11Device* pDevice, const std::wstring& assertFile)
 
 Material::~Material()
 {
-	for (auto& t : m_pTextures)
-		delete t;
-	m_pTextures.clear();
+	delete m_pTexture;
+	m_pTexture = nullptr;
 
 	if (m_pTechnique)
 		m_pTechnique->Release();
@@ -36,8 +39,7 @@ Material::~Material()
 
 Material::Material(const Material& other)
 {
-	m_pTextures.reserve(other.m_pTextures.size());
-	m_pTextures = other.m_pTextures;
+	m_pTexture = other.m_pTexture;
 }
 
 ID3DX11Effect* Material::GetEffect() const
@@ -57,10 +59,22 @@ ID3DX11EffectMatrixVariable* Material::GetMatWorldViewProjMatrix() const
 
 void Material::SetDiffuseMap(Texture* pTexture)
 {
-	m_pTextures.push_back(pTexture);
+	if (m_pTexture != nullptr) delete m_pTexture;
+
+	m_pTexture = pTexture;
 
 	if (m_pDiffuseMapVariable->IsValid())
 		m_pDiffuseMapVariable->SetResource(pTexture->GetTextureShaderResource());
+}
+
+void Material::SetName(const std::string& name)
+{
+	m_Name = name;
+}
+
+std::string Material::GetName() const
+{
+	return m_Name;
 }
 
 ID3DX11Effect* Material::LoadEffect(ID3D11Device* pDevice, const std::wstring& assertFile)
@@ -111,4 +125,22 @@ ID3DX11Effect* Material::LoadEffect(ID3D11Device* pDevice, const std::wstring& a
 	}
 
 	return pEffect;
+}
+
+void Material::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
+{
+	writer.Key("DiffuseTexture");
+	writer.String(m_pTexture->GetPath().c_str());
+
+	writer.Key("AssertFile");
+	writer.String(m_AssertFile.c_str());
+}
+
+Material* Material::Deserialize(Scene* , const rapidjson::Value& value)
+{
+	auto pMaterial = new Material(MyEngine::GetSingleton()->GetDevice(), value["AssertFile"].GetString(), value["Name"].GetString());
+
+	pMaterial->SetDiffuseMap(new Texture(MyEngine::GetSingleton()->GetDevice(), value["DiffuseTexture"].GetString()));
+
+	return pMaterial;
 }

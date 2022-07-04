@@ -97,6 +97,9 @@ public:
 	void KeyDown(WPARAM wparam);
 	void KeyUp(WPARAM wparam);
 
+	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);
+	virtual void Deserialize(const rapidjson::Value&);
+
 private:
 	// Datamembers				
 	float m_FOV{};

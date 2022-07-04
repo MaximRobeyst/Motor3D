@@ -2,7 +2,7 @@
 #include "Light.h"
 #include "Texture.h"
 
-LitMaterial::LitMaterial(ID3D11Device* pDevice, const std::wstring& assertFile)
+LitMaterial::LitMaterial(ID3D11Device* pDevice, const std::string& assertFile)
 	: Material(pDevice, assertFile)
 {
 	m_pWorldMatrixVariable = m_pEffect->GetVariableByName("gWorldMatrix")->AsMatrix();
@@ -61,7 +61,8 @@ ID3DX11EffectMatrixVariable* LitMaterial::GetViewInverseMatrix() const
 
 void LitMaterial::SetNormalMap(Texture* pTexture)
 {
-	m_pTextures.push_back(pTexture);
+	// TODO: implement normal map
+	//m_pTextures.push_back(pTexture);
 
 	if (m_pNormalMapVariable->IsValid())
 		m_pNormalMapVariable->SetResource(pTexture->GetTextureShaderResource());
@@ -69,7 +70,8 @@ void LitMaterial::SetNormalMap(Texture* pTexture)
 
 void LitMaterial::SetSpecularMap(Texture* pTexture)
 {
-	m_pTextures.push_back(pTexture);
+	// TODO: implement specular
+	//m_pTextures.push_back(pTexture);
 
 	if (m_pSpecularMapVariable->IsValid())
 		m_pSpecularMapVariable->SetResource(pTexture->GetTextureShaderResource());
@@ -77,7 +79,8 @@ void LitMaterial::SetSpecularMap(Texture* pTexture)
 
 void LitMaterial::SetGlossinessMap(Texture* pTexture)
 {
-	m_pTextures.push_back(pTexture);
+	// TODO: implement Glossiness
+	//m_pTextures.push_back(pTexture);
 
 	if (m_pGlossinessMapVariable->IsValid())
 		m_pGlossinessMapVariable->SetResource(pTexture->GetTextureShaderResource());

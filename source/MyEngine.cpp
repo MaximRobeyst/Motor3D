@@ -287,6 +287,22 @@ HWND MyEngine::GetWindowHandle() const
     return m_hWnd;
 }
 
+float MyEngine::GetWindowHeight() const
+{
+    RECT rect;
+    GetWindowRect(GetWindowHandle(), &rect);
+    float height = static_cast<float>(rect.bottom - rect.top);
+    return height;
+}
+
+float MyEngine::GetWindowWidth() const
+{
+    RECT rect;
+    GetWindowRect(GetWindowHandle(), &rect);
+    float width = static_cast<float>(rect.right - rect.left);
+    return width;
+}
+
 void MyEngine::Start()
 {
     m_pApplication->Start();

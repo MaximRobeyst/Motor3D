@@ -4,12 +4,14 @@
 // Static datamembers
 
 // Constructor(s) & Destructor
-Texture::Texture(ID3D11Device* pDevice, const std::wstring& texturePath, ID3D11DeviceContext* pDeviceContext)
+Texture::Texture(ID3D11Device* pDevice, const std::string& texturePath, ID3D11DeviceContext* pDeviceContext)
+	: m_Path{texturePath}
 {
 	//SDL_Surface* pTexture{ nullptr };
 	//pTexture = IMG_Load(texturePath.c_str());
 
-	auto hr = CreateWICTextureFromFile(pDevice, pDeviceContext, texturePath.c_str(), &m_pResource, &m_pTextureResourceView);
+	std::wstring path{ texturePath.begin(), texturePath.end() };
+	auto hr = CreateWICTextureFromFile(pDevice, pDeviceContext, path.c_str(), &m_pResource, &m_pTextureResourceView);
 	if (FAILED(hr))
 	{
 		OutputDebugStringW(L"Failed to load in : " + *texturePath.c_str());
@@ -81,4 +83,9 @@ Texture& Texture::operator=(const Texture& other)
 ID3D11ShaderResourceView* Texture::GetTextureShaderResource() const
 {
 	return m_pTextureResourceView;
+}
+
+std::string Texture::GetPath() const
+{
+	return m_Path;
 }

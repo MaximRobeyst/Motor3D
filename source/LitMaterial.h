@@ -6,7 +6,7 @@ struct PointLight;
 class LitMaterial : public Material
 {
 public:
-	LitMaterial(ID3D11Device* pDevice, const std::wstring& assertFile);				// Constructor
+	LitMaterial(ID3D11Device* pDevice, const std::string& assertFile);				// Constructor
 
 	//Member Fucntions
 	ID3DX11EffectMatrixVariable* GetWorldMatrix() const;

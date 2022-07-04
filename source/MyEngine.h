@@ -52,6 +52,9 @@ public:
 
 	HWND GetWindowHandle() const;
 
+	float GetWindowHeight() const;
+	float GetWindowWidth() const;
+
 private:
 	void Start();
 	void Render();

@@ -6,6 +6,7 @@
 #include "Utils.h"
 #include "Factory.h"
 #include "ResourceManager.h"
+#include "MaterialManager.h"
 #include "Scene.h"
 
 const Creator<IComponent, TransformComponent> g_TransformCreator{};
@@ -95,6 +96,8 @@ void TransformComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuff
 
 void TransformComponent::Deserialize(const rapidjson::Value& value)
 {
+	m_pGameobject->RemoveComponent(m_pGameobject->GetComponent<TransformComponent>());
+
 	m_Position = DirectX::XMFLOAT3{
 		static_cast<float>(value["Position"].GetArray()[0].GetDouble()),
 		static_cast<float>(value["Position"].GetArray()[1].GetDouble()) ,
@@ -233,11 +236,18 @@ void MeshComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& 
 	writer.String(m_pMesh->GetFilename().c_str());
 	writer.Key("SubmeshId");
 	writer.Int(m_pMesh->GetSubmeshID());
+	writer.Key("Material");
+	writer.String(m_pMesh->GetMaterial("")->GetName().c_str());
 }
 
 void MeshComponent::Deserialize(const rapidjson::Value& value)
 {
 	m_pMesh = ResourceManager::GetInstance()->GetMesh(value["MeshPath"].GetString())->GetSubMesh(value["SubmeshId"].GetInt());
+
+	auto p = MaterialManager::GetInstance();
+	Material* mat = MaterialManager::GetInstance()->GetMaterial(value["Material"].GetString());
+	m_pMesh->SetMaterial(mat->GetName(), mat);
+	p = nullptr;
 }
 
 RigidBodyComponent::RigidBodyComponent(DirectX::XMFLOAT3 velocity, DirectX::XMFLOAT3 acceleration, DirectX::XMFLOAT3 gravity)
@@ -362,4 +372,14 @@ void CameraComponent::Update(float /*elapsedSec*/)
 	DirectX::XMStoreFloat4x4(&m_ViewProjection, view * projection);
 	DirectX::XMStoreFloat4x4(&m_ViewProjectionInv, viewProjectionInv);
 
+}
+
+
+void CameraComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& )
+{
+}
+
+void CameraComponent::Deserialize(const rapidjson::Value&)
+{
+	m_AspectRatio = MyEngine::GetSingleton()->GetWindowWidth() / MyEngine::GetSingleton()->GetWindowHeight();
 }

@@ -128,11 +128,6 @@ void Mesh::SetWorldMatrix(const DirectX::XMFLOAT4X4& worldMatrix)
 
 void Mesh::SetMaterial(const std::string&, Material* pMaterial)
 {
-	if (m_pMaterial != nullptr)
-	{
-		delete m_pMaterial;
-	}
-
 	m_pMaterial = pMaterial;
 }
 

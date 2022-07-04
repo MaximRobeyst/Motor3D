@@ -206,15 +206,15 @@ void MyApplication::Initialize()
 	auto pMaterialManager = MaterialManager::GetInstance();
 
 	pMaterialManager->GetMaterial("lambert8SG")->SetDiffuseMap(
-		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_BarrelAndBanjo_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
+		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/T_BarrelAndBanjo_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
 	pMaterialManager->GetMaterial("lambert5SG")->SetDiffuseMap(
-		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_Distillery_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
+		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/T_Distillery_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
 	pMaterialManager->GetMaterial("lambert9SG")->SetDiffuseMap(
-		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_Shotgun_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
+		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/T_Shotgun_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
 	pMaterialManager->GetMaterial("lambert10SG")->SetDiffuseMap(
-		new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/T_ChairAndFirepit_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
+		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/T_ChairAndFirepit_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));
 	pMaterialManager->GetMaterial("DAE2_RickAstley_Assignment1_000_aiStandardSurface1SG1")->SetDiffuseMap(
-			new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
+			new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
 
 	m_pUnLitMaterial = nullptr;
 }

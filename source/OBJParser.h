@@ -285,9 +285,9 @@ static bool ParseOBJ(const std::string& filename, std::vector<Mesh*>& m_pMeshes)
 				meshes.push_back(Mesh_Struct{ vertices, indices });
 			}
 
-			auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
+			auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), "Resources/material_unlit.fx");
 
-			Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
+			Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/uv_grid_2.png");
 			mat->SetDiffuseMap(pDiffuseTexture);
 
 			MaterialManager::GetInstance()->AddMaterial(name, mat);
@@ -419,9 +419,9 @@ static bool ParseOBJ(const std::string& filename,  std::vector<Mesh*>& pMeshes, 
 				meshes.push_back(Mesh_Struct{ vertices, indices });
 			}
 
-			auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), L"Resources/material_unlit.fx");
+			auto mat = new Material(MyEngine::GetSingleton()->GetDevice(), "Resources/material_unlit.fx", meshmatNames[meshmatNames.size() - 1]);
 
-			Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
+			Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/uv_grid_2.png");
 			mat->SetDiffuseMap(pDiffuseTexture);
 
 			pScene->AddMaterial(name, mat);
