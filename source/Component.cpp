@@ -23,33 +23,33 @@ TransformComponent::TransformComponent(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 
 {
 }
 
+void TransformComponent::Start()
+{
+	GetWorldMatrix();
+	UpdateDirections();
+}
+
 void TransformComponent::Update(float /*dt*/)
 {
 	GetWorldMatrix();
-
-	auto worldMatrix = DirectX::XMLoadFloat4x4(&m_WorldMatrix);
-
-	DirectX::XMVECTOR pos, rot, scale; 
-	DirectX::XMMatrixDecompose(&scale, &rot, &pos, worldMatrix);
-
-	auto rotMat = DirectX::XMMatrixRotationQuaternion(rot);
-	const auto forward = DirectX::XMVector3TransformCoord(DirectX::XMVectorSet(0, 0, 1, 0), rotMat);
-	const auto right = DirectX::XMVector3TransformCoord(DirectX::XMVectorSet(1, 0, 0, 0), rotMat);
-	const auto up = DirectX::XMVector3Cross(forward, right);
-
-	DirectX::XMStoreFloat3(&m_Forward, forward);
-	DirectX::XMStoreFloat3(&m_Right, right);
-	DirectX::XMStoreFloat3(&m_Up, up);
+	UpdateDirections();
 }
 
 void TransformComponent::RenderGUI()
 {
+	bool changes{ false };
+
+	//ImGui::InputFloat3("Forward", &m_Forward.x);
+	//ImGui::InputFloat3("Right", &m_Right.x);
+	//ImGui::InputFloat3("Up", &m_Up.x);
+
 	float position[] = { m_Position.x, m_Position.y, m_Position.z };
 	if (ImGui::InputFloat3("Position", position))
 	{
 		m_Position.x = position[0];
 		m_Position.y = position[1];
 		m_Position.z = position[2];
+		changes = true;
 	}
 
 	float rotation[] = { m_Rotation.x * static_cast<float>( TO_REGREES), m_Rotation.y * static_cast<float>(TO_REGREES), m_Rotation.z * static_cast<float>(TO_REGREES) };
@@ -58,6 +58,7 @@ void TransformComponent::RenderGUI()
 		m_Rotation.x = rotation[0] * static_cast<float>(TO_RADIANS);
 		m_Rotation.y = rotation[1] * static_cast<float>(TO_RADIANS);
 		m_Rotation.z = rotation[2] * static_cast<float>(TO_RADIANS);
+		changes = true;
 	}
 
 	float scale[] = { m_Scale.x, m_Scale.y, m_Scale.z };
@@ -66,6 +67,13 @@ void TransformComponent::RenderGUI()
 		m_Scale.x = scale[0];
 		m_Scale.y = scale[1];
 		m_Scale.z = scale[2];
+		changes = true;
+	}
+
+	if (changes)
+	{
+		GetWorldMatrix();
+		UpdateDirections();
 	}
 
 }
@@ -119,13 +127,17 @@ void TransformComponent::Deserialize(const rapidjson::Value& value)
 
 DirectX::XMFLOAT4X4 TransformComponent::GetWorldMatrix()
 {
-	DirectX::XMFLOAT3 rotation{GetRotation()};
-	DirectX::XMFLOAT3 position = GetPosition();
+	if (!m_Dirty) return m_WorldMatrix;
 
-	auto translationMatrix = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-	auto rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+	auto rotationQuaternion = DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	auto worldMatrix = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z) * DirectX::XMMatrixRotationQuaternion(rotationQuaternion) * DirectX::XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
 
-	auto worldMatrix = translationMatrix * rotationMatrix;
+	if (m_pGameobject->GetParent() != nullptr)
+	{
+		const auto parentWorld = m_pGameobject->GetParent()->GetTransform()->GetWorldMatrix();
+		worldMatrix *= DirectX::XMLoadFloat4x4(&parentWorld);
+	}
+
 	DirectX::XMFLOAT4X4 matrixToReturn;
 
 	DirectX::XMStoreFloat4x4(&matrixToReturn, worldMatrix);
@@ -151,6 +163,7 @@ DirectX::XMFLOAT3 TransformComponent::GetPosition() const
 void TransformComponent::SetPosition(DirectX::XMFLOAT3 position)
 {
 	m_Position = position;
+	m_Dirty = true;
 }
 
 DirectX::XMFLOAT3 TransformComponent::GetRotation() const
@@ -170,6 +183,7 @@ DirectX::XMFLOAT3 TransformComponent::GetRotation() const
 void TransformComponent::SetRotation(DirectX::XMFLOAT3 rotation)
 {
 	m_Rotation = rotation;
+	m_Dirty = true;
 }
 
 void TransformComponent::SetParent(TransformComponent* /*pTransformComponent*/)
@@ -189,6 +203,25 @@ DirectX::XMFLOAT3& TransformComponent::GetRight()
 DirectX::XMFLOAT3& TransformComponent::GetUp()
 {
 	return m_Up;
+}
+
+void TransformComponent::UpdateDirections()
+{
+	if (!m_Dirty) return;
+
+	auto worldMatrix = DirectX::XMLoadFloat4x4(&m_WorldMatrix);
+
+	DirectX::XMVECTOR pos, rot, scale;
+	DirectX::XMMatrixDecompose(&scale, &rot, &pos, worldMatrix);
+
+	auto rotMat = DirectX::XMMatrixRotationQuaternion(rot);
+	const auto forward = DirectX::XMVector3TransformCoord(DirectX::XMVectorSet(0, 0, 1, 0), rotMat);
+	const auto right = DirectX::XMVector3TransformCoord(DirectX::XMVectorSet(1, 0, 0, 0), rotMat);
+	const auto up = DirectX::XMVector3Cross(forward, right);
+
+	DirectX::XMStoreFloat3(&m_Forward, forward);
+	DirectX::XMStoreFloat3(&m_Right, right);
+	DirectX::XMStoreFloat3(&m_Up, up);
 }
 
 IComponent::IComponent(uint8_t componentID)
@@ -220,14 +253,20 @@ MeshComponent::~MeshComponent()
 	delete m_pMesh;
 }
 
+void MeshComponent::Start()
+{
+	m_pTransform = m_pGameobject->GetComponent<TransformComponent>();
+	m_pMesh->SetWorldMatrix(m_pTransform->GetWorldMatrix());
+}
+
 void MeshComponent::Render(Camera* , GameObject* /*pGameobject*/)
 {
+	m_pMesh->SetWorldMatrix(m_pTransform->GetWorldMatrix());
 	m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), m_pGameobject->GetScene()->GetCamera());
 }
 
 void MeshComponent::Update(float)
 {
-	m_pMesh->SetWorldMatrix(m_pGameobject->GetComponent<TransformComponent>()->GetWorldMatrix());
 }
 
 void MeshComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
@@ -345,9 +384,52 @@ void CameraComponent::Start()
 {
 	m_pTransformComponent = m_pGameobject->GetTransform();
 	m_pGameobject->GetScene()->SetCamera(this);
+
+	UpdateMatrix();
 }
 
 void CameraComponent::Update(float /*elapsedSec*/)
+{
+	//UpdateMatrix();
+}
+
+void CameraComponent::Render(Camera* , GameObject* )
+{
+	UpdateMatrix();
+}
+
+void CameraComponent::RenderGUI()
+{
+	ImGui::SliderAngle("Field of View", &m_FOV, 30.f);
+	if (ImGui::InputFloat("Near", &m_Near))
+	{
+		UpdateMatrix();
+	}
+	if (ImGui::InputFloat("Far", &m_Far))
+	{
+		UpdateMatrix();
+	}
+}
+
+void CameraComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
+{
+	writer.Key("FOV");
+	writer.Double(static_cast<double>(m_FOV));
+	writer.Key("Far");
+	writer.Double(static_cast<double>(m_Far));
+	writer.Key("Near");
+	writer.Double(static_cast<double>(m_Near));
+}
+
+void CameraComponent::Deserialize(const rapidjson::Value& value)
+{
+	m_FOV = static_cast<float>(value["FOV"].GetDouble());
+	m_AspectRatio = MyEngine::GetSingleton()->GetWindowWidth() / MyEngine::GetSingleton()->GetWindowHeight();
+
+
+}
+
+void CameraComponent::UpdateMatrix()
 {
 	DirectX::XMMATRIX projection{};
 	projection = DirectX::XMMatrixPerspectiveFovLH(m_FOV, m_AspectRatio, m_Near, m_Far);
@@ -371,15 +453,4 @@ void CameraComponent::Update(float /*elapsedSec*/)
 	DirectX::XMStoreFloat4x4(&m_ViewInv, viewInv);
 	DirectX::XMStoreFloat4x4(&m_ViewProjection, view * projection);
 	DirectX::XMStoreFloat4x4(&m_ViewProjectionInv, viewProjectionInv);
-
-}
-
-
-void CameraComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& )
-{
-}
-
-void CameraComponent::Deserialize(const rapidjson::Value&)
-{
-	m_AspectRatio = MyEngine::GetSingleton()->GetWindowWidth() / MyEngine::GetSingleton()->GetWindowHeight();
 }

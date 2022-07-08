@@ -100,7 +100,7 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext, CameraComponent* pCamera)
 	auto viewProjection = DirectX::XMLoadFloat4x4(&viewProjectionMat);
 	auto worldMatrix = DirectX::XMLoadFloat4x4(&m_WorldMatrix);
 
-	auto worldViewPorjection = viewProjection * worldMatrix;
+	auto worldViewPorjection = worldMatrix * viewProjection;
 	DirectX::XMFLOAT4X4 worldViewPorjectionMatrix;
 	DirectX::XMStoreFloat4x4(&worldViewPorjectionMatrix, worldViewPorjection);
 

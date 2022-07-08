@@ -62,15 +62,6 @@ void MyApplication::KeyDown(WPARAM )
 	//m_pCamera->KeyDown(wparam);
 }
 
-void MyApplication::SaveFile()
-{
-}
-
-void MyApplication::LoadFile()
-{
-	
-}
-
 void MyApplication::Start()
 {
 	m_pScene->Start();
@@ -85,6 +76,7 @@ void MyApplication::RenderGUI()
 {
 	ImGuiWindowFlags windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_MenuBar;
+
 
 	ImGui::Begin("Application", 0, windowFlags);
 
@@ -121,6 +113,10 @@ void MyApplication::RenderGUI()
 		ImGui::EndMenuBar();
 	}
 
+	if (ImGui::Button("Play"))
+		MyEngine::GetSingleton()->SetPlaying(true);
+	if(ImGui::Button("Pause"))
+		MyEngine::GetSingleton()->SetPlaying(false);
 
 	if (ImGui::CollapsingHeader("Scene"))
 	{

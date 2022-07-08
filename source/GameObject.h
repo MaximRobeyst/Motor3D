@@ -24,7 +24,7 @@ class Scene;
 class GameObject
 {
 public:
-	GameObject(const std::string& name = "new Entity", DirectX::XMFLOAT3 position = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 scale = {});
+	GameObject(const std::string& name = "new Entity", DirectX::XMFLOAT3 position = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 scale = {1,1,1});
 	GameObject(TransformComponent* pTransformComponent, const std::string& name = "New Entity");
 	~GameObject();
 
@@ -76,6 +76,7 @@ private:
 	static uint32_t m_AmountOfGameObjects;
 
 	std::vector<IComponent*> m_pComponents;
+
 	Scene* m_pScene;
 	std::string m_Name;
 

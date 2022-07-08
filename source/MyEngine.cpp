@@ -138,32 +138,65 @@ int MyEngine::Run(MyApplication* applicationPtr)
 
 
 	bool running = true;
+#ifdef _DEBUG
     Start();
 
-	while (running)
-	{
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (msg.message == WM_QUIT)
-				running = false;
-		}
-		// Get current time
-		std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+    while (running)
+    {
+        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+            if (msg.message == WM_QUIT)
+                running = false;
+        }
+        // Get current time
+        std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 
-		// Calculate elapsed time
-		float elapsedSeconds = std::chrono::duration<float>(t2 - t1).count();
+        // Calculate elapsed time
+        float elapsedSeconds = std::chrono::duration<float>(t2 - t1).count();
 
-		elapsedSeconds = elapsedSeconds < 0.1f ? elapsedSeconds : 0.1f;
+        elapsedSeconds = elapsedSeconds < 0.1f ? elapsedSeconds : 0.1f;
 
-		// Update current time
-		t1 = t2;
+        // Update current time
+        t1 = t2;
 
-		Update(elapsedSeconds);
+        if(m_Playing)
+            Update(elapsedSeconds);
 
-		Render();
-	}
+        Render();
+    }
+
+#else
+    Start();
+
+    while (running)
+    {
+        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+            if (msg.message == WM_QUIT)
+                running = false;
+        }
+        // Get current time
+        std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+
+        // Calculate elapsed time
+        float elapsedSeconds = std::chrono::duration<float>(t2 - t1).count();
+
+        elapsedSeconds = elapsedSeconds < 0.1f ? elapsedSeconds : 0.1f;
+
+        // Update current time
+        t1 = t2;
+
+        Update(elapsedSeconds);
+
+        Render();
+    }
+#endif // 
+
+
 
     // (6) Close with received Quit message information
     return static_cast<int>(msg.wParam);
@@ -303,6 +336,19 @@ float MyEngine::GetWindowWidth() const
     return width;
 }
 
+bool MyEngine::SetPlaying(bool playing)
+{
+    m_Playing = playing;
+    if (playing)
+        Start();
+    return m_Playing;
+}
+
+bool MyEngine::GetPlaying() const
+{
+    return m_Playing;
+}
+
 void MyEngine::Start()
 {
     m_pApplication->Start();
@@ -333,7 +379,6 @@ void MyEngine::Render()
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
     }
-
 
     m_pSwapChain->Present(0, 0);
 }

@@ -225,3 +225,6 @@ x64/Debug/Demo.pdb
 .vs/MyApplication/v17/ipch/AutoPCH/3ba75aa91ffaadd7/MYENGINE.ipch
 .vs/MyApplication/v17/ipch/AutoPCH/5e6788aa6a25c9db/LITMATERIAL.ipch
 .vs/MyApplication/v17/ipch/AutoPCH/bafdf74eefbe9208/TEXTURE.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/e146a1afa75aeb89/IMGUI_DEMO.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/e3c97deff4ecac7d/IMGUI_WIDGETS.ipch
+.vs/MyApplication/v17/ipch/AutoPCH/fbb4f47a62fd6269/DEMO.ipch

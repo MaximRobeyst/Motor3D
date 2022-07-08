@@ -186,7 +186,6 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="DX11Renderer.h" />
     <ClInclude Include="Factory.h" />
-    <ClInclude Include="FieldBinder.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LitMaterial.h" />
@@ -218,7 +217,6 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DX11Renderer.cpp" />
     <ClCompile Include="Factory.cpp" />
-    <ClCompile Include="FieldBinder.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LitMaterial.cpp" />

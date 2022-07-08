@@ -55,6 +55,9 @@ public:
 	float GetWindowHeight() const;
 	float GetWindowWidth() const;
 
+	bool SetPlaying(bool playing);
+	bool GetPlaying() const;
+
 private:
 	void Start();
 	void Render();
@@ -72,6 +75,8 @@ private:
 	static HINSTANCE m_Instance;
 	static int m_Show;
 	static MyEngine* m_MyEnginePtr;
+
+	bool m_Playing{false};
 
 	DX11Renderer* m_pRenderer{};
 

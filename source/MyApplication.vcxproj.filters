@@ -120,9 +120,6 @@
     <ClInclude Include="Factory.h">
       <Filter>Engine Files\Serialaztion</Filter>
     </ClInclude>
-    <ClInclude Include="FieldBinder.h">
-      <Filter>Engine Files\Serialaztion</Filter>
-    </ClInclude>
     <ClInclude Include="MaterialManager.h">
       <Filter>Engine Files\Managers</Filter>
     </ClInclude>
@@ -198,9 +195,6 @@
       <Filter>Engine Files\Engine Components</Filter>
     </ClCompile>
     <ClCompile Include="Factory.cpp">
-      <Filter>Engine Files\Serialaztion</Filter>
-    </ClCompile>
-    <ClCompile Include="FieldBinder.cpp">
       <Filter>Engine Files\Serialaztion</Filter>
     </ClCompile>
     <ClCompile Include="MaterialManager.cpp">

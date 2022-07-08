@@ -38,6 +38,18 @@ public:
 		}
 	}
 
+	std::vector<std::string> GetComponentNames() const
+	{
+		std::vector<std::string> componentNames;
+
+		for (auto iter = m_ClassCreators.begin(); iter != m_ClassCreators.end(); ++iter)
+		{
+			componentNames.emplace_back(iter->first);
+		}
+
+		return componentNames;
+	}
+
 private:
 	Factory<Base>() = default;
 

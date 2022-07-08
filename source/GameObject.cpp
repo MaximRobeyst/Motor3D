@@ -75,14 +75,62 @@ void GameObject::Update(float dt)
 
 void GameObject::RenderGUI()
 {
+	std::vector<char> chars{ m_Name.begin(), m_Name.end() };
+	ImGui::InputText("Name: ", chars.data(), m_Name.size());
+
 	ImGui::Text(m_Name.c_str());
 
-	for (auto component : m_pComponents)
+	static std::vector<bool> components( true );
+	if (components.size() != m_pComponents.size())
 	{
-		if (ImGui::CollapsingHeader(typeid(*component).name()))
+		components.resize(m_pComponents.size());
+		std::fill(components.begin(), components.end(), true);
+	}
+
+	for (int i = 0; i < m_pComponents.size(); ++i)
+	{
+		bool b = components[i];
+		if (ImGui::CollapsingHeader(typeid(*m_pComponents[i]).name(), &b))
 		{
-			component->RenderGUI();
+			m_pComponents[i]->RenderGUI();
 		}
+		//if (b)
+		//	RemoveComponent(m_pComponents[i]);
+
+		components[i] = b;
+	}
+
+	//for (int i = 0 ; i < components.size(); ++i)
+	//{
+	//	if (components[i])
+	//	{
+	//		RemoveComponent(m_pComponents[i]);
+	//		components.erase(std::remove(components.begin(), components.end(), components[i]));
+	//	}
+	//}
+	
+
+	if (ImGui::BeginPopupContextItem("New Component"))
+	{
+		auto names = Factory<IComponent>::GetInstance().GetComponentNames();
+
+		static ImGuiTextFilter filter;
+		filter.Draw();
+		for (size_t i = 0; i < names.size(); ++i)
+			if (filter.PassFilter(names[i].c_str()))
+			{
+				if (ImGui::Button(names[i].c_str()))
+				{
+					AddComponent(Factory<IComponent>::GetInstance().Create(names[i]));
+				}
+			}
+
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::Button("Add Component", ImVec2{ 450, 25 }))
+	{
+		ImGui::OpenPopup("New Component");
 	}
 }
 

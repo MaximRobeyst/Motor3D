@@ -8,7 +8,6 @@
 #include <wtypes.h>
 
 #include "GameObject.h"
-#include "FieldBinder.h"
 
 class Mesh;
 class Camera;
@@ -18,6 +17,7 @@ class IComponent
 public:
 	IComponent(uint8_t componentID);
 	virtual ~IComponent() = default;
+
 
 	virtual void Start() {};
 	virtual void Render(Camera* pCamera, GameObject* pGameobject);
@@ -40,6 +40,7 @@ class TransformComponent : public IComponent
 public:
 	TransformComponent(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3{ 1,1,1 });
 
+	void Start() override;
 	void Update(float dt) override;
 
 	void RenderGUI() override;
@@ -62,6 +63,10 @@ public:
 	DirectX::XMFLOAT3& GetUp();
 
 private:
+	void UpdateDirections();
+
+	bool m_Dirty{true};
+
 	DirectX::XMFLOAT3 m_Position;
 	DirectX::XMFLOAT3 m_Rotation;
 	DirectX::XMFLOAT3 m_Scale;
@@ -94,13 +99,19 @@ public:
 
 	void Start() override;
 	void Update(float elapsedSec) override;
+	void Render(Camera* pCamera, GameObject* pGameobject) override;
+
 	void KeyDown(WPARAM wparam);
 	void KeyUp(WPARAM wparam);
+
+	void RenderGUI() override;
 
 	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);
 	virtual void Deserialize(const rapidjson::Value&);
 
 private:
+	void UpdateMatrix();
+
 	// Datamembers				
 	float m_FOV{};
 	float m_AspectRatio{};
@@ -153,6 +164,7 @@ public:
 	MeshComponent(Mesh* pMesh = nullptr);
 	~MeshComponent();
 
+	void Start() override;
 	void Render(Camera* pCamera, GameObject* pGameobject) override;
 	void Update(float dt) override;
 
@@ -160,6 +172,7 @@ public:
 	virtual void Deserialize(const rapidjson::Value&);
 private:
 	Mesh* m_pMesh{};
+	TransformComponent* m_pTransform;
 };
 
 class Rotator : public IComponent
