@@ -2,6 +2,7 @@
 #include <DirectXMath.h>
 #include "MyEngine.h"
 #include "Utils.h"
+#include <imgui.h>
 
 Camera::Camera(float FOV, float aspectRatio, float cfar, float cnear)
 	: m_Position{ DirectX::XMFLOAT3{0,0,0 } }
@@ -82,6 +83,19 @@ void Camera::KeyUp(WPARAM wparam)
 		m_InputVel.z = 0;
 	if (wparam == 0x41 || wparam == 0x44)	// A-Key && D-Key
 		m_InputVel.x = 0;
+}
+
+void Camera::CameraGui()
+{
+	ImGui::SliderAngle("Field of View", &m_FOV, 30.f);
+	if (ImGui::InputFloat("Near", &m_Near))
+	{
+		UpdateMatrix();
+	}
+	if (ImGui::InputFloat("Far", &m_Far))
+	{
+		UpdateMatrix();
+	}
 }
 
 void Camera::UpdateMatrix()

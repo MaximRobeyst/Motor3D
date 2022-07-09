@@ -5,12 +5,16 @@
 #include <vector>
 #include "Light.h"
 #include <memory>
+#include <string>
+
 
 class Mesh;
 class Camera;
 class Material;
 class LitMaterial;
 class Scene;
+
+typedef int ImGuiTreeNodeFlags;
 
 class MyApplication
 {
@@ -49,6 +53,11 @@ public:
 #endif //  _DEBUG
 
 private:
+#ifdef  _DEBUG
+	void ApplicationFiles(const std::string& path);
+	void DialogueFolder(int i, const std::string& path, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop);
+#endif //  _DEBUG
+
 	void SaveFile();
 	void LoadFile();
 

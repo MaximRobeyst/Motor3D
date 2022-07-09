@@ -87,6 +87,7 @@ void GameObject::RenderGUI()
 	{
 		m_Name = chars;
 	}
+	ImGui::SameLine();
 	ImGui::Checkbox("Enabled", &m_Enabled);
 
 	static std::vector<bool> components( true );

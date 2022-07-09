@@ -21,6 +21,9 @@
 #include "ResourceManager.h"
 #include "Utils.h"
 
+#include <iostream>
+#include <filesystem>
+
 #define MY_ENGINE MyEngine::GetSingleton()
 
 MyApplication::MyApplication()
@@ -55,7 +58,8 @@ void MyApplication::RightMouseButtonAction(int , int , bool isUp)
 void MyApplication::KeyUp(WPARAM wparam)
 {
 #ifdef _DEBUG
-	m_pCamera->KeyUp(wparam);
+	if(!MyEngine::GetSingleton()->GetPlaying())
+		m_pCamera->KeyUp(wparam);
 #endif
 }
 
@@ -63,7 +67,8 @@ void MyApplication::KeyDown(WPARAM wparam)
 {
 
 #ifdef _DEBUG
-	m_pCamera->KeyDown(wparam);
+	if (!MyEngine::GetSingleton()->GetPlaying())
+		m_pCamera->KeyDown(wparam);
 #endif
 }
 
@@ -71,6 +76,74 @@ void MyApplication::KeyDown(WPARAM wparam)
 Camera* MyApplication::GetCamera() const
 {
 	return m_pCamera;
+}
+
+void MyApplication::ApplicationFiles(const std::string& path)
+{
+	static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+
+	static bool test_drag_and_drop = false;
+	static int selection_mask = (1 << 2);
+	int node_clicked = -1;
+
+	int i{};
+	for (const auto& file : std::filesystem::directory_iterator(path))
+	{
+		std::string filepath{ file.path().string() };
+		DialogueFolder(i, filepath, base_flags, node_clicked, test_drag_and_drop);
+		++i;
+	}
+
+	if (node_clicked != -1)
+	{
+		if (ImGui::GetIO().KeyCtrl)
+			selection_mask ^= (1 << node_clicked);
+		else
+			selection_mask = (1 << node_clicked);
+	}
+}
+void MyApplication::DialogueFolder(int i, const std::string& path, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop)
+{
+	std::wstring wpath{ path.begin(), path.end() };
+	if (GetFileAttributes(wpath.c_str()) == FILE_ATTRIBUTE_DIRECTORY)
+	{
+		bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, path.c_str(), i);
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+		{
+			node_clicked = i;
+		}
+		if (test_drag_and_drop && ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
+			ImGui::Text("This is a drag and drop source");
+			ImGui::EndDragDropSource();
+		}
+		if (node_open)
+		{
+			int j{};
+			for (const auto& file : std::filesystem::directory_iterator(path))
+			{
+				DialogueFolder(j, file.path().string(), node_flags, node_clicked, test_drag_and_drop);
+				++j;
+			}
+			ImGui::TreePop();
+		}
+	}
+	else
+	{
+		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+		ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, path.c_str(), i);
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+		{
+			node_clicked = i;
+		}
+		if (test_drag_and_drop && ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
+			ImGui::Text("This is a drag and drop source");
+			ImGui::EndDragDropSource();
+		}
+	}
 }
 #endif // _DEBUG
 
@@ -93,6 +166,9 @@ void MyApplication::RenderGUI()
 	ImGuiWindowFlags windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_MenuBar;
 
+	ImGui::Begin("Files");
+	ApplicationFiles("Resources/");
+	ImGui::End();
 
 	ImGui::Begin("Application", 0, windowFlags);
 
@@ -126,11 +202,23 @@ void MyApplication::RenderGUI()
 			}
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("View"))
+		{
+			if (ImGui::BeginMenu("Debug Camera"))
+			{
+				m_pCamera->CameraGui();
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMenuBar();
 	}
 
 	if (ImGui::Button("Play"))
 		MyEngine::GetSingleton()->SetPlaying(true);
+	ImGui::SameLine();
 	if(ImGui::Button("Pause"))
 		MyEngine::GetSingleton()->SetPlaying(false);
 

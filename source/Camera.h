@@ -31,6 +31,8 @@ public:
 	void KeyDown(WPARAM wparam);
 	void KeyUp(WPARAM wparam);
 
+	void CameraGui();
+
 protected:
 	// Private member functions		
 	virtual void UpdateMatrix();

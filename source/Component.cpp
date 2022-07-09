@@ -340,7 +340,7 @@ void Rotator::Update(float dt)
 
 void Rotator::RenderGUI()
 {
-	ImGui::Checkbox("Enabled", &m_Enabled);
+	ImGui::Checkbox("Enabled Rotator", &m_Enabled);
 }
 
 void Rotator::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
