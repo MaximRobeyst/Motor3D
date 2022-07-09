@@ -8,6 +8,7 @@
 #include "ResourceManager.h"
 #include "MaterialManager.h"
 #include "Scene.h"
+#include "Camera.h"
 
 const Creator<IComponent, TransformComponent> g_TransformCreator{};
 const Creator<IComponent, RigidBodyComponent> g_RigidbodyCreator{};
@@ -16,7 +17,7 @@ const Creator<IComponent, Rotator> g_RotatorComponent{};
 const Creator<IComponent, CameraComponent> g_CameraComponent{};
 
 TransformComponent::TransformComponent(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
-	: IComponent{0}
+	: IComponent{}
 	, m_Position{pos}
 	, m_Rotation{rotation}
 	, m_Scale{scale}
@@ -224,8 +225,7 @@ void TransformComponent::UpdateDirections()
 	DirectX::XMStoreFloat3(&m_Up, up);
 }
 
-IComponent::IComponent(uint8_t componentID)
-	: m_ComponentID{componentID}
+IComponent::IComponent()
 {
 }
 
@@ -243,7 +243,7 @@ void IComponent::SetGameobject(GameObject* gameobject)
 }
 
 MeshComponent::MeshComponent(Mesh* pMesh)
-	: IComponent{1}
+	: IComponent{}
 	, m_pMesh{pMesh}
 {
 }
@@ -269,6 +269,10 @@ void MeshComponent::Update(float)
 {
 }
 
+void MeshComponent::RenderGUI()
+{
+}
+
 void MeshComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
 {
 	writer.Key("MeshPath");
@@ -290,7 +294,7 @@ void MeshComponent::Deserialize(const rapidjson::Value& value)
 }
 
 RigidBodyComponent::RigidBodyComponent(DirectX::XMFLOAT3 velocity, DirectX::XMFLOAT3 acceleration, DirectX::XMFLOAT3 gravity)
-	: IComponent(0)
+	: IComponent()
 	, m_Velocity{velocity}
 	, m_Acceleration{acceleration}
 	, m_Gravity{gravity}
@@ -315,7 +319,7 @@ void RigidBodyComponent::UpdateTransform(TransformComponent* tc)
 }
 
 Rotator::Rotator(float rotationSpeed, DirectX::XMFLOAT3 axis)
-	: IComponent(4)
+	: IComponent()
 	, m_Rotation{}
 	, m_RotationSpeed{rotationSpeed}
 	, m_Axis{axis}
@@ -331,10 +335,7 @@ void Rotator::Update(float dt)
 	auto axis = DirectX::XMLoadFloat3(&m_Axis);
 	auto rot = DirectX::XMLoadFloat(&m_Rotation);
 
-	DirectX::XMFLOAT3 rotation;
-	DirectX::XMStoreFloat3(&rotation, DirectX::XMVectorMultiply(axis , rot));
-
-	m_pGameobject->GetTransform()->SetRotation(rotation);
+	m_pGameobject->GetTransform()->SetRotation(DirectX::XMFLOAT3{ 0, m_Rotation, 0 });
 }
 
 void Rotator::RenderGUI()
@@ -371,12 +372,8 @@ void Rotator::Deserialize(const rapidjson::Value& value)
 
 }
 
-CameraComponent::CameraComponent(float /*FOV*/, float aspectRatio, float cfar, float cnear)
-	: IComponent{0}
-	, m_FOV{ DirectX::XM_PIDIV4 }
-	, m_AspectRatio{aspectRatio}
-	, m_Far{cfar}
-	, m_Near{cnear}
+CameraComponent::CameraComponent(float FOV, float aspectRatio, float cfar, float cnear)
+	: Camera{FOV, aspectRatio, cfar, cnear}
 {
 }
 

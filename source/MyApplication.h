@@ -43,6 +43,11 @@ public:
 
 	void KeyUp(WPARAM wparam);
 	void KeyDown(WPARAM wparam);
+
+#ifdef  _DEBUG
+	Camera* GetCamera() const;
+#endif //  _DEBUG
+
 private:
 	void SaveFile();
 	void LoadFile();
@@ -64,7 +69,11 @@ private:
 	std::vector<PointLight> m_pLights;
 
 	//Mesh* m_pMesh{nullptr};
-	Camera* m_pCamera{nullptr};
+
+#ifdef  _DEBUG
+	Camera* m_pCamera{ nullptr };
+#endif //  _DEBUG
+
 
 	std::vector<Mesh*> m_pMeshes;
 };

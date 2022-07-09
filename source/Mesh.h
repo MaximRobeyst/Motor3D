@@ -36,7 +36,7 @@ public:
 	Mesh& operator=(const Mesh& other) ;
 	Mesh& operator=(Mesh&& other)	noexcept = delete;
 
-	void Render(ID3D11DeviceContext* pDeviceContext, CameraComponent* pCamera);
+	void Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera);
 
 	DirectX::XMFLOAT4X4 GetWorldMatrix() const;
 	void SetWorldMatrix(const DirectX::XMFLOAT4X4& worldMatrix);

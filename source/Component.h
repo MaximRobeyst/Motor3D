@@ -7,15 +7,15 @@
 #include <DirectXMath.h>
 #include <wtypes.h>
 
+#include "Camera.h"
 #include "GameObject.h"
 
 class Mesh;
-class Camera;
 
 class IComponent
 {
 public:
-	IComponent(uint8_t componentID);
+	IComponent();
 	virtual ~IComponent() = default;
 
 
@@ -78,7 +78,7 @@ private:
 	DirectX::XMFLOAT3 m_Up;
 };
 
-class CameraComponent : public IComponent
+class CameraComponent : public IComponent, public Camera
 {
 public:
 	CameraComponent(float FOV = 60.f, float aspectRatio = 1.0f, float cfar = 100.f, float cnear = 0.1f);
@@ -89,13 +89,6 @@ public:
 	CameraComponent(CameraComponent&& other) noexcept = delete;
 	CameraComponent& operator=(const CameraComponent& other) = delete;
 	CameraComponent& operator=(CameraComponent&& other)	noexcept = delete;
-
-	// Member functions						
-	DirectX::XMFLOAT4X4 GetView() const { return m_View; };
-	DirectX::XMFLOAT4X4 GetViewInv() const { return m_ViewInv;  };
-	DirectX::XMFLOAT4X4 GetProjectionMatrix() const { return m_ProjectionMatrix; };
-	DirectX::XMFLOAT4X4 GetViewProjection() const { return m_ViewProjection; };
-	DirectX::XMFLOAT4X4 GetViewProjectionMatrix() const { return m_ViewProjection; };
 
 	void Start() override;
 	void Update(float elapsedSec) override;
@@ -109,14 +102,8 @@ public:
 	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);
 	virtual void Deserialize(const rapidjson::Value&);
 
-private:
-	void UpdateMatrix();
-
-	// Datamembers				
-	float m_FOV{};
-	float m_AspectRatio{};
-	float m_Far{};
-	float m_Near{};
+protected:
+	void UpdateMatrix() override;
 
 	bool m_LeftMouseButtonPressed;
 
@@ -131,12 +118,6 @@ private:
 
 	DirectX::XMFLOAT2 m_AbsoluteRotation{}; //Pitch(x) & Yaw(y) only
 	DirectX::XMFLOAT3 m_RelativeTranslation{};
-
-	DirectX::XMFLOAT4X4 m_View{};
-	DirectX::XMFLOAT4X4 m_ViewInv{};
-	DirectX::XMFLOAT4X4 m_ProjectionMatrix{};
-	DirectX::XMFLOAT4X4 m_ViewProjection{};
-	DirectX::XMFLOAT4X4 m_ViewProjectionInv{};
 
 	DirectX::XMFLOAT2 m_PrevMousePos{};
 };
@@ -167,6 +148,8 @@ public:
 	void Start() override;
 	void Render(Camera* pCamera, GameObject* pGameobject) override;
 	void Update(float dt) override;
+
+	void RenderGUI() override;
 
 	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>&);
 	virtual void Deserialize(const rapidjson::Value&);

@@ -32,7 +32,7 @@ public:
 	void Deserialize(const std::string& filename);
 
 	void SetCamera(CameraComponent* pCameraComponent);
-	CameraComponent* GetCamera() const;
+	Camera* GetCamera() const;
 
 private:
 	void RenderGameobjectSceneGraph(GameObject* pGameobject,int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop);

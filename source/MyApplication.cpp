@@ -52,18 +52,34 @@ void MyApplication::RightMouseButtonAction(int , int , bool isUp)
 	if (isUp) m_PointsVec.clear();
 }
 
-void MyApplication::KeyUp(WPARAM )
+void MyApplication::KeyUp(WPARAM wparam)
 {
-	//m_pCamera->KeyUp(wparam);
+#ifdef _DEBUG
+	m_pCamera->KeyUp(wparam);
+#endif
 }
 
-void MyApplication::KeyDown(WPARAM )
+void MyApplication::KeyDown(WPARAM wparam)
 {
-	//m_pCamera->KeyDown(wparam);
+
+#ifdef _DEBUG
+	m_pCamera->KeyDown(wparam);
+#endif
 }
+
+#ifdef _DEBUG
+Camera* MyApplication::GetCamera() const
+{
+	return m_pCamera;
+}
+#endif // _DEBUG
+
 
 void MyApplication::Start()
 {
+#ifdef _DEBUG
+	m_pCamera = new Camera(DirectX::XMFLOAT3{ 0,1,-2.5f }, DirectX::XMFLOAT3{ 0,0,1 }, (F_PI / 4.f), MyEngine::GetSingleton()->GetWindowWidth() / MyEngine::GetSingleton()->GetWindowHeight());
+#endif
 	m_pScene->Start();
 }
 
@@ -129,11 +145,16 @@ void MyApplication::RenderGUI()
 
 void MyApplication::Update(float dt)
 {
+#ifdef _DEBUG
+	m_pCamera->UpdateCamera(dt);
+#endif // _DEBUG
+
 
 	//m_pCamera->Update(dt);
 
 	//m_pMesh->SetWorldMatrix(rotationMatrix);
 
+	if (!MyEngine::GetSingleton()->GetPlaying()) return;
 	m_pScene->Update(dt);
 
 	// Center Cursor
@@ -158,29 +179,11 @@ void MyApplication::Initialize()
 
 	m_pScene = new Scene();
 	auto pCamera = new GameObject("Camera", DirectX::XMFLOAT3{ 0, 1.f, -2.5f });
-	pCamera->AddComponent(new CameraComponent(60, static_cast<float>(width) / static_cast<float>(height), 2500.f, 0.1f));
+	pCamera->AddComponent(new CameraComponent(F_PI / 4.f, static_cast<float>(width) / static_cast<float>(height), 100.f, 0.1f));
 	m_pScene->AddGameObject(pCamera);
 
 
 	ParseOBJ("Resources/5Props.obj", m_pMeshes);
-
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	for (int j = 0; j < 10; j++)
-	//	{
-	//		GameObject* cube = new GameObject("Cube", FVector3{  RandomFloat(100.f, -100.f), RandomFloat(50.f, 40.f), RandomFloat(100.f, -100.f)});
-	//
-	//		m_pScene->AddGameObject(cube);
-	//
-	//		Material* mat = new Material(MY_ENGINE->GetDevice(), L"Resources/material_unlit.fx");
-	//		Texture* pDiffuseTexture = new Texture(MY_ENGINE->GetDevice(), L"Resources/uv_grid_2.png");
-	//		mat->SetDiffuseMap(pDiffuseTexture);
-	//		Mesh* pMesh = new Mesh(MY_ENGINE->GetDevice(), MY_ENGINE->GetWindowHandle(), "Resources/cube.obj", mat);
-	//
-	//		cube->AddComponent(new MeshComponent(pMesh));
-	//		cube->AddComponent(new RigidBodyComponent(FVector3{}, FVector3{}, FVector3{ 0.f,-9.81f, 0.f }));
-	//	}
-	//}
 
 	int i{};
 	std::vector<GameObject*> gameobjects{};

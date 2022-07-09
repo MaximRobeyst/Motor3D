@@ -184,6 +184,7 @@
     <ClInclude Include="..\3rdParty\imgui\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="DX11Renderer.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameObject.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="..\3rdParty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="DX11Renderer.cpp" />
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="GameObject.cpp" />

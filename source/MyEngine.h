@@ -50,6 +50,8 @@ public:
 	ID3D11DeviceContext* GetDeviceContext() const;
 	DX11Renderer* GetRenderer() const;
 
+	MyApplication* GetApplication() const;
+
 	HWND GetWindowHandle() const;
 
 	float GetWindowHeight() const;

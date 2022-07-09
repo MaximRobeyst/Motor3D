@@ -5,10 +5,10 @@
 
 #include <DirectXMath.h>
 
-
-class Camera final
+class Camera 
 {
 public:
+	Camera(float FOV, float aspectRatio, float cfar = 100.f, float cnear = 0.1f);
 	Camera(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& forward, float FOV, float aspectRatio, float cfar = 100.f, float cnear = 0.1f);
 	~Camera() = default;
 
@@ -19,30 +19,33 @@ public:
 	Camera& operator=(Camera&& other)	noexcept = delete;
 
 	// Member functions						
-	DirectX::XMFLOAT4X4 GetViewMatrix() const;
-	DirectX::XMFLOAT4X4 GetWorldMatrix() const;
-	DirectX::XMFLOAT4X4 GetProjectionMatrix() const;
+	DirectX::XMFLOAT4X4 GetView() const { return m_View; };
+	DirectX::XMFLOAT4X4 GetViewInv() const { return m_ViewInv; };
+	DirectX::XMFLOAT4X4 GetProjectionMatrix() const { return m_ProjectionMatrix; };
+	DirectX::XMFLOAT4X4 GetViewProjection() const { return m_ViewProjection; };
+	DirectX::XMFLOAT4X4 GetViewProjectionMatrix() const { return m_ViewProjection; };
 
-	void Update(float elapsedSec);
+	DirectX::XMFLOAT2 GetAbsoluteRotation() const { return m_AbsoluteRotation; }
+
+	void UpdateCamera(float elapsedSec);
 	void KeyDown(WPARAM wparam);
 	void KeyUp(WPARAM wparam);
 
-private:
+protected:
 	// Private member functions		
-	void UpdateMatrix();
-	void MakeProjectionMatrix();
+	virtual void UpdateMatrix();
 
-	// Datamembers				
-	float m_FOV;
+	// Datamembers		
 	bool m_LeftMouseButtonPressed;
 
 	const float m_KeyboardMoveSensitivity{ 15.f };
 	const float m_KeyboardMoveMultiplier{ 10.f };
-	const float m_MouseRotationSensitivity{ 1.f };
-	const float m_MouseMoveSensitivity{ 200.f };
-	const float m_AspectRatio{};
-	const float m_Far{};
-	const float m_Near{};
+	const float m_MouseRotationSensitivity{ 2.f };
+	const float m_MouseMoveSensitivity{ 10 };
+	float m_FOV;
+	float m_AspectRatio{};
+	float m_Far{};
+	float m_Near{};
 
 	DirectX::XMFLOAT3 m_InputVel{};
 
@@ -51,11 +54,13 @@ private:
 
 	DirectX::XMFLOAT3 m_Position{};
 	DirectX::XMFLOAT3 m_Forward{};
+	DirectX::XMFLOAT3 m_Up{};
 
-	DirectX::XMFLOAT4X4 m_WorldToView{};
-	DirectX::XMFLOAT4X4 m_ViewToWorld{};
+	DirectX::XMFLOAT4X4 m_View{};
+	DirectX::XMFLOAT4X4 m_ViewInv{};
 	DirectX::XMFLOAT4X4 m_ProjectionMatrix{};
-	DirectX::XMFLOAT4X4 m_WorldViewProjectionMatrix{};
+	DirectX::XMFLOAT4X4 m_ViewProjection{};
+	DirectX::XMFLOAT4X4 m_ViewProjectionInv{};
 
 	DirectX::XMFLOAT2 m_PrevMousePos{};
 };

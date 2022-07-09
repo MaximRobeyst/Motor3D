@@ -161,8 +161,7 @@ int MyEngine::Run(MyApplication* applicationPtr)
         // Update current time
         t1 = t2;
 
-        if(m_Playing)
-            Update(elapsedSeconds);
+        Update(elapsedSeconds);
 
         Render();
     }
@@ -315,6 +314,11 @@ DX11Renderer* MyEngine::GetRenderer() const
     return m_pRenderer;
 }
 
+MyApplication* MyEngine::GetApplication() const
+{
+    return m_pApplication;
+}
+
 HWND MyEngine::GetWindowHandle() const
 {
     return m_hWnd;
@@ -363,6 +367,7 @@ void MyEngine::Render()
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
     m_pApplication->Render();
 
+#ifdef _DEBUG
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
@@ -379,6 +384,8 @@ void MyEngine::Render()
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
     }
+
+#endif // DEBUG
 
     m_pSwapChain->Present(0, 0);
 }

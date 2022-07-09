@@ -3,25 +3,35 @@
 #include "MyEngine.h"
 #include "Utils.h"
 
+Camera::Camera(float FOV, float aspectRatio, float cfar, float cnear)
+	: m_Position{ DirectX::XMFLOAT3{0,0,0 } }
+	, m_Forward{ DirectX::XMFLOAT3{0,0,1 } }
+	, m_FOV{ FOV }
+	, m_AspectRatio{ aspectRatio }
+	, m_Far{ cfar }
+	, m_Near{ cnear }
+{
+}
+
 Camera::Camera(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& forward, float FOV, float aspectRatio, float cfar, float cnear)
 	: m_Position{ position }
 	, m_Forward{  }
-	, m_FOV{ tanf( ToRadians(FOV) / 2.f) }
+	, m_FOV{ FOV }
 	, m_AspectRatio{ aspectRatio }
 	, m_Far{ cfar }
 	, m_Near{ cnear }
 {
 	DirectX::XMStoreFloat3(&m_Forward, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&forward)));
+	DirectX::XMStoreFloat3(&m_Up, DirectX::XMVectorSet(0, 1, 0, 0));
 
 	RECT windowRect;
 	GetWindowRect(MyEngine::GetSingleton()->GetWindowHandle(), &windowRect);
 	m_PrevMousePos = DirectX::XMFLOAT2{ static_cast<float>(windowRect.left + ((windowRect.right - windowRect.left) / 2)), static_cast<float>(windowRect.bottom + ((windowRect.top - windowRect.bottom) / 2)) };
 
-	MakeProjectionMatrix();
 	UpdateMatrix();
 }
 
-void Camera::Update(float elapsedSec)
+void Camera::UpdateCamera(float elapsedSec)
 {
 	//const uint8_t* pKeyboardState = SDL_GetKeyboardState(0);
 	float keyboardSpeed = (GetKeyState(VK_SHIFT) & 0x80) ? m_KeyboardMoveSensitivity * m_KeyboardMoveMultiplier : m_KeyboardMoveSensitivity;
@@ -37,8 +47,13 @@ void Camera::Update(float elapsedSec)
 
 	if ((GetKeyState(VK_RBUTTON) & 0x80) != 0)
 	{
-		m_AbsoluteRotation.x -= Clamp((m_PrevMousePos.y-y),-1.f,1.f) * m_MouseRotationSensitivity;
-		m_AbsoluteRotation.y -= Clamp((m_PrevMousePos.x-x),-1.f,1.f) * m_MouseRotationSensitivity;
+		m_AbsoluteRotation.x -= Clamp((m_PrevMousePos.y - y), -1.f, 1.f) * m_MouseRotationSensitivity * elapsedSec;
+		m_AbsoluteRotation.y -= Clamp((m_PrevMousePos.x - x), -1.f, 1.f) * m_MouseRotationSensitivity * elapsedSec;
+	}
+	else
+	{
+		m_AbsoluteRotation.x = 0;
+		m_AbsoluteRotation.y = 0;
 	}
 
 	m_PrevMousePos.x = static_cast<float>(x);
@@ -71,59 +86,49 @@ void Camera::KeyUp(WPARAM wparam)
 
 void Camera::UpdateMatrix()
 {
-	//FORWARD (zAxis) with YAW applied
-	DirectX::XMVECTOR forward = DirectX::XMLoadFloat3(&m_Forward);
-	DirectX::XMMATRIX yawRotation = DirectX::XMMatrixRotationY(m_AbsoluteRotation.y * float(TO_RADIANS));
-	DirectX::XMVECTOR zAxis = DirectX::XMVector3Transform(forward, yawRotation);
+	DirectX::XMMATRIX projection{};
+	projection = DirectX::XMMatrixPerspectiveFovLH(m_FOV, m_AspectRatio, m_Near, m_Far);
 
-	DirectX::XMFLOAT3 upVector = DirectX::XMFLOAT3{ 0, 1,0 };
-	DirectX::XMVECTOR upVetor = DirectX::XMLoadFloat3(&upVector);
+	auto position = DirectX::XMLoadFloat3(&m_Position);
+	auto forward = DirectX::XMLoadFloat3(&m_Forward);
+	auto up = m_Up;
+
+	DirectX::XMMATRIX yawRotation = DirectX::XMMatrixRotationY(m_AbsoluteRotation.y * float(TO_RADIANS));
+	auto zAxis = DirectX::XMVector3TransformCoord(forward, yawRotation);
 
 	//Calculate RIGHT (xAxis) based on transformed FORWARD
-	DirectX::XMVECTOR xAxis = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(upVetor, zAxis));
+	auto xAxis = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVectorSet( 0.f, 1.f, 0.f, 0.f ), zAxis));
 
 	//FORWARD with PITCH applied (based on xAxis)
-	DirectX::XMMATRIX pitchRotation = DirectX::XMMatrixRotationZ(m_AbsoluteRotation.x * float(TO_RADIANS));
-	zAxis = DirectX::XMVector3Transform(zAxis, pitchRotation);
+	DirectX::XMMATRIX pitchRotation = DirectX::XMMatrixRotationX(m_AbsoluteRotation.x * float(TO_RADIANS));
+	zAxis = DirectX::XMVector3TransformCoord(zAxis, pitchRotation);
 
 	//Calculate UP (yAxis)
-	DirectX::XMVECTOR yAxis = DirectX::XMVector3Cross(zAxis, xAxis);
+	auto yAxis = DirectX::XMVector3Cross(zAxis, xAxis);
+
+	using namespace DirectX;
 
 	//Translate based on transformed axis
-	auto position = DirectX::XMLoadFloat3(&m_Position);
-	DirectX::XMVectorAdd(position , DirectX::XMVectorMultiply(DirectX::XMLoadFloat(&m_RelativeTranslation.x) , xAxis));
-	DirectX::XMVectorAdd(position , DirectX::XMVectorMultiply(DirectX::XMLoadFloat(&m_RelativeTranslation.y) , yAxis));
-	DirectX::XMVectorAdd(position , DirectX::XMVectorMultiply(DirectX::XMLoadFloat(&m_RelativeTranslation.z) , zAxis));
+	position = position + (m_RelativeTranslation.x * xAxis);
+	position = position + (m_RelativeTranslation.y * yAxis);
+	position = position + (m_RelativeTranslation.z * zAxis);
+
+	DirectX::XMStoreFloat3(&m_Forward, zAxis);
 	DirectX::XMStoreFloat3(&m_Position, position);
 
-	auto posfloat4 = DirectX::XMFLOAT4{ m_Position.x, m_Position.y, m_Position.z, 1.f };
-	position = DirectX::XMLoadFloat4(&posfloat4);
+	const DirectX::XMVECTOR worldPosition = DirectX::XMLoadFloat3(&m_Position);
+	const DirectX::XMVECTOR lookAt = DirectX::XMLoadFloat3(&m_Forward);
+	const DirectX::XMVECTOR upVec = DirectX::XMLoadFloat3(&up);
 
-	//Construct View2World Matrix
-	DirectX::XMMATRIX viewToWorld
-	{
-		xAxis,
-		yAxis,
-		zAxis,
-		position
-	};
+	auto LookAt = DirectX::XMVectorAdd(worldPosition, lookAt);
 
-	//Construct World2View Matrix || viewMatrix
-	DirectX::XMVECTOR viewToWorldDeterminant = DirectX::XMMatrixDeterminant(viewToWorld);
-	viewToWorld = DirectX::XMMatrixInverse(&viewToWorldDeterminant, viewToWorld);
-	DirectX::XMStoreFloat4x4(&m_ViewToWorld, viewToWorld);
+	const DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(worldPosition, LookAt, upVec);
+	const DirectX::XMMATRIX viewInv = DirectX::XMMatrixInverse(nullptr, view);
+	const DirectX::XMMATRIX viewProjectionInv = DirectX::XMMatrixInverse(nullptr, view * projection);
 
-	// WorldViewProjectionMatrix = ProjectionMatrix * ViewMatrix * WorldMatrix
-	auto worldViewProjectionationMatrix = DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&m_ProjectionMatrix) , viewToWorld);
-	DirectX::XMStoreFloat4x4(&m_WorldViewProjectionMatrix, worldViewProjectionationMatrix);
-}
-
-void Camera::MakeProjectionMatrix()
-{
-	m_ProjectionMatrix = DirectX::XMFLOAT4X4{
-		1 / (m_AspectRatio * m_FOV),0,0, 0 ,
-		0,1 / m_FOV,0, 0 ,
-		0,0, m_Far / (m_Far - m_Near), 1.f,
-		0, 0,-(m_Far * m_Near) / (m_Far - m_Near),0 
-	};
+	DirectX::XMStoreFloat4x4(&m_ProjectionMatrix, projection);
+	DirectX::XMStoreFloat4x4(&m_View, view);
+	DirectX::XMStoreFloat4x4(&m_ViewInv, viewInv);
+	DirectX::XMStoreFloat4x4(&m_ViewProjection, view * projection);
+	DirectX::XMStoreFloat4x4(&m_ViewProjectionInv, viewProjectionInv);
 }

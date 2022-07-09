@@ -79,7 +79,7 @@ Mesh& Mesh::operator=(const Mesh& other)
 	return *this;
 }
 
-void Mesh::Render(ID3D11DeviceContext* pDeviceContext, CameraComponent* pCamera)
+void Mesh::Render(ID3D11DeviceContext* pDeviceContext, Camera* pCamera)
 {
 	//Set vertex buffer
 	UINT stride = sizeof(Vertex);

@@ -12,7 +12,7 @@
 #include <imgui.h>
 #include "Component.h"
 #include "MaterialManager.h"
-
+#include "MyApplication.h"
 
 Scene::Scene()
 {
@@ -185,9 +185,18 @@ void Scene::SetCamera(CameraComponent* pCameraComponent)
 	m_pCameraComponent = pCameraComponent;
 }
 
-CameraComponent* Scene::GetCamera() const
+Camera* Scene::GetCamera() const
 {
+#ifdef _DEBUG
+	if (MyEngine::GetSingleton()->GetPlaying())
+		return m_pCameraComponent;
+	else
+		return MyEngine::GetSingleton()->GetApplication()->GetCamera();
+#else
 	return m_pCameraComponent;
+#endif // _DEBUG
+
+
 }
 
 void Scene::RenderGameobjectSceneGraph(GameObject* pGameobject, int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop)

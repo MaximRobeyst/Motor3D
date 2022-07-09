@@ -48,6 +48,8 @@ void GameObject::RemoveComponent(IComponent* component)
 
 void GameObject::Start()
 {
+	if (!m_Enabled) return;
+
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
 		(*iter)->Start();
 
@@ -57,6 +59,8 @@ void GameObject::Start()
 
 void GameObject::Render(Camera* pCamera)
 {
+	if (!m_Enabled) return;
+
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
 		(*iter)->Render(pCamera, this);
 
@@ -66,6 +70,8 @@ void GameObject::Render(Camera* pCamera)
 
 void GameObject::Update(float dt)
 {
+	if (!m_Enabled) return;
+
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
 		(*iter)->Update(dt);
 
@@ -75,10 +81,13 @@ void GameObject::Update(float dt)
 
 void GameObject::RenderGUI()
 {
-	std::vector<char> chars{ m_Name.begin(), m_Name.end() };
-	ImGui::InputText("Name: ", chars.data(), m_Name.size());
-
-	ImGui::Text(m_Name.c_str());
+	char chars[128];
+	strcpy_s(chars, m_Name.c_str());
+	if (ImGui::InputText("Name: ", chars, 128))
+	{
+		m_Name = chars;
+	}
+	ImGui::Checkbox("Enabled", &m_Enabled);
 
 	static std::vector<bool> components( true );
 	if (components.size() != m_pComponents.size())
@@ -251,6 +260,16 @@ GameObject* GameObject::Deserialize(Scene* pScene, const rapidjson::Value& value
 	}
 
 	return pGameobject;
+}
+
+void GameObject::SetEnabled(bool value)
+{
+	m_Enabled = value;
+}
+
+bool GameObject::GetEnabled() const
+{
+	return m_Enabled;
 }
 
 void GameObject::AddChild(GameObject* child)

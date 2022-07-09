@@ -66,6 +66,9 @@ public:
 	void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);
 	static GameObject* Deserialize(Scene* pScene, const rapidjson::Value& value);
 
+	void SetEnabled(bool value);
+	bool GetEnabled() const;
+
 private:
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
@@ -79,6 +82,7 @@ private:
 
 	Scene* m_pScene;
 	std::string m_Name;
+	bool m_Enabled{true};
 
 	GameObject* m_pParent;
 	std::vector<GameObject*> m_pChildren;
