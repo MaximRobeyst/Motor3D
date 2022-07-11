@@ -15,7 +15,6 @@ public:
 	ID3D11RenderTargetView* GetRenderTarget() const;
 	IDXGISwapChain* GetSwapChain() const;
 
-
 private:
 	HRESULT InitializeDirectX();
 
@@ -27,5 +26,9 @@ private:
 	ID3D11RenderTargetView* m_pRenderTargetView;
 	ID3D11Texture2D* m_pDepthStencilBuffer;
 	ID3D11DepthStencilView* m_pDepthStencilView;
+
+	ID3D11Texture2D* m_pRenderTargetTexture{ nullptr };
+	D3D11_RENDER_TARGET_VIEW_DESC m_RenderTargetViewDesc;
+	ID3D11ShaderResourceView* m_pShaderView{ nullptr };
 };
 

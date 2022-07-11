@@ -13,9 +13,11 @@ DX11Renderer::DX11Renderer(HWND hwnd, UINT width, UINT height)
 
 DX11Renderer::~DX11Renderer()
 {
+#ifdef _DEBUG
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+#endif // _DEBUG
 
     if (m_pRenderTargetView)
         m_pRenderTargetView->Release();
@@ -48,6 +50,7 @@ void DX11Renderer::Initialize()
 {
     InitializeDirectX();
 
+#ifdef _DEBUG
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -66,6 +69,7 @@ void DX11Renderer::Initialize()
 
     ImGui_ImplWin32_Init(m_hWnd);
     ImGui_ImplDX11_Init(m_pDevice, m_pDeviceContext);
+#endif // _DEBUG
 }
 
 ID3D11Device* DX11Renderer::GetDevice() const

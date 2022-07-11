@@ -38,7 +38,10 @@ MyApplication::~MyApplication()
 	delete MaterialManager::GetInstance();
 	delete ResourceManager::GetInstance();
 
+#ifdef _DEBUG
 	delete m_pCamera;
+#endif // _DEBUG
+
 	delete m_pScene;
 }
 
@@ -158,9 +161,10 @@ void MyApplication::Start()
 
 void MyApplication::Render()
 {
-	m_pScene->Render(m_pCamera);	
+	m_pScene->Render(nullptr);	
 }
 
+#ifdef _DEBUG
 void MyApplication::RenderGUI()
 {
 	ImGuiWindowFlags windowFlags = 0;
@@ -230,6 +234,7 @@ void MyApplication::RenderGUI()
 
 	ImGui::End();
 }
+#endif
 
 void MyApplication::Update(float dt)
 {

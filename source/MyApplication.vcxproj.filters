@@ -132,6 +132,27 @@
     <ClInclude Include="Camera.h">
       <Filter>Engine Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\GraphEditor.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\ImCurveEdit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\ImGradient.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\ImGuizmo.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\ImSequencer.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\ImZoomSlider.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexture.h">
+      <Filter>Engine Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyEngine.cpp">
@@ -207,6 +228,24 @@
       <Filter>Engine Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
+      <Filter>Engine Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\GraphEditor.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\ImCurveEdit.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\ImGradient.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\ImGuizmo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\ImSequencer.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexture.cpp">
       <Filter>Engine Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>

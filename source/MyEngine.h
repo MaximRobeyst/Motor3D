@@ -13,6 +13,7 @@
 class MyApplication;
 struct RGBColor;
 class DX11Renderer;
+class RenderTexture;
 
 class MyEngine
 {
@@ -88,6 +89,10 @@ private:
 	ID3D11Resource* m_pRenderTargetBuffer;
 	ID3D11RenderTargetView* m_pRenderTargetView;
 	ID3D11DepthStencilView* m_pDepthStencilView;
+	ID3D11Texture2D* m_pRenderTargetTexture{};
+
+
+	RenderTexture* m_pRenderTarget{};
 
 	COLORREF m_Color{ RGB(255, 255, 255) };
 };

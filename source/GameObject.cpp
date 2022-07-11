@@ -5,6 +5,7 @@
 #include "Factory.h"
 
 #include <imgui.h>
+#include <ImGuizmo.h>
 
 
 uint32_t GameObject::m_AmountOfGameObjects{};
@@ -81,6 +82,23 @@ void GameObject::Update(float dt)
 
 void GameObject::RenderGUI()
 {
+	ImGuizmo::SetOrthographic(false);
+	ImGuizmo::SetDrawlist();
+
+	float windowWidth = ImGui::GetWindowHeight();
+	float windowHeight = ImGui::GetWindowWidth();
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+	auto pCamera = m_pScene->GetCamera();
+
+	const float* view = &pCamera->GetView().m[0][0];
+	const float* projection = &m_pScene->GetCamera()->GetProjectionMatrix().m[0][0];
+
+	float* transform = &GetTransform()->GetWorldMatrix().m[0][0];
+
+	ImGuizmo::Manipulate(view, projection, ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, transform);
+
+
 	char chars[128];
 	strcpy_s(chars, m_Name.c_str());
 	if (ImGui::InputText("Name: ", chars, 128))

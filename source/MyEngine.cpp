@@ -11,6 +11,8 @@
 #include "MyApplication.h"
 #include "DX11Renderer.h"
 
+#include "RenderTexture.h"
+
 #include <imgui.h>
 #include <backends\imgui_impl_dx11.h>
 #include <backends\imgui_impl_win32.h>
@@ -19,6 +21,7 @@
 	#include <vld.h>
 #endif // _DEBUG
 #include <backends\imgui_impl_win32.cpp>
+#include <ImGuizmo.h>
 
 
 // initialize statics
@@ -50,6 +53,7 @@ MyEngine* MyEngine::GetSingleton()
 
 // constructor
 MyEngine::MyEngine()
+    : m_pRenderTarget{new RenderTexture()}
 {
     // (1) Custom variables
     m_AppName = L"MyApplication";
@@ -73,11 +77,13 @@ MyEngine::MyEngine()
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_MYAPPLICATION));
 
     RegisterClassExW(&wcex); 
+
 }
 
 MyEngine::~MyEngine()
 {
     delete m_pRenderer;
+    delete m_pRenderTarget;
 
 	if (m_pApplication)
 		delete m_pApplication;
@@ -118,12 +124,14 @@ int MyEngine::Run(MyApplication* applicationPtr)
 
     m_pRenderer = new DX11Renderer(hWnd, 1280, 720);
     m_pRenderer->Initialize();
-
     m_pSwapChain = m_pRenderer->GetSwapChain();
     m_pDevice = m_pRenderer->GetDevice();
     m_pDeviceContext = m_pRenderer->GetDeviceContext();
     m_pRenderTargetView = m_pRenderer->GetRenderTarget();
     m_pDepthStencilView = m_pRenderer->GetStencilView();
+
+    m_pRenderTarget->Initialize(GetWindowWidth(), GetWindowHeight());
+
 
     OutputDebugString(L"DirectX is initialized\n");
     m_pApplication->Initialize();
@@ -362,17 +370,36 @@ void MyEngine::Render()
 {
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
-    m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, clear_color_with_alpha);
-    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+    
+
+    m_pRenderTarget->SetRenderTarget(m_pDeviceContext, m_pDepthStencilView);
+    m_pRenderTarget->ClearRenderTarget(m_pDeviceContext, m_pDepthStencilView, clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+
+    //m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+    //m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, clear_color_with_alpha);
+    //m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
     m_pApplication->Render();
+
 
 #ifdef _DEBUG
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
+    ImGuizmo::BeginFrame();
 
-    ImGui::ShowDemoWindow();
+    //ImGui::ShowDemoWindow();
+
+    ImGui::Begin("Scene window");
+
+    ImVec2 pos = ImGui::GetCursorScreenPos();
+    ImGui::GetWindowDrawList()->AddImage(
+        (void*)m_pRenderTarget->GetShaderResourceView(),
+        ImVec2{ ImGui::GetCursorPos() },
+        ImVec2{ ImGui::GetWindowPos().x + ImGui::GetWindowWidth(), ImGui::GetWindowPos().y + ImGui::GetWindowHeight() }
+    );
+
+    ImGui::End();
+
     m_pApplication->RenderGUI();
 
     ImGui::Render();
