@@ -98,6 +98,24 @@ void Camera::CameraGui()
 	}
 }
 
+
+void Camera::CreateProjectionMatrix(float width, float height)
+{
+	CreateProjectionMatrix(width, height, m_FOV, m_Near, m_Far);
+}
+
+void Camera::CreateProjectionMatrix(float width, float height, float FOV, float cnear, float cfar)
+{
+	m_FOV = FOV;
+	m_AspectRatio = width / height;
+	m_Near = cnear;
+	m_Far = cfar;
+
+	DirectX::XMMATRIX projection{};
+	projection = DirectX::XMMatrixPerspectiveFovLH(m_FOV, m_AspectRatio, m_Near, m_Far);
+	DirectX::XMStoreFloat4x4(&m_ProjectionMatrix, projection);
+}
+
 void Camera::UpdateMatrix()
 {
 	DirectX::XMMATRIX projection{};

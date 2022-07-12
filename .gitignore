@@ -314,3 +314,6 @@ x64/Release/Demo.pdb
 .vs/MyApplication/v17/ipch/AutoPCH/efa07aad5353517e/RENDERTEXTURE.ipch
 source/x64/Release/RenderTexture.obj
 .vs/MyApplication/v17/ipch/AutoPCH/f8aab24240af10b6/CAMERA.ipch
+.vs/MyApplication/v17/
+source/x64/Debug/
+source/x64/Release/

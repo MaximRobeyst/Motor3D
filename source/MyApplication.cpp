@@ -213,6 +213,15 @@ void MyApplication::RenderGUI()
 				m_pCamera->CameraGui();
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("In Window"))
+			{
+				bool inWindow = MyEngine::GetSingleton()->GetInWindow();
+				if(ImGui::Checkbox("In Window", &inWindow))
+				{
+					MyEngine::GetSingleton()->SetInWindow(inWindow);
+				}
+				ImGui::EndMenu();
+			}
 
 			ImGui::EndMenu();
 		}
@@ -313,6 +322,11 @@ void MyApplication::Initialize()
 
 void MyApplication::Unitialize()
 {
+}
+
+Scene* MyApplication::GetScene()
+{
+	return m_pScene;
 }
 
 void MyApplication::Activate(bool isActive)

@@ -23,6 +23,10 @@
 #include <backends\imgui_impl_win32.cpp>
 #include <ImGuizmo.h>
 
+#include "Scene.h"
+#include "Camera.h"
+#include "GameObject.h"
+#include "Component.h"
 
 // initialize statics
 HINSTANCE MyEngine::m_Instance{};
@@ -361,6 +365,16 @@ bool MyEngine::GetPlaying() const
     return m_Playing;
 }
 
+void MyEngine::SetInWindow(bool value)
+{
+    m_InWindow = value;
+}
+
+bool MyEngine::GetInWindow() const
+{
+    return m_InWindow;
+}
+
 void MyEngine::Start()
 {
     m_pApplication->Start();
@@ -372,15 +386,25 @@ void MyEngine::Render()
     const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
     
 #ifdef _DEBUG
-    m_pRenderTarget->SetRenderTarget(m_pDeviceContext, m_pDepthStencilView);
-    m_pRenderTarget->ClearRenderTarget(m_pDeviceContext, m_pDepthStencilView, clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    if (!m_InWindow)
+    {
+        m_pRenderTarget->SetRenderTarget(m_pDeviceContext, m_pDepthStencilView);
+        m_pRenderTarget->ClearRenderTarget(m_pDeviceContext, m_pDepthStencilView, clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    }
+    else
+    {
+        m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+        m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, clear_color_with_alpha);
+        m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+    }
 #else
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, clear_color_with_alpha);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 #endif
-    m_pApplication->Render();
 
+
+    m_pApplication->Render();
 
 #ifdef _DEBUG
     ImGui_ImplDX11_NewFrame();
@@ -398,6 +422,30 @@ void MyEngine::Render()
         ImVec2{ ImGui::GetCursorPos() },
         ImVec2{ ImGui::GetWindowPos().x + ImGui::GetWindowWidth(), ImGui::GetWindowPos().y + ImGui::GetWindowHeight() }
     );
+
+    auto pScene = m_pApplication->GetScene();
+    auto pCamera = pScene->GetCamera();
+    pCamera->CreateProjectionMatrix(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+
+    auto selectedObject = m_pApplication->GetScene()->GetSelectedObject();
+    if (selectedObject != nullptr)
+    {
+        //// ImGuizmos
+        //ImGuizmo::SetOrthographic(false);
+        //ImGuizmo::SetDrawlist();
+        //
+        //float windowWidth = ImGui::GetWindowWidth();
+        //float windowHeight = ImGui::GetWindowHeight();
+        //ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+        //
+        //
+        //const float* view = &pCamera->GetView().m[0][0];
+        //const float* projection = &pCamera->GetProjectionMatrix().m[0][0];
+        //
+        //float* transform = &selectedObject->GetTransform()->GetWorldMatrix().m[0][0];
+        //
+        //ImGuizmo::Manipulate(view, projection, ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, transform);
+    }
 
     ImGui::End();
 

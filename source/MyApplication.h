@@ -43,6 +43,8 @@ public:
 
 	void Unitialize();
 
+	Scene* GetScene();
+
 	void Activate(bool isActive);
 	void LeftMouseButtonAction(int x, int y, bool isUp);
 	void RightMouseButtonAction(int x, int y, bool isUp);

@@ -61,6 +61,9 @@ public:
 	bool SetPlaying(bool playing);
 	bool GetPlaying() const;
 
+	void SetInWindow(bool value);
+	bool GetInWindow() const;
+
 private:
 	void Start();
 	void Render();
@@ -80,6 +83,8 @@ private:
 	static MyEngine* m_MyEnginePtr;
 
 	bool m_Playing{false};
+	bool m_InWindow{ false };
+	bool m_FollowGameCamera{ false };
 
 	DX11Renderer* m_pRenderer{};
 

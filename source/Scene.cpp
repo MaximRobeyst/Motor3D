@@ -199,6 +199,11 @@ Camera* Scene::GetCamera() const
 
 }
 
+GameObject* Scene::GetSelectedObject() const
+{
+	return m_pSelectedGameobject;
+}
+
 void Scene::RenderGameobjectSceneGraph(GameObject* pGameobject, int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop)
 {
 	if (pGameobject->GetChildCount() > 0)

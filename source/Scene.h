@@ -33,6 +33,7 @@ public:
 
 	void SetCamera(CameraComponent* pCameraComponent);
 	Camera* GetCamera() const;
+	GameObject* GetSelectedObject() const;
 
 private:
 	void RenderGameobjectSceneGraph(GameObject* pGameobject,int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop);

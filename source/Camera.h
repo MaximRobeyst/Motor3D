@@ -32,6 +32,8 @@ public:
 	void KeyUp(WPARAM wparam);
 
 	void CameraGui();
+	void CreateProjectionMatrix(float width, float height);
+	void CreateProjectionMatrix(float width, float height, float FOV, float cnear, float cfar);
 
 protected:
 	// Private member functions		
