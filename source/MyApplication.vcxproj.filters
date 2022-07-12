@@ -37,6 +37,9 @@
     <Filter Include="Engine Files\Managers">
       <UniqueIdentifier>{4dbe0b3b-6255-4a3f-97e7-9fdf9d7aa552}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Input">
+      <UniqueIdentifier>{079b3813-0568-4410-8d21-54011ea9a5ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -153,6 +156,15 @@
     <ClInclude Include="RenderTexture.h">
       <Filter>Engine Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="EngineCommand.h">
+      <Filter>Engine Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Engine Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Engine Files\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyEngine.cpp">
@@ -221,9 +233,6 @@
     <ClCompile Include="MaterialManager.cpp">
       <Filter>Engine Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Application Files</Filter>
-    </ClCompile>
     <ClCompile Include="DebugCamera.cpp">
       <Filter>Engine Files\Rendering</Filter>
     </ClCompile>
@@ -247,6 +256,18 @@
     </ClCompile>
     <ClCompile Include="RenderTexture.cpp">
       <Filter>Engine Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Engine Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineCommand.cpp">
+      <Filter>Engine Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Engine Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Engine Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

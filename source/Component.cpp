@@ -271,6 +271,33 @@ void MeshComponent::Update(float)
 
 void MeshComponent::RenderGUI()
 {
+	static ImGuiComboFlags flags = 0;
+	auto names = ResourceManager::GetInstance()->GetMeshNames();
+	static int item_current_idx = 0; // Here we store our selection data as an index.
+	const char* combo_preview_value = names[item_current_idx].c_str();  // Pass in the preview value visible before opening the combo (it could be anything)
+	if (ImGui::BeginCombo("combo 1", combo_preview_value, flags))
+	{
+		for (int n = 0; n < names.size(); n++)
+		{
+			const bool is_selected = (item_current_idx == n);
+			if (ImGui::Selectable(names[n].c_str(), is_selected))
+			{
+				item_current_idx = n;
+				SetMesh(names[n]);
+			}
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+	
+	int submeshId = m_pMesh->GetSubmeshID();
+	if (ImGui::InputInt("Submesh", &submeshId))
+		m_pMesh = ResourceManager::GetInstance()->GetMesh(m_pMesh->GetFilename() + std::to_string(submeshId));
 }
 
 void MeshComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
@@ -291,6 +318,13 @@ void MeshComponent::Deserialize(const rapidjson::Value& value)
 	Material* mat = MaterialManager::GetInstance()->GetMaterial(value["Material"].GetString());
 	m_pMesh->SetMaterial(mat->GetName(), mat);
 	p = nullptr;
+}
+
+void MeshComponent::SetMesh(const std::string& name)
+{
+	if (m_pMesh == ResourceManager::GetInstance()->GetMesh(name)) return;
+
+	m_pMesh = ResourceManager::GetInstance()->GetMesh(name);
 }
 
 RigidBodyComponent::RigidBodyComponent(DirectX::XMFLOAT3 velocity, DirectX::XMFLOAT3 acceleration, DirectX::XMFLOAT3 gravity)

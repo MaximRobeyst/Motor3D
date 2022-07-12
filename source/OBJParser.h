@@ -165,6 +165,8 @@ static void CreateMesh(std::vector<Mesh*>& pMeshes, Mesh_Struct& mesh, const std
 	//Texture* pDiffuseTexture = new Texture(MyEngine::GetSingleton()->GetDevice(), L"Resources/uv_grid_2.png");
 	//mat->SetDiffuseMap(pDiffuseTexture);
 
+	auto materialManager = MaterialManager::GetInstance();
+
 	Mesh* pMesh = new Mesh(
 		MyEngine::GetSingleton()->GetDevice(),
 		MyEngine::GetSingleton()->GetWindowHandle(),
@@ -172,7 +174,7 @@ static void CreateMesh(std::vector<Mesh*>& pMeshes, Mesh_Struct& mesh, const std
 		mesh.indices,
 		filepath,
 		pMeshes.size(),
-		MaterialManager::GetInstance()->GetMaterial(mesh.materialName)
+		materialManager->GetMaterial( (mesh.materialName.empty() ? "default" : mesh.materialName))
 	);
 	pMeshes.push_back(pMesh);
 }

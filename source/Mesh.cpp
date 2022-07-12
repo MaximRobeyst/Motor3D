@@ -6,6 +6,7 @@
 #pragma warning (pop)
 
 #include "Component.h"
+#include "ResourceManager.h"
 
 
 // The mesh causes a memory leak that i cant find at the moment and i think it has something to with the material
@@ -20,8 +21,10 @@ Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Materi
 	auto worldmatrix = DirectX::XMMatrixIdentity();
 	DirectX::XMStoreFloat4x4(&m_WorldMatrix, worldmatrix);
 
-	ParseOBJ(filePath, m_pSubmeshes);
+	if (!ParseOBJ(filePath, m_pSubmeshes))
+		return;
 
+	ResourceManager::GetInstance()->AddMesh(filePath, this);
 	Initialize(pDevice, hWnd, vertices, indices);
 }
 
@@ -34,6 +37,10 @@ Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices
 	auto worldmatrix = DirectX::XMMatrixIdentity();
 	DirectX::XMStoreFloat4x4(&m_WorldMatrix, worldmatrix);
 
+	if (m_SubmeshId == 0)
+		ResourceManager::GetInstance()->AddMesh(filePath, this);
+	else
+		ResourceManager::GetInstance()->AddMesh(filePath + std::to_string(m_SubmeshId), this);
 	Initialize(pDevice, hWnd, vertices, indices);
 }
 

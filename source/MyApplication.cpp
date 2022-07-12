@@ -93,6 +93,11 @@ void MyApplication::ApplicationFiles(const std::string& path)
 	for (const auto& file : std::filesystem::directory_iterator(path))
 	{
 		std::string filepath{ file.path().string() };
+		if (filepath.substr(filepath.find_last_of(".") + 1) == "obj")
+		{
+			ResourceManager::GetInstance()->AddMeshFile(filepath);
+		}
+
 		DialogueFolder(i, filepath, base_flags, node_clicked, test_drag_and_drop);
 		++i;
 	}
@@ -305,6 +310,11 @@ void MyApplication::Initialize()
 	}
 	
 	auto pMaterialManager = MaterialManager::GetInstance();
+
+	pMaterialManager->AddMaterial("default", new Material(MyEngine::GetSingleton()->GetDevice(), "Resources/material_unlit.fx", "default"));
+	pMaterialManager->GetMaterial("default")->SetDiffuseMap(
+		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
+
 
 	pMaterialManager->GetMaterial("lambert8SG")->SetDiffuseMap(
 		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/T_BarrelAndBanjo_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));

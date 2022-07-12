@@ -413,7 +413,7 @@ void MyEngine::Render()
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 
-    //ImGui::ShowDemoWindow();
+    ImGui::ShowDemoWindow();
 
     auto pScene = m_pApplication->GetScene();
     auto pCamera = pScene->GetCamera();

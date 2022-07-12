@@ -154,6 +154,8 @@ public:
 	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>&);
 	virtual void Deserialize(const rapidjson::Value&);
 private:
+	void SetMesh(const std::string& meshpath);
+
 	Mesh* m_pMesh{};
 	TransformComponent* m_pTransform;
 };

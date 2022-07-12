@@ -25,6 +25,8 @@ public:
 	void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);
 	void Deserialize(Scene* pScene, const rapidjson::Value& value);
 
+
+
 private:
 	MaterialManager() = default;
 
