@@ -155,13 +155,6 @@ int MyEngine::Run(MyApplication* applicationPtr)
 
     while (running)
     {
-        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-            if (msg.message == WM_QUIT)
-                running = false;
-        }
         // Get current time
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 
@@ -176,6 +169,14 @@ int MyEngine::Run(MyApplication* applicationPtr)
         Update(elapsedSeconds);
 
         Render();
+
+        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+            if (msg.message == WM_QUIT)
+                running = false;
+        }
     }
 
 #else
@@ -414,40 +415,47 @@ void MyEngine::Render()
 
     //ImGui::ShowDemoWindow();
 
-    ImGui::Begin("Scene window");
-
-    ImVec2 pos = ImGui::GetCursorScreenPos();
-    ImGui::GetWindowDrawList()->AddImage(
-        (void*)m_pRenderTarget->GetShaderResourceView(),
-        ImVec2{ ImGui::GetCursorPos() },
-        ImVec2{ ImGui::GetWindowPos().x + ImGui::GetWindowWidth(), ImGui::GetWindowPos().y + ImGui::GetWindowHeight() }
-    );
-
     auto pScene = m_pApplication->GetScene();
     auto pCamera = pScene->GetCamera();
-    pCamera->CreateProjectionMatrix(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+    if (!m_InWindow)
+        pCamera->CreateProjectionMatrix(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+    else
+        pCamera->CreateProjectionMatrix(GetWindowWidth(), GetWindowHeight());
 
-    auto selectedObject = m_pApplication->GetScene()->GetSelectedObject();
-    if (selectedObject != nullptr)
+    if (!m_InWindow)
     {
-        //// ImGuizmos
-        //ImGuizmo::SetOrthographic(false);
-        //ImGuizmo::SetDrawlist();
-        //
-        //float windowWidth = ImGui::GetWindowWidth();
-        //float windowHeight = ImGui::GetWindowHeight();
-        //ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-        //
-        //
-        //const float* view = &pCamera->GetView().m[0][0];
-        //const float* projection = &pCamera->GetProjectionMatrix().m[0][0];
-        //
-        //float* transform = &selectedObject->GetTransform()->GetWorldMatrix().m[0][0];
-        //
-        //ImGuizmo::Manipulate(view, projection, ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, transform);
-    }
+        ImGui::Begin("Scene window");
 
-    ImGui::End();
+        ImVec2 pos = ImGui::GetCursorScreenPos();
+        ImGui::GetWindowDrawList()->AddImage(
+            (void*)m_pRenderTarget->GetShaderResourceView(),
+            ImVec2{ ImGui::GetCursorPos() },
+            ImVec2{ ImGui::GetWindowPos().x + ImGui::GetWindowWidth(), ImGui::GetWindowPos().y + ImGui::GetWindowHeight() }
+        );
+
+
+        auto selectedObject = m_pApplication->GetScene()->GetSelectedObject();
+        if (selectedObject != nullptr)
+        {
+            //// ImGuizmos
+            //ImGuizmo::SetOrthographic(false);
+            //ImGuizmo::SetDrawlist();
+            //
+            //float windowWidth = ImGui::GetWindowWidth();
+            //float windowHeight = ImGui::GetWindowHeight();
+            //ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+            //
+            //
+            //const float* view = &pCamera->GetView().m[0][0];
+            //const float* projection = &pCamera->GetProjectionMatrix().m[0][0];
+            //
+            //float* transform = &selectedObject->GetTransform()->GetWorldMatrix().m[0][0];
+            //
+            //ImGuizmo::Manipulate(view, projection, ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, transform);
+        }
+
+        ImGui::End();
+    }
 
     m_pApplication->RenderGUI();
 

@@ -83,7 +83,7 @@ private:
 	static MyEngine* m_MyEnginePtr;
 
 	bool m_Playing{false};
-	bool m_InWindow{ false };
+	bool m_InWindow{ true };
 	bool m_FollowGameCamera{ false };
 
 	DX11Renderer* m_pRenderer{};
