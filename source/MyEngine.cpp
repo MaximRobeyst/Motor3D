@@ -371,13 +371,14 @@ void MyEngine::Render()
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
     
-
+#ifdef _DEBUG
     m_pRenderTarget->SetRenderTarget(m_pDeviceContext, m_pDepthStencilView);
     m_pRenderTarget->ClearRenderTarget(m_pDeviceContext, m_pDepthStencilView, clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-
-    //m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
-    //m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, clear_color_with_alpha);
-    //m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+#else
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+    m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, clear_color_with_alpha);
+    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+#endif
     m_pApplication->Render();
 
 
