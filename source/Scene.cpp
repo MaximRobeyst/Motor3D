@@ -22,6 +22,9 @@ void Scene::AddGameObject(GameObject* pGameObject)
 {
 	m_pGameObjects.push_back(pGameObject);
 	pGameObject->SetScene(this);
+
+	if(m_Started)
+		pGameObject->Start();
 }
 
 void Scene::RemoveGameobject(GameObject* pGameobject)
@@ -69,6 +72,8 @@ void Scene::Start()
 	{
 		(*iter)->Start();
 	}
+
+	m_Started = true;
 }
 
 void Scene::Render(Camera* pCamera)

@@ -40,6 +40,9 @@ void GameObject::AddComponent(IComponent* component)
 {
 	component->SetGameobject(this);
 	m_pComponents.push_back(component);
+
+	if(m_Started)
+		component->Start();
 }
 
 void GameObject::RemoveComponent(IComponent* component)
@@ -56,6 +59,7 @@ void GameObject::Start()
 
 	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
 		(*iter)->Start();
+	m_Started = true;
 }
 
 void GameObject::Render(Camera* pCamera)

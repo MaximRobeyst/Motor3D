@@ -230,6 +230,12 @@ void MyApplication::RenderGUI()
 
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Create"))
+		{
+			if (ImGui::MenuItem("New Gameobject"))
+				m_pScene->AddGameObject(new GameObject("New Gameobject"));
+			ImGui::EndMenu();
+		}
 
 		ImGui::EndMenuBar();
 	}

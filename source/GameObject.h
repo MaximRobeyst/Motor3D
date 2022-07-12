@@ -82,7 +82,8 @@ private:
 
 	Scene* m_pScene;
 	std::string m_Name;
-	bool m_Enabled{true};
+	bool m_Enabled{ true };
+	bool m_Started{ false };
 
 	GameObject* m_pParent;
 	std::vector<GameObject*> m_pChildren;

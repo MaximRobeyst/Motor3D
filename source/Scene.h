@@ -38,6 +38,8 @@ public:
 private:
 	void RenderGameobjectSceneGraph(GameObject* pGameobject,int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop);
 
+	bool m_Started{ false };
+
 	std::vector<GameObject*> m_pGameObjects{};
 	std::map<std::string, Material*> m_pMaterials{};
 

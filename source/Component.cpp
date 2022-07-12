@@ -256,11 +256,15 @@ MeshComponent::~MeshComponent()
 void MeshComponent::Start()
 {
 	m_pTransform = m_pGameobject->GetComponent<TransformComponent>();
+	if (m_pMesh == nullptr) return;
+
 	m_pMesh->SetWorldMatrix(m_pTransform->GetWorldMatrix());
 }
 
 void MeshComponent::Render(Camera* , GameObject* /*pGameobject*/)
 {
+	if (m_pMesh == nullptr) return;
+
 	m_pMesh->SetWorldMatrix(m_pTransform->GetWorldMatrix());
 	m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), m_pGameobject->GetScene()->GetCamera());
 }
@@ -295,6 +299,8 @@ void MeshComponent::RenderGUI()
 		ImGui::EndCombo();
 	}
 	
+	if (m_pMesh == nullptr) return;
+
 	int submeshId = m_pMesh->GetSubmeshID();
 	if (ImGui::InputInt("Submesh", &submeshId))
 		m_pMesh = ResourceManager::GetInstance()->GetMesh(m_pMesh->GetFilename() + std::to_string(submeshId));

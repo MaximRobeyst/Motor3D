@@ -1,0 +1,389 @@
+{
+    "Materials": [
+        {
+            "Type": "class Material",
+            "Name": "DAE2_RickAstley_Assignment1_000_aiStandardSurface1SG1",
+            "DiffuseTexture": "Resources/uv_grid_2.png",
+            "AssertFile": "Resources/material_unlit.fx"
+        },
+        {
+            "Type": "class Material",
+            "Name": "default",
+            "DiffuseTexture": "Resources/uv_grid_2.png",
+            "AssertFile": "Resources/material_unlit.fx"
+        },
+        {
+            "Type": "class Material",
+            "Name": "lambert10SG",
+            "DiffuseTexture": "Resources/T_ChairAndFirepit_BC_01.jpg",
+            "AssertFile": "Resources/material_unlit.fx"
+        },
+        {
+            "Type": "class Material",
+            "Name": "lambert5SG",
+            "DiffuseTexture": "Resources/T_Distillery_BC_01.jpg",
+            "AssertFile": "Resources/material_unlit.fx"
+        },
+        {
+            "Type": "class Material",
+            "Name": "lambert8SG",
+            "DiffuseTexture": "Resources/T_BarrelAndBanjo_BC_01.jpg",
+            "AssertFile": "Resources/material_unlit.fx"
+        },
+        {
+            "Type": "class Material",
+            "Name": "lambert9SG",
+            "DiffuseTexture": "Resources/T_Shotgun_BC_01.jpg",
+            "AssertFile": "Resources/material_unlit.fx"
+        }
+    ],
+    "SceneName": "2ChairScene",
+    "Gameobjects": [
+        {
+            "Name": "Camera",
+            "Components": [
+                {
+                    "Name": "class TransformComponent",
+                    "Position": [
+                        0.0,
+                        1.0,
+                        -2.5
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Name": "class CameraComponent",
+                    "FOV": 0.7853981256484985,
+                    "Far": 100.0,
+                    "Near": 0.10000000149011612
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Name": "Cube0",
+            "Components": [
+                {
+                    "Name": "class TransformComponent",
+                    "Position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Name": "class MeshComponent",
+                    "MeshPath": "Resources/5Props.obj",
+                    "SubmeshId": 0,
+                    "Material": "lambert10SG"
+                },
+                {
+                    "Name": "class Rotator",
+                    "Enabled": false,
+                    "RotationSpeed": 45.0,
+                    "Axis": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "Name": "Cube1",
+                    "Components": [
+                        {
+                            "Name": "class TransformComponent",
+                            "Position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Rotation": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "Name": "class MeshComponent",
+                            "MeshPath": "Resources/5Props.obj",
+                            "SubmeshId": 1,
+                            "Material": "lambert5SG"
+                        },
+                        {
+                            "Name": "class Rotator",
+                            "Enabled": false,
+                            "RotationSpeed": 45.0,
+                            "Axis": [
+                                0.0,
+                                1.0,
+                                0.0
+                            ]
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "Name": "Cube2",
+                            "Components": [
+                                {
+                                    "Name": "class TransformComponent",
+                                    "Position": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Rotation": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ]
+                                },
+                                {
+                                    "Name": "class MeshComponent",
+                                    "MeshPath": "Resources/5Props.obj",
+                                    "SubmeshId": 2,
+                                    "Material": "lambert8SG"
+                                },
+                                {
+                                    "Name": "class Rotator",
+                                    "Enabled": false,
+                                    "RotationSpeed": 45.0,
+                                    "Axis": [
+                                        0.0,
+                                        1.0,
+                                        0.0
+                                    ]
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "Name": "Cube3",
+                                    "Components": [
+                                        {
+                                            "Name": "class TransformComponent",
+                                            "Position": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Rotation": [
+                                                0.0,
+                                                0.0,
+                                                0.0
+                                            ],
+                                            "Scale": [
+                                                1.0,
+                                                1.0,
+                                                1.0
+                                            ]
+                                        },
+                                        {
+                                            "Name": "class MeshComponent",
+                                            "MeshPath": "Resources/5Props.obj",
+                                            "SubmeshId": 3,
+                                            "Material": "lambert10SG"
+                                        },
+                                        {
+                                            "Name": "class Rotator",
+                                            "Enabled": false,
+                                            "RotationSpeed": 45.0,
+                                            "Axis": [
+                                                0.0,
+                                                1.0,
+                                                0.0
+                                            ]
+                                        }
+                                    ],
+                                    "Children": [
+                                        {
+                                            "Name": "Cube4",
+                                            "Components": [
+                                                {
+                                                    "Name": "class TransformComponent",
+                                                    "Position": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                                    "Rotation": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                                    "Scale": [
+                                                        1.0,
+                                                        1.0,
+                                                        1.0
+                                                    ]
+                                                },
+                                                {
+                                                    "Name": "class MeshComponent",
+                                                    "MeshPath": "Resources/5Props.obj",
+                                                    "SubmeshId": 4,
+                                                    "Material": "lambert9SG"
+                                                },
+                                                {
+                                                    "Name": "class Rotator",
+                                                    "Enabled": false,
+                                                    "RotationSpeed": 45.0,
+                                                    "Axis": [
+                                                        0.0,
+                                                        1.0,
+                                                        0.0
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": [
+                                                {
+                                                    "Name": "Cube5",
+                                                    "Components": [
+                                                        {
+                                                            "Name": "class TransformComponent",
+                                                            "Position": [
+                                                                0.0,
+                                                                0.0,
+                                                                0.0
+                                                            ],
+                                                            "Rotation": [
+                                                                0.0,
+                                                                0.0,
+                                                                0.0
+                                                            ],
+                                                            "Scale": [
+                                                                1.0,
+                                                                1.0,
+                                                                1.0
+                                                            ]
+                                                        },
+                                                        {
+                                                            "Name": "class MeshComponent",
+                                                            "MeshPath": "Resources/5Props.obj",
+                                                            "SubmeshId": 5,
+                                                            "Material": "lambert8SG"
+                                                        },
+                                                        {
+                                                            "Name": "class Rotator",
+                                                            "Enabled": false,
+                                                            "RotationSpeed": 45.0,
+                                                            "Axis": [
+                                                                0.0,
+                                                                1.0,
+                                                                0.0
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "Children": [
+                                                        {
+                                                            "Name": "Cube6",
+                                                            "Components": [
+                                                                {
+                                                                    "Name": "class TransformComponent",
+                                                                    "Position": [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ],
+                                                                    "Rotation": [
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0
+                                                                    ],
+                                                                    "Scale": [
+                                                                        1.0,
+                                                                        1.0,
+                                                                        1.0
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "Name": "class MeshComponent",
+                                                                    "MeshPath": "Resources/5Props.obj",
+                                                                    "SubmeshId": 6,
+                                                                    "Material": "DAE2_RickAstley_Assignment1_000_aiStandardSurface1SG1"
+                                                                },
+                                                                {
+                                                                    "Name": "class Rotator",
+                                                                    "Enabled": false,
+                                                                    "RotationSpeed": 45.0,
+                                                                    "Axis": [
+                                                                        0.0,
+                                                                        1.0,
+                                                                        0.0
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "Children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "New Gameobject",
+            "Components": [
+                {
+                    "Name": "class TransformComponent",
+                    "Position": [
+                        -0.44999998807907104,
+                        0.0,
+                        0.10000000149011612
+                    ],
+                    "Rotation": [
+                        0.0,
+                        -1.0471975803375244,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                {
+                    "Name": "class MeshComponent",
+                    "MeshPath": "Resources/5Props.obj",
+                    "SubmeshId": 3,
+                    "Material": "lambert10SG"
+                }
+            ],
+            "Children": []
+        }
+    ]
+}
