@@ -165,6 +165,15 @@
     <ClInclude Include="InputManager.h">
       <Filter>Engine Files\Input</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>Engine Files\Engine Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Engine Files\Engine Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshComponent.h">
+      <Filter>Engine Files\Engine Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyEngine.cpp">
@@ -268,6 +277,15 @@
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteComponent.cpp">
+      <Filter>Engine Files\Engine Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>Engine Files\Engine Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshComponent.cpp">
+      <Filter>Engine Files\Engine Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -301,7 +301,7 @@ static bool ParseOBJ(const std::string& filename, std::vector<Mesh*>& m_pMeshes)
 	file.close();
 
 	// Create the final mesh
-	meshes.push_back(Mesh_Struct{ vertices, indices, meshmatNames[meshmatNames.size() - 1] });
+	meshes.emplace_back(Mesh_Struct{ vertices, indices, meshmatNames[meshmatNames.size() - 1] });
 	vertices.clear();
 	indices.clear();
 	for (auto& meshStruct : meshes)

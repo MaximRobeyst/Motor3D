@@ -20,6 +20,8 @@
 #include <imgui.h>
 #include "ResourceManager.h"
 #include "Utils.h"
+#include "MeshComponent.h"
+#include "SpriteComponent.h"
 
 #include <iostream>
 #include <filesystem>
@@ -314,6 +316,13 @@ void MyApplication::Initialize()
 
 		++i;
 	}
+	
+	auto spriteObject = new GameObject("Sprite");
+	m_pScene->AddGameObject(spriteObject);
+	auto spriteComponent = new SpriteComponent();
+	spriteComponent->SetTexture("Resources/uv_grid_2.png");
+	spriteObject->AddComponent(spriteComponent);
+
 	
 	auto pMaterialManager = MaterialManager::GetInstance();
 

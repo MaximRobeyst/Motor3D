@@ -27,6 +27,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "SpriteComponent.h"
 
 // initialize statics
 HINSTANCE MyEngine::m_Instance{};

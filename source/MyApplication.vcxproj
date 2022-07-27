@@ -201,10 +201,13 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="LitMaterial.h" />
     <ClInclude Include="MaterialManager.h" />
+    <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="WICTextureLoader.h" />
     <ClInclude Include="Material.h" />
@@ -244,10 +247,13 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LitMaterial.cpp" />
     <ClCompile Include="MaterialManager.cpp" />
+    <ClCompile Include="MeshComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />

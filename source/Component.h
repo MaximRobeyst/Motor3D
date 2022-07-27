@@ -11,6 +11,7 @@
 #include "GameObject.h"
 
 class Mesh;
+class TransformComponent;
 
 class IComponent
 {
@@ -20,7 +21,7 @@ public:
 
 
 	virtual void Start() {};
-	virtual void Render(Camera* pCamera, GameObject* pGameobject);
+	virtual void Render();
 	virtual void Update(float dt);
 
 	virtual void RenderGUI() {};
@@ -33,49 +34,6 @@ public:
 protected:
 	uint8_t m_ComponentID;
 	GameObject* m_pGameobject{};
-};
-
-class TransformComponent : public IComponent
-{
-public:
-	TransformComponent(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3{ 1,1,1 });
-
-	void Start() override;
-	void Update(float dt) override;
-
-	void RenderGUI() override;
-
-	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);
-	virtual void Deserialize(const rapidjson::Value&);
-
-	DirectX::XMFLOAT4X4 GetWorldMatrix();
-	
-	DirectX::XMFLOAT3 GetPosition() const;
-	void SetPosition(DirectX::XMFLOAT3 position);
-
-	DirectX::XMFLOAT3 GetRotation() const;
-	void SetRotation(DirectX::XMFLOAT3 rotation);
-
-	void SetParent(TransformComponent* pTransformComponent);
-
-	DirectX::XMFLOAT3& GetForward();
-	DirectX::XMFLOAT3& GetRight();
-	DirectX::XMFLOAT3& GetUp();
-
-private:
-	void UpdateDirections();
-
-	bool m_Dirty{true};
-
-	DirectX::XMFLOAT3 m_Position;
-	DirectX::XMFLOAT3 m_Rotation;
-	DirectX::XMFLOAT3 m_Scale;
-
-	DirectX::XMFLOAT4X4 m_WorldMatrix;
-
-	DirectX::XMFLOAT3 m_Forward;
-	DirectX::XMFLOAT3 m_Right;
-	DirectX::XMFLOAT3 m_Up;
 };
 
 class CameraComponent : public IComponent, public Camera
@@ -92,7 +50,7 @@ public:
 
 	void Start() override;
 	void Update(float elapsedSec) override;
-	void Render(Camera* pCamera, GameObject* pGameobject) override;
+	void Render() override;
 
 	void KeyDown(WPARAM wparam);
 	void KeyUp(WPARAM wparam);
@@ -139,26 +97,6 @@ private:
 	DirectX::XMFLOAT3 m_Gravity{};
 };
 
-class MeshComponent : public IComponent
-{
-public:
-	MeshComponent(Mesh* pMesh = nullptr);
-	~MeshComponent();
-
-	void Start() override;
-	void Render(Camera* pCamera, GameObject* pGameobject) override;
-	void Update(float dt) override;
-
-	void RenderGUI() override;
-
-	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>&);
-	virtual void Deserialize(const rapidjson::Value&);
-private:
-	void SetMesh(const std::string& meshpath);
-
-	Mesh* m_pMesh{};
-	TransformComponent* m_pTransform;
-};
 
 class Rotator : public IComponent
 {

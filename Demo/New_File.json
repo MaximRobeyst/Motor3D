@@ -8,6 +8,12 @@
         },
         {
             "Type": "class Material",
+            "Name": "default",
+            "DiffuseTexture": "Resources/uv_grid_2.png",
+            "AssertFile": "Resources/material_unlit.fx"
+        },
+        {
+            "Type": "class Material",
             "Name": "lambert10SG",
             "DiffuseTexture": "Resources/T_ChairAndFirepit_BC_01.jpg",
             "AssertFile": "Resources/material_unlit.fx"
@@ -75,12 +81,12 @@
                     ],
                     "Rotation": [
                         0.0,
-                        0.7853981852531433,
+                        0.0,
                         0.0
                     ],
                     "Scale": [
                         1.0,
-                        2.0,
+                        1.0,
                         1.0
                     ]
                 },
@@ -348,6 +354,33 @@
                     ]
                 }
             ]
+        },
+        {
+            "Name": "Sprite",
+            "Components": [
+                {
+                    "Name": "class TransformComponent",
+                    "Position": [
+                        128.0,
+                        128.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        0.125,
+                        0.125,
+                        1.0
+                    ]
+                },
+                {
+                    "Name": "class SpriteComponent"
+                }
+            ],
+            "Children": []
         }
     ]
 }

@@ -7,6 +7,8 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 
+#include "TransformComponent.h"
+
 
 uint32_t GameObject::m_AmountOfGameObjects{};
 
@@ -67,7 +69,7 @@ void GameObject::Render(Camera* pCamera)
 	if (!m_Enabled) return;
 
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
-		(*iter)->Render(pCamera, this);
+		(*iter)->Render();
 
 	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
 		(*iter)->Render(pCamera);

@@ -1,9 +1,5 @@
 #pragma once
 
-#pragma warning (push, 0)
-#include "DataTypes.h"
-#pragma warning(pop)
-
 #include <vector>
 #include <memory>
 #include <stringbuffer.h>
@@ -16,8 +12,8 @@
 #include <string>
 #include <DirectXMath.h>
 
-class TransformComponent;
 class IComponent;
+class TransformComponent;
 class Camera;
 class Scene;
 
