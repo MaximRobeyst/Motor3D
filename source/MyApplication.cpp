@@ -22,6 +22,8 @@
 #include "Utils.h"
 #include "MeshComponent.h"
 #include "SpriteComponent.h"
+#include "TransformComponent.h"
+#include "ParticleComponent.h"
 
 #include <iostream>
 #include <filesystem>
@@ -42,6 +44,7 @@ MyApplication::~MyApplication()
 
 #ifdef _DEBUG
 	delete m_pCamera;
+	m_pCamera = nullptr;
 #endif // _DEBUG
 
 	delete m_pScene;
@@ -161,7 +164,8 @@ void MyApplication::DialogueFolder(int i, const std::string& path, ImGuiTreeNode
 void MyApplication::Start()
 {
 #ifdef _DEBUG
-	m_pCamera = new Camera(DirectX::XMFLOAT3{ 0,1,-2.5f }, DirectX::XMFLOAT3{ 0,0,1 }, (F_PI / 4.f), MyEngine::GetSingleton()->GetWindowWidth() / MyEngine::GetSingleton()->GetWindowHeight());
+	if(m_pCamera == nullptr)
+		m_pCamera = new Camera(DirectX::XMFLOAT3{ 0,1,-2.5f }, DirectX::XMFLOAT3{ 0,0,1 }, (F_PI / 4.f), MyEngine::GetSingleton()->GetWindowWidth() / MyEngine::GetSingleton()->GetWindowHeight());
 #endif
 	m_pScene->Start();
 }
@@ -322,8 +326,13 @@ void MyApplication::Initialize()
 	auto spriteComponent = new SpriteComponent();
 	spriteComponent->SetTexture("Resources/uv_grid_2.png");
 	spriteObject->AddComponent(spriteComponent);
+	spriteObject->GetTransform()->SetScale(DirectX::XMFLOAT3{ 0.25f, 0.25f, 0.25f });
 
-	
+	auto particleObject = new GameObject("Particle Object");
+	m_pScene->AddGameObject(particleObject);
+	ParticleEmmiterSettings particleSettings{};
+	particleObject->AddComponent(new ParticleComponent("smoke.png", particleSettings, 60));
+
 	auto pMaterialManager = MaterialManager::GetInstance();
 
 	pMaterialManager->AddMaterial("default", new Material(MyEngine::GetSingleton()->GetDevice(), "Resources/material_unlit.fx", "default"));

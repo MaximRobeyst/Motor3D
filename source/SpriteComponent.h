@@ -18,6 +18,8 @@ public:
 	void Render() override;
 	void Update(float dt) override;
 
+	void RenderGUI() override;
+
 	void SetTexture(const std::string& spriteAsset);
 	void SetColor(const DirectX::XMFLOAT4 color);
 
@@ -40,8 +42,9 @@ private:
 	ID3DX11EffectMatrixVariable* m_pEVar_TransformMatrix{};
 	ID3DX11EffectVectorVariable* m_pEVar_TextureSize{};
 
-	DirectX::XMFLOAT4 m_Color{};
+	DirectX::XMFLOAT4 m_Color{1,1,1,1};
 	DirectX::XMFLOAT4X4 m_Transform{};
+	DirectX::XMFLOAT2 m_Pivot{};
 
 	struct SpriteVertex
 	{

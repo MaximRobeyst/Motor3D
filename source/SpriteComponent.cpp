@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include <comdef.h>
+#include <imgui.h>
 
 const Creator<IComponent, SpriteComponent> g_TransformCreator{};
 
@@ -64,10 +65,14 @@ SpriteComponent::~SpriteComponent()
 void SpriteComponent::Start()
 {
 	//Effect
-	m_pEffect = LoadShader(L"Resources/SpriteRenderer.fx");
-	m_pTechnique = m_pEffect->GetTechniqueByIndex(0);
 
-	CreateInputLayout();
+	if(!m_pEffect)
+		m_pEffect = LoadShader(L"Resources/SpriteRenderer.fx");
+	if(!m_pTechnique)
+		m_pTechnique = m_pEffect->GetTechniqueByIndex(0);
+
+	if(!m_pInputLayout)
+		CreateInputLayout();
 
 	m_pEVar_TransformMatrix = (m_pEffect)->GetVariableByName("gTransform")->AsMatrix();	
 	if (!(m_pEVar_TransformMatrix)->IsValid())
@@ -124,8 +129,8 @@ void SpriteComponent::Render()
 	HRESULT hResult = S_OK;
 	SpriteVertex vertex{};
 	vertex.TransformData = DirectX::XMFLOAT4{ m_pTransformComponent->GetPosition().x, m_pTransformComponent->GetPosition().y, m_pTransformComponent->GetPosition().z, m_pTransformComponent->GetRotation().z};
-	vertex.TransformData2 = DirectX::XMFLOAT4{ 0,0, m_pTransformComponent->GetScale().x, m_pTransformComponent->GetScale().y };
-	vertex.Color = DirectX::XMFLOAT4{1,1,1,1};
+	vertex.TransformData2 = DirectX::XMFLOAT4{ m_Pivot.x,m_Pivot.y, m_pTransformComponent->GetScale().x, m_pTransformComponent->GetScale().y };
+	vertex.Color = m_Color;
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	hResult = pDeviceContext->Map(m_pImmediateVertexBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource);
@@ -165,12 +170,16 @@ void SpriteComponent::Render()
 		m_pTechnique->GetPassByIndex(i)->Apply(0, pDeviceContext);
 		pDeviceContext->Draw(1, 0);
 	}
-
-
 }
 
 void SpriteComponent::Update(float /*dt*/)
 {
+}
+
+void SpriteComponent::RenderGUI()
+{
+	ImGui::InputFloat2("Pivot", &m_Pivot.x);
+	ImGui::ColorEdit4("Color", &m_Color.x);
 }
 
 void SpriteComponent::SetTexture(const std::string& spriteAsset)

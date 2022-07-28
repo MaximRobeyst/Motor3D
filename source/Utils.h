@@ -24,6 +24,14 @@ bool AreEqual(T a, T b, uint16_t ulp = 2)//Only works when non-integer types use
 		|| std::abs(a - b) < std::numeric_limits<T>::min();
 }
 
+inline float randF(float min, float max)
+{
+	const float random = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+	const float diff = max - min;
+	const float r = random * diff;
+	return min + r;
+}
+
 /*! Function to convert degrees to radians */
 template<typename T, typename = std::enable_if<std::is_pod<T>::value>>
 constexpr T ToRadians(const T angle)
