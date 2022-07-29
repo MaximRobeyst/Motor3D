@@ -240,14 +240,14 @@ LRESULT MyEngine::HandleEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         break;
 
     case WM_LBUTTONUP:
-        m_pApplication->LeftMouseButtonAction(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+        //m_pApplication->LeftMouseButtonAction(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
         InvalidateRect(hWnd, nullptr, true);
         break;
 	case WM_LBUTTONDOWN:
-		m_pApplication->LeftMouseButtonAction(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
+		//m_pApplication->LeftMouseButtonAction(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
 		InvalidateRect(hWnd, nullptr, true);
     case WM_RBUTTONUP:
-        m_pApplication->RightMouseButtonAction(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+        //m_pApplication->RightMouseButtonAction(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
         InvalidateRect(hWnd, nullptr, true);
         break;
 	case WM_KEYDOWN:

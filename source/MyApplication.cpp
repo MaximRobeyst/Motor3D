@@ -24,6 +24,12 @@
 #include "SpriteComponent.h"
 #include "TransformComponent.h"
 #include "ParticleComponent.h"
+#include "TerrainComponent.h"
+
+#include "Logger.h"
+
+#include "EditorWindow.h"
+#include "LogWindow.h"
 
 #include <iostream>
 #include <filesystem>
@@ -45,6 +51,13 @@ MyApplication::~MyApplication()
 #ifdef _DEBUG
 	delete m_pCamera;
 	m_pCamera = nullptr;
+
+	for (auto& window : m_pEditorWindows)
+	{
+		window->Cleanup();
+		delete window;
+	}
+	m_pEditorWindows.clear();
 #endif // _DEBUG
 
 	delete m_pScene;
@@ -53,14 +66,12 @@ MyApplication::~MyApplication()
 //-------------------------------------------------
 // Own methods								
 //-------------------------------------------------
-void MyApplication::LeftMouseButtonAction(int x, int y, bool isUp)
+void MyApplication::LeftMouseButtonAction()
 {
-	if (isUp) m_PointsVec.push_back({ x, y });
 }
 
-void MyApplication::RightMouseButtonAction(int , int , bool isUp)
+void MyApplication::RightMouseButtonAction()
 {
-	if (isUp) m_PointsVec.clear();
 }
 
 void MyApplication::KeyUp(WPARAM wparam)
@@ -81,6 +92,21 @@ void MyApplication::KeyDown(WPARAM wparam)
 }
 
 #ifdef _DEBUG
+EditorWindow* MyApplication::GetWindowByName(std::string name)
+{
+	auto iter = std::find_if(m_pEditorWindows.begin(), m_pEditorWindows.end(), [&](EditorWindow* editorWindow)
+		{
+			return name == editorWindow->GetTitle();
+		});
+
+	return *iter;
+}
+
+void MyApplication::AddWindowEditor(EditorWindow* pWindow)
+{
+	m_pEditorWindows.emplace_back(pWindow);
+}
+
 Camera* MyApplication::GetCamera() const
 {
 	return m_pCamera;
@@ -164,8 +190,14 @@ void MyApplication::DialogueFolder(int i, const std::string& path, ImGuiTreeNode
 void MyApplication::Start()
 {
 #ifdef _DEBUG
-	if(m_pCamera == nullptr)
+	if (m_pCamera == nullptr)
 		m_pCamera = new Camera(DirectX::XMFLOAT3{ 0,1,-2.5f }, DirectX::XMFLOAT3{ 0,0,1 }, (F_PI / 4.f), MyEngine::GetSingleton()->GetWindowWidth() / MyEngine::GetSingleton()->GetWindowHeight());
+
+	for (auto editorWindow : m_pEditorWindows)
+	{
+		editorWindow->Initialize();
+	}
+
 #endif
 	m_pScene->Start();
 }
@@ -259,6 +291,11 @@ void MyApplication::RenderGUI()
 
 
 	ImGui::End();
+
+	for (auto editorWindow : m_pEditorWindows)
+	{
+		editorWindow->RootDraw();
+	}
 }
 #endif
 
@@ -289,6 +326,13 @@ void MyApplication::Update(float dt)
 void MyApplication::Initialize()
 {
 	//ParseOBJ("Resources/vehicle.obj", vertices, indices);
+	Logger::GetInstance()->Log(LogLevel::Debug, "Log test");
+
+	auto pMaterialManager = MaterialManager::GetInstance();
+
+	pMaterialManager->AddMaterial("default", new Material(MyEngine::GetSingleton()->GetDevice(), "Resources/material_unlit.fx", "default"));
+	pMaterialManager->GetMaterial("default")->SetDiffuseMap(
+		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
 
 	RECT rect;
 	GetWindowRect(MY_ENGINE->GetWindowHandle(), &rect);
@@ -331,14 +375,11 @@ void MyApplication::Initialize()
 	auto particleObject = new GameObject("Particle Object");
 	m_pScene->AddGameObject(particleObject);
 	ParticleEmmiterSettings particleSettings{};
-	particleObject->AddComponent(new ParticleComponent("smoke.png", particleSettings, 60));
+	particleObject->AddComponent(new ParticleComponent("Resources/smoke.png", particleSettings, 60));
 
-	auto pMaterialManager = MaterialManager::GetInstance();
-
-	pMaterialManager->AddMaterial("default", new Material(MyEngine::GetSingleton()->GetDevice(), "Resources/material_unlit.fx", "default"));
-	pMaterialManager->GetMaterial("default")->SetDiffuseMap(
-		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/uv_grid_2.png", MY_ENGINE->GetDeviceContext()));
-
+	auto terrainObject = new GameObject("Terrain Object");
+	m_pScene->AddGameObject(terrainObject);
+	terrainObject->AddComponent(new TerrainComponent(64,64));
 
 	pMaterialManager->GetMaterial("lambert8SG")->SetDiffuseMap(
 		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/T_BarrelAndBanjo_BC_01.jpg", MyEngine::GetSingleton()->GetDeviceContext()));

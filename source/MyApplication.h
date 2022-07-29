@@ -13,6 +13,7 @@ class Camera;
 class Material;
 class LitMaterial;
 class Scene;
+class EditorWindow;
 
 typedef int ImGuiTreeNodeFlags;
 
@@ -46,13 +47,15 @@ public:
 	Scene* GetScene();
 
 	void Activate(bool isActive);
-	void LeftMouseButtonAction(int x, int y, bool isUp);
-	void RightMouseButtonAction(int x, int y, bool isUp);
+	void LeftMouseButtonAction();
+	void RightMouseButtonAction();
 
 	void KeyUp(WPARAM wparam);
 	void KeyDown(WPARAM wparam);
 
 #ifdef  _DEBUG
+	EditorWindow* GetWindowByName(std::string name);
+	void AddWindowEditor(EditorWindow* pWindow);
 	Camera* GetCamera() const;
 #endif //  _DEBUG
 
@@ -68,8 +71,7 @@ private:
 	//-------------------------------------------------
 	// Datamembers								
 	//-------------------------------------------------
-	std::vector<POINT> m_PointsVec{};
-
+	// 
 	// The application will be even smaller the only thing we will really need is a scene the application will
 	// call the functions of these scenes and wont really do anything else besides except for UI functionallity
 	// later on
@@ -85,6 +87,7 @@ private:
 
 #ifdef  _DEBUG
 	Camera* m_pCamera{ nullptr };
+	std::vector<EditorWindow*> m_pEditorWindows {};
 #endif //  _DEBUG
 
 

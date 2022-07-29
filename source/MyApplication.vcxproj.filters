@@ -40,6 +40,9 @@
     <Filter Include="Engine Files\Input">
       <UniqueIdentifier>{079b3813-0568-4410-8d21-54011ea9a5ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Debuging">
+      <UniqueIdentifier>{c49f26af-6b4a-48b1-9fa3-1df33119b958}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -177,6 +180,21 @@
     <ClInclude Include="ParticleComponent.h">
       <Filter>Engine Files\Engine Components</Filter>
     </ClInclude>
+    <ClInclude Include="TerrainComponent.h">
+      <Filter>Engine Files\Engine Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Engine Files\Debuging</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>Engine Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="LogWindow.h">
+      <Filter>Engine Files\Debuging</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorWindow.h">
+      <Filter>Engine Files\Debuging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyEngine.cpp">
@@ -292,6 +310,21 @@
     </ClCompile>
     <ClCompile Include="ParticleComponent.cpp">
       <Filter>Engine Files\Engine Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainComponent.cpp">
+      <Filter>Engine Files\Engine Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Engine Files\Debuging</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceLocator.cpp">
+      <Filter>Engine Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="LogWindow.cpp">
+      <Filter>Engine Files\Debuging</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorWindow.cpp">
+      <Filter>Engine Files\Debuging</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

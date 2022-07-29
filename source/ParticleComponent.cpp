@@ -14,13 +14,13 @@
 
 const Creator<IComponent, ParticleComponent> g_ParticleComponent{};
 
-ParticleComponent::ParticleComponent(const std::string& /*assetFile*/, const ParticleEmmiterSettings& emmiterSettings, int particleCount)
+ParticleComponent::ParticleComponent(const std::string& textureFile, const ParticleEmmiterSettings& emmiterSettings, int particleCount)
 	: m_pParticleArray{new Particle[particleCount]}
 	, m_pParticleBuffer{new VertexParticle[particleCount]}
 	, m_ParticleCount{particleCount}
 	, m_MaxParticles{particleCount}
 	, m_EmitterSettings{emmiterSettings}
-	, m_pTexture{new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/smoke.png")}
+	, m_pTexture{new Texture(MyEngine::GetSingleton()->GetDevice(), textureFile)}
 	, m_pMaterial{new Material(MyEngine::GetSingleton()->GetDevice(), "Resources/ParticleRenderer.fx", "Particle_Material")}
 {
 }
