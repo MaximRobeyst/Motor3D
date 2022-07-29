@@ -299,10 +299,10 @@ void MyApplication::RenderGUI()
 }
 #endif
 
-void MyApplication::Update(float dt)
+void MyApplication::Update()
 {
 #ifdef _DEBUG
-	m_pCamera->UpdateCamera(dt);
+	m_pCamera->UpdateCamera();
 #endif // _DEBUG
 
 
@@ -311,7 +311,7 @@ void MyApplication::Update(float dt)
 	//m_pMesh->SetWorldMatrix(rotationMatrix);
 
 	if (!MyEngine::GetSingleton()->GetPlaying()) return;
-	m_pScene->Update(dt);
+	m_pScene->Update();
 
 	// Center Cursor
 	RECT windowRect;

@@ -16,7 +16,7 @@ public:
 
 	void Start() override;
 	void Render() override;
-	void Update(float dt) override;
+	void Update() override;
 
 	void RenderGUI() override;
 

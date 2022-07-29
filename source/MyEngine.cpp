@@ -28,6 +28,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "SpriteComponent.h"
+#include "GameTime.h"
 
 // initialize statics
 HINSTANCE MyEngine::m_Instance{};
@@ -161,13 +162,12 @@ int MyEngine::Run(MyApplication* applicationPtr)
 
         // Calculate elapsed time
         float elapsedSeconds = std::chrono::duration<float>(t2 - t1).count();
-
-        elapsedSeconds = elapsedSeconds < 0.1f ? elapsedSeconds : 0.1f;
+        GameTime::GetInstance().SetElapsed(elapsedSeconds);
 
         // Update current time
         t1 = t2;
 
-        Update(elapsedSeconds);
+        Update();
 
         Render();
 
@@ -274,38 +274,6 @@ LRESULT MyEngine::HandleEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
     }
 
     return 0;
-}
-
-void MyEngine::SetColor(COLORREF color)
-{
-    m_Color = color;
-}
-
-void MyEngine::FillEllipse(int x1, int y1, int radiusX, int radiusY)
-{
-    HBRUSH brush = CreateSolidBrush(m_Color);
-    HBRUSH oldBrush = (HBRUSH)SelectObject(m_hDC, brush);
-
-    Ellipse(m_hDC, x1 - radiusX / 2, y1 - radiusY / 2, x1 + radiusX / 2, y1 + radiusY / 2);
-
-    SelectObject(m_hDC, oldBrush);
-    DeleteObject(brush);
-}
-
-void MyEngine::DrawLine(int x1, int y1, int x2, int y2)
-{
-    HPEN pen = CreatePen(PS_SOLID, 1, m_Color);
-    HPEN oldPen = (HPEN)SelectObject(m_hDC, pen);
-
-    MoveToEx(m_hDC, x1, y1, 0);
-    LineTo(m_hDC, x2, y2);
-
-    SelectObject(m_hDC, oldPen);
-    DeleteObject(pen);
-}
-
-void MyEngine::DrawString(const std::wstring& , int , int , int , int )
-{
 }
 
 void MyEngine::SetTitle(const std::wstring& text)
@@ -475,7 +443,7 @@ void MyEngine::Render()
     m_pSwapChain->Present(0, 0);
 }
 
-void MyEngine::Update(float dt)
+void MyEngine::Update()
 {
-	m_pApplication->Update(dt);
+	m_pApplication->Update();
 }

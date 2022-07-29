@@ -26,7 +26,7 @@ public:
 	void Render(Camera* pCamera);
 	void RenderGUI();
 
-	void Update(float dt);
+	void Update();
 
 	void Serialize(const std::string& filename);
 	void Deserialize(const std::string& filename);

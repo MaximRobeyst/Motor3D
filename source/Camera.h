@@ -27,7 +27,7 @@ public:
 
 	DirectX::XMFLOAT2 GetAbsoluteRotation() const { return m_AbsoluteRotation; }
 
-	void UpdateCamera(float elapsedSec);
+	void UpdateCamera();
 	void KeyDown(WPARAM wparam);
 	void KeyUp(WPARAM wparam);
 

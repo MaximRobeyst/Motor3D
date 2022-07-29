@@ -21,7 +21,7 @@ void TransformComponent::Start()
 	UpdateDirections();
 }
 
-void TransformComponent::Update(float /*dt*/)
+void TransformComponent::Update()
 {
 	GetWorldMatrix();
 	UpdateDirections();

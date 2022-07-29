@@ -11,6 +11,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include <comdef.h>
+#include "GameTime.h"
 
 const Creator<IComponent, ParticleComponent> g_ParticleComponent{};
 
@@ -74,10 +75,10 @@ void ParticleComponent::Render()
 	}
 }
 
-void ParticleComponent::Update(float dt)
+void ParticleComponent::Update()
 {
 	float particleInterval = ((m_EmitterSettings.maxEnergy + m_EmitterSettings.minEnergy) / 2) / m_MaxParticles;
-	m_LastParticleSpawn += dt;
+	m_LastParticleSpawn += GameTime::GetInstance().GetElapsed();
 	m_ActiveParticles = 0;
 	D3D11_MAPPED_SUBRESOURCE pData;
 	HRESULT hResult;
@@ -87,7 +88,7 @@ void ParticleComponent::Update(float dt)
 		auto& currentParticle = m_pParticleArray[i];
 
 		if (currentParticle.isActive)
-			UpdateParticle(currentParticle, dt);
+			UpdateParticle(currentParticle, GameTime::GetInstance().GetElapsed());
 		if (!currentParticle.isActive && m_LastParticleSpawn >= particleInterval)
 			SpawnParticle(currentParticle);
 

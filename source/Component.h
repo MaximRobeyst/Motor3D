@@ -22,7 +22,7 @@ public:
 
 	virtual void Start() {};
 	virtual void Render();
-	virtual void Update(float dt);
+	virtual void Update();
 
 	virtual void RenderGUI() {};
 
@@ -49,7 +49,7 @@ public:
 	CameraComponent& operator=(CameraComponent&& other)	noexcept = delete;
 
 	void Start() override;
-	void Update(float elapsedSec) override;
+	void Update() override;
 	void Render() override;
 
 	void KeyDown(WPARAM wparam);
@@ -84,7 +84,7 @@ class RigidBodyComponent : public IComponent
 {
 public:
 	RigidBodyComponent(DirectX::XMFLOAT3 velocity = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 acceleration = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 gravity = DirectX::XMFLOAT3{});
-	void Update(float dt) override;
+	void Update() override;
 
 	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>&);
 	virtual void Deserialize(const rapidjson::Value&);
@@ -103,7 +103,7 @@ class Rotator : public IComponent
 public:
 	Rotator(float rotationSpeed = 45.f, DirectX::XMFLOAT3 axis = DirectX::XMFLOAT3{ 0, 1, 0 } );
 
-	void Update(float dt) override;
+	void Update() override;
 
 	void RenderGUI() override;
 

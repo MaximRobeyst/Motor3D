@@ -43,7 +43,7 @@ public:
 
 	void Start();
 	void Render(Camera* pCamera);
-	void Update(float dt);
+	void Update();
 
 	void RenderGUI();
 

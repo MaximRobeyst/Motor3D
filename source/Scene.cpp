@@ -122,11 +122,11 @@ void Scene::RenderGUI()
 	ImGui::EndChild();
 }
 
-void Scene::Update(float dt)
+void Scene::Update()
 {
 	for (auto iter = m_pGameObjects.begin(); iter != m_pGameObjects.end(); iter++)
 	{
-		(*iter)->Update(dt);
+		(*iter)->Update();
 	}
 }
 

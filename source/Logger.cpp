@@ -223,7 +223,7 @@ void Logger::Log(LogLevel level, const std::string& msg, const std::source_locat
 		MessageBoxA(0, msg.c_str(), "ERROR", MB_OK | MB_ICONERROR);
 	}
 
-	m_pLogWindow->AddLog(msg.c_str());
+	m_pLogWindow->AddLog(stream.str().c_str());
 }
 
 void Logger::LogDebug(const std::string& msg, const std::source_location location) const

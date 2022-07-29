@@ -40,7 +40,7 @@ public:
 #ifdef _DEBUG
 	void RenderGUI();
 #endif
-	void Update(float dt);
+	void Update();
 
 	void Unitialize();
 

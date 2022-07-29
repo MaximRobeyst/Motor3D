@@ -195,6 +195,9 @@
     <ClInclude Include="EditorWindow.h">
       <Filter>Engine Files\Debuging</Filter>
     </ClInclude>
+    <ClInclude Include="GameTime.h">
+      <Filter>Engine Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyEngine.cpp">
@@ -325,6 +328,9 @@
     </ClCompile>
     <ClCompile Include="EditorWindow.cpp">
       <Filter>Engine Files\Debuging</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTime.cpp">
+      <Filter>Engine Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

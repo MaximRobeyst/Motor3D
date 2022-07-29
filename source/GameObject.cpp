@@ -75,15 +75,15 @@ void GameObject::Render(Camera* pCamera)
 		(*iter)->Render(pCamera);
 }
 
-void GameObject::Update(float dt)
+void GameObject::Update()
 {
 	if (!m_Enabled) return;
 
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
-		(*iter)->Update(dt);
+		(*iter)->Update();
 
 	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
-		(*iter)->Update(dt);
+		(*iter)->Update();
 }
 
 void GameObject::RenderGUI()

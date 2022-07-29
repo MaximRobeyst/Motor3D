@@ -40,11 +40,6 @@ public:
 	//-------------------------------------------------
 	// API methods							
 	//-------------------------------------------------
-	void SetColor(COLORREF color);
-	void FillEllipse(int x1, int y1, int radiusX, int radiusY);
-	void DrawLine(int x1, int y1, int x2, int y2);
-	void DrawString(const std::wstring& text, int left, int bottom, int width, int height);
-
 	void SetTitle(const std::wstring& text);
 
 	ID3D11Device* GetDevice() const;
@@ -67,7 +62,7 @@ public:
 private:
 	void Start();
 	void Render();
-	void Update(float dt);
+	void Update();
 
 	//-------------------------------------------------
 	// Datamembers								

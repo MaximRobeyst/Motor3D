@@ -172,7 +172,7 @@ void SpriteComponent::Render()
 	}
 }
 
-void SpriteComponent::Update(float /*dt*/)
+void SpriteComponent::Update()
 {
 }
 

@@ -55,7 +55,7 @@ public:
 
 	void Start() override;
 	void Render() override;
-	void Update(float) override;
+	void Update() override;
 
 private:
 	void CreateVertexBuffer();

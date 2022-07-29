@@ -38,7 +38,7 @@ void MeshComponent::Render()
 	m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), m_pGameobject->GetScene()->GetCamera());
 }
 
-void MeshComponent::Update(float)
+void MeshComponent::Update()
 {
 }
 

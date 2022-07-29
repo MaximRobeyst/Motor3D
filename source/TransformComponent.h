@@ -13,7 +13,7 @@ public:
 	TransformComponent(DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3{ 1,1,1 });
 
 	void Start() override;
-	void Update(float dt) override;
+	void Update() override;
 
 	void RenderGUI() override;
 

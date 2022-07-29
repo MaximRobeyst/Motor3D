@@ -3,6 +3,7 @@
 #include "MyEngine.h"
 #include "Utils.h"
 #include <imgui.h>
+#include "GameTime.h"
 
 Camera::Camera(float FOV, float aspectRatio, float cfar, float cnear)
 	: m_Position{ DirectX::XMFLOAT3{0,0,0 } }
@@ -32,8 +33,10 @@ Camera::Camera(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& forwa
 	UpdateMatrix();
 }
 
-void Camera::UpdateCamera(float elapsedSec)
+void Camera::UpdateCamera()
 {
+	float elapsedSec = GameTime::GetInstance().GetElapsed();
+
 	//const uint8_t* pKeyboardState = SDL_GetKeyboardState(0);
 	float keyboardSpeed = (GetKeyState(VK_SHIFT) & 0x80) ? m_KeyboardMoveSensitivity * m_KeyboardMoveMultiplier : m_KeyboardMoveSensitivity;
 	m_RelativeTranslation.x = (((GetKeyState(0x44) & 0x80) - (GetKeyState(0x41) & 0x80)) / 128) * keyboardSpeed * elapsedSec;

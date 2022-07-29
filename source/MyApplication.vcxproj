@@ -198,6 +198,7 @@
     <ClInclude Include="EngineCommand.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameTime.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LitMaterial.h" />
@@ -250,6 +251,7 @@
     <ClCompile Include="EngineCommand.cpp" />
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LitMaterial.cpp" />

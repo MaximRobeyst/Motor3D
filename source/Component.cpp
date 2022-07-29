@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "TransformComponent.h"
+#include "GameTime.h"
 
 const Creator<IComponent, RigidBodyComponent> g_RigidbodyCreator{};
 const Creator<IComponent, Rotator> g_RotatorComponent{};
@@ -24,7 +25,7 @@ void IComponent::Render()
 {
 }
 
-void IComponent::Update(float /*dt*/)
+void IComponent::Update()
 {
 }
 
@@ -42,7 +43,7 @@ RigidBodyComponent::RigidBodyComponent(DirectX::XMFLOAT3 velocity, DirectX::XMFL
 {
 }
 
-void RigidBodyComponent::Update(float)
+void RigidBodyComponent::Update()
 {
 }
 
@@ -67,11 +68,11 @@ Rotator::Rotator(float rotationSpeed, DirectX::XMFLOAT3 axis)
 {
 }
 
-void Rotator::Update(float dt)
+void Rotator::Update()
 {
 	if (!m_Enabled) return;
 
-	m_Rotation += (ToRadians(m_RotationSpeed) * dt);
+	m_Rotation += (ToRadians(m_RotationSpeed) * GameTime::GetInstance().GetElapsed());
 
 	auto axis = DirectX::XMLoadFloat3(&m_Axis);
 	auto rot = DirectX::XMLoadFloat(&m_Rotation);
@@ -126,7 +127,7 @@ void CameraComponent::Start()
 	UpdateMatrix();
 }
 
-void CameraComponent::Update(float /*elapsedSec*/)
+void CameraComponent::Update()
 {
 	//UpdateMatrix();
 }
