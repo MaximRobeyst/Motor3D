@@ -11,7 +11,7 @@ enum class LogLevel
 	Info = 0x2,
 	Warning = 0x4,
 	Error = 0x8,
-	Todo = 0x16
+	ToDo = 0x16
 };
 
 class LogWindow;
@@ -37,17 +37,18 @@ public:
 	void LogErrorAndBreak(const std::string& msg, const std::source_location location = std::source_location::current()) const;
 	void LogToDo(const std::string& source, const std::source_location location = std::source_location::current()) const;
 
-	static void ClearConsole();
-
 	void BreakOnLog(LogLevel level, bool doBreak) { doBreak ? m_BreakBitField |= static_cast<int>(level) : m_BreakBitField &= ~static_cast<int>(level); }
 
 	void AppendTimestamp(bool append) { m_AppendTimestamp = append; }
 
-	static std::string SimplifyPath(const std::string& str, size_t dirSize = 0);
+	std::string SimplifyPath(const std::string& str, size_t dirSize = 0) const;
 
 
 private:
 	Logger();
+
+	std::vector<std::string> Split(const std::string& str, const std::string& delim, const bool trim_empty = false) const;
+	std::string Replace(const std::string& source, const char* key, const char* with) const;
 
 	static Logger* m_pInstance;
 
