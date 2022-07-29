@@ -11,13 +11,19 @@ public:
 	void Start() override;
 	void Render() override;
 
+	void RenderGUI() override;
+
 private:
 	void ParseHeightMap();
 	void CreateGrid();
 
+	void Remesh();
+
 	int m_NrOfRows{ 64 };
 	int m_NrOfColumns{ 64 };
 	int m_NrOfVertices{};
+
+	float m_Height{ 1.f };
 
 	std::vector<unsigned short> m_VecHeightValues{};
 	std::vector<Vertex> m_VertexArr{};
@@ -25,5 +31,7 @@ private:
 
 	std::string m_HeightMapFile{};
 	Mesh* m_pMesh{};
+
+	TransformComponent* m_pTransform{};
 };
 

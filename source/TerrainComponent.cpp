@@ -4,9 +4,12 @@
 #include "Material.h"
 #include "Scene.h"
 #include "MaterialManager.h"
+#include "Texture.h"
+#include "TransformComponent.h"
 
 #include <fstream>
 #include <vector>
+#include <imgui.h>
 
 const Creator<IComponent, TerrainComponent> m_TerrainCreator{};
 
@@ -27,11 +30,25 @@ TerrainComponent::~TerrainComponent()
 
 void TerrainComponent::Start()
 {
+	m_pTransform = m_pGameobject->GetComponent<TransformComponent>();
 }
 
 void TerrainComponent::Render()
 {
+	m_pMesh->SetWorldMatrix(m_pTransform->GetWorldMatrix());
 	m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), m_pGameobject->GetScene()->GetCamera());
+}
+
+void TerrainComponent::RenderGUI()
+{
+	if (ImGui::InputFloat("height", &m_Height))
+		Remesh();
+
+	if (ImGui::InputInt("Rows", &m_NrOfRows))
+		Remesh();
+
+	if (ImGui::InputInt("Colums", &m_NrOfColumns))
+		Remesh();
 }
 
 void TerrainComponent::ParseHeightMap()
@@ -66,8 +83,11 @@ void TerrainComponent::CreateGrid()
 		{
 			int vertexId = row * nrOfColums + col;
 			m_VertexArr[vertexId].position.x = cellXPos;
-			m_VertexArr[vertexId].position.y = 0;
+			m_VertexArr[vertexId].position.y = (m_VecHeightValues[vertexId] / 65535.f) * m_Height;
 			m_VertexArr[vertexId].position.z = cellzPos;
+
+			m_VertexArr[vertexId].uv.x = static_cast<float>(col) /  static_cast<float>(nrOfColums - 1);
+			m_VertexArr[vertexId].uv.y = static_cast<float>(row) / static_cast<float>(nrOfRows - 1);
 
 			cellXPos += cellWidth;
 		}
@@ -97,5 +117,19 @@ void TerrainComponent::CreateGrid()
 		}
 	}
 
+	// Set mesh from the mesh component
+
 	m_pMesh = new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), m_VertexArr, m_IndexArr, "Resources/terrain.obj", 0, MaterialManager::GetInstance()->GetMaterial("default"));
+	m_pMesh->GetMaterial("default")->SetDiffuseMap(new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/ireland-heightmap.jpg"));
+}
+
+void TerrainComponent::Remesh()
+{
+	m_IndexArr.clear();
+	m_IndexArr.clear();
+
+	m_NrOfVertices = m_NrOfRows * m_NrOfColumns;
+
+	ParseHeightMap();
+	CreateGrid();
 }
