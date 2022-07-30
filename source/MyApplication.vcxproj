@@ -199,6 +199,7 @@
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTime.h" />
+    <ClInclude Include="ImGuiHelpers.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LitMaterial.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Serialization.h" />
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="TerrainComponent.h" />
@@ -252,6 +254,7 @@
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="ImGuiHelpers.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LitMaterial.cpp" />
@@ -264,6 +267,7 @@
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Serialization.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="TerrainComponent.cpp" />

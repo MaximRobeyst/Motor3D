@@ -10,6 +10,8 @@
 #include "Camera.h"
 #include "GameObject.h"
 
+#include "Serialization.h"
+
 class Mesh;
 class TransformComponent;
 
@@ -32,8 +34,8 @@ public:
 	void SetGameobject(GameObject* pGameobject);
 
 protected:
-	uint8_t m_ComponentID;
 	GameObject* m_pGameobject{};
+	std::vector<ClassMeta<IComponent>> m_pMetaInfo{};
 };
 
 class CameraComponent : public IComponent, public Camera
