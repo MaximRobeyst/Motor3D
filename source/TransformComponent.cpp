@@ -20,13 +20,19 @@ void TransformComponent::Start()
 	GetWorldMatrix();
 	UpdateDirections();
 
-	m_pMetaInfo.AddMemberPtr("Position", &TransformComponent::m_Position);
 }
 
 void TransformComponent::Update()
 {
 	GetWorldMatrix();
 	UpdateDirections();
+}
+
+void TransformComponent::RegisterMembers()
+{
+	m_pMetaInfo.AddMemberPtr("Position", &TransformComponent::m_Position);
+	m_pMetaInfo.AddMemberPtr("Rotation", &TransformComponent::m_Rotation);
+	m_pMetaInfo.AddMemberPtr("Scale", &TransformComponent::m_Scale);
 }
 
 void TransformComponent::RenderGUI()
@@ -125,7 +131,7 @@ DirectX::XMFLOAT4X4 TransformComponent::GetWorldMatrix()
 {
 	if (!m_Dirty) return m_WorldMatrix;
 
-	auto rotationQuaternion = DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	auto rotationQuaternion = DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x * static_cast<float>(TO_RADIANS), m_Rotation.y * static_cast<float>(TO_RADIANS), m_Rotation.z * static_cast<float>(TO_RADIANS));
 	auto worldMatrix = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z) * DirectX::XMMatrixRotationQuaternion(rotationQuaternion) * DirectX::XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
 
 	if (m_pGameobject->GetParent() != nullptr)

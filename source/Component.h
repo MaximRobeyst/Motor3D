@@ -26,6 +26,8 @@ public:
 	virtual void Render();
 	virtual void Update();
 
+	virtual void RegisterMembers() {};
+
 	virtual void RenderGUI() {};
 
 	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& ) {};

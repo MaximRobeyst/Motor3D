@@ -15,6 +15,8 @@ public:
 	void Start() override;
 	void Update() override;
 
+	void RegisterMembers() override;
+
 	void RenderGUI() override;
 
 	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& writer);

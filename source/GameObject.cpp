@@ -41,6 +41,7 @@ GameObject::~GameObject()
 void GameObject::AddComponent(IComponent* component)
 {
 	component->SetGameobject(this);
+	component->RegisterMembers();
 	m_pComponents.push_back(component);
 
 	if(m_Started)
