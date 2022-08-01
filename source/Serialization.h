@@ -12,6 +12,8 @@ class IMember
 {
 public:
 	virtual ~IMember() = default;
+
+	virtual void RenderGUI(Class& obj, const std::string& name) = 0;
 };
 
 template <typename Class, typename T>
@@ -21,26 +23,22 @@ template<typename Class, typename T>
 class Member : public IMember<Class>
 {
 public:
-	Member(std::string name, member_ptr_t<Class, T> ptr);
+	Member(T Class::* ptr);
 
-	std::string GetName() const;
 	member_ptr_t<Class, T> GetPtr();
+
+	void RenderGUI(Class& obj, const std::string& name)
+	{
+		ImGui::Input(name.c_str(), obj.*m_Ptr);
+	}
 private:
-	std::string m_Name;
-	member_ptr_t<Class, T> m_Ptr;
+	T Class::* m_Ptr;
 };
 
 template<typename Class, typename T>
-inline Member<Class, T>::Member(std::string name, member_ptr_t<Class, T> ptr)
-	: m_Name{name}
-	, m_Ptr{ptr}
+inline Member<Class, T>::Member(T Class::* ptr)
+	: m_Ptr{ptr}
 {
-}
-
-template<typename Class, typename T>
-inline std::string Member<Class, T>::GetName() const
-{
-	return m_Name;
 }
 
 template<typename Class, typename T>
@@ -52,22 +50,28 @@ inline member_ptr_t<Class, T> Member<Class, T>::GetPtr()
 template <typename Class>
 class ClassMeta
 {
-public:/*
+public:
+	template <typename T>
+	void AddMemberPtr(std::string name, T Class::* ptr)
+	{
+		m_Members.emplace(name, std::make_unique<Member<Class, T>>(ptr));
+	}
+
 	template<typename T>
-	void RenderGUI()
+	void RenderGUI(Class& obj)
 	{
 		for (const auto& pair : m_Members)
 		{
 			const auto& name = pair.first;
 			const auto& memberPtr = pair.second;
 
-			ImGui::Input(name, memberPtr);
+			memberPtr->RenderGUI(obj, name);
 		}
-	}*/
+	}
 
-private:
 	using MemberPtrType = std::unique_ptr<IMember<Class>>;
 	using MemberMapType = std::unordered_map<std::string, MemberPtrType>;
+private:
 
 	MemberMapType m_Members;
 };

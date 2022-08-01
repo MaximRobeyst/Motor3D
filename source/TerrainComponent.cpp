@@ -120,7 +120,7 @@ void TerrainComponent::CreateGrid()
 	// Set mesh from the mesh component
 
 	m_pMesh = new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), m_VertexArr, m_IndexArr, "Resources/terrain.obj", 0, MaterialManager::GetInstance()->GetMaterial("default"));
-	m_pMesh->GetMaterial("default")->SetDiffuseMap(new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/ireland-heightmap.jpg"));
+	m_pMesh->GetMaterial("default")->SetDiffuseMap(new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/ireland_map.png"));
 }
 
 void TerrainComponent::Remesh()

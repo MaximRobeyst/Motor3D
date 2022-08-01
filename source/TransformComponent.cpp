@@ -19,6 +19,8 @@ void TransformComponent::Start()
 {
 	GetWorldMatrix();
 	UpdateDirections();
+
+	m_pMetaInfo.AddMemberPtr("Position", &TransformComponent::m_Position);
 }
 
 void TransformComponent::Update()
@@ -29,44 +31,46 @@ void TransformComponent::Update()
 
 void TransformComponent::RenderGUI()
 {
-	bool changes{ false };
+	m_pMetaInfo.RenderGUI<TransformComponent>(*this);
 
-	//ImGui::InputFloat3("Forward", &m_Forward.x);
-	//ImGui::InputFloat3("Right", &m_Right.x);
-	//ImGui::InputFloat3("Up", &m_Up.x);
-
-	float position[] = { m_Position.x, m_Position.y, m_Position.z };
-	if (ImGui::InputFloat3("Position", position))
-	{
-		m_Position.x = position[0];
-		m_Position.y = position[1];
-		m_Position.z = position[2];
-		changes = true;
-	}
-
-	float rotation[] = { m_Rotation.x * static_cast<float>(TO_REGREES), m_Rotation.y * static_cast<float>(TO_REGREES), m_Rotation.z * static_cast<float>(TO_REGREES) };
-	if (ImGui::InputFloat3("Rotation", rotation))
-	{
-		m_Rotation.x = rotation[0] * static_cast<float>(TO_RADIANS);
-		m_Rotation.y = rotation[1] * static_cast<float>(TO_RADIANS);
-		m_Rotation.z = rotation[2] * static_cast<float>(TO_RADIANS);
-		changes = true;
-	}
-
-	float scale[] = { m_Scale.x, m_Scale.y, m_Scale.z };
-	if (ImGui::InputFloat3("Scale", scale))
-	{
-		m_Scale.x = scale[0];
-		m_Scale.y = scale[1];
-		m_Scale.z = scale[2];
-		changes = true;
-	}
-
-	if (changes)
-	{
-		GetWorldMatrix();
-		UpdateDirections();
-	}
+	//bool changes{ false };
+	//
+	////ImGui::InputFloat3("Forward", &m_Forward.x);
+	////ImGui::InputFloat3("Right", &m_Right.x);
+	////ImGui::InputFloat3("Up", &m_Up.x);
+	//
+	//float position[] = { m_Position.x, m_Position.y, m_Position.z };
+	//if (ImGui::InputFloat3("Position", position))
+	//{
+	//	m_Position.x = position[0];
+	//	m_Position.y = position[1];
+	//	m_Position.z = position[2];
+	//	changes = true;
+	//}
+	//
+	//float rotation[] = { m_Rotation.x * static_cast<float>(TO_REGREES), m_Rotation.y * static_cast<float>(TO_REGREES), m_Rotation.z * static_cast<float>(TO_REGREES) };
+	//if (ImGui::InputFloat3("Rotation", rotation))
+	//{
+	//	m_Rotation.x = rotation[0] * static_cast<float>(TO_RADIANS);
+	//	m_Rotation.y = rotation[1] * static_cast<float>(TO_RADIANS);
+	//	m_Rotation.z = rotation[2] * static_cast<float>(TO_RADIANS);
+	//	changes = true;
+	//}
+	//
+	//float scale[] = { m_Scale.x, m_Scale.y, m_Scale.z };
+	//if (ImGui::InputFloat3("Scale", scale))
+	//{
+	//	m_Scale.x = scale[0];
+	//	m_Scale.y = scale[1];
+	//	m_Scale.z = scale[2];
+	//	changes = true;
+	//}
+	//
+	//if (changes)
+	//{
+	//	GetWorldMatrix();
+	//	UpdateDirections();
+	//}
 
 }
 

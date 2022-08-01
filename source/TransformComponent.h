@@ -40,6 +40,9 @@ public:
 private:
 	void UpdateDirections();
 
+
+	ClassMeta<TransformComponent> m_pMetaInfo{};
+
 	bool m_Dirty{ true };
 
 	DirectX::XMFLOAT3 m_Position;

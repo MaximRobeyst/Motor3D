@@ -35,7 +35,6 @@ public:
 
 protected:
 	GameObject* m_pGameobject{};
-	std::vector<ClassMeta<IComponent>> m_pMetaInfo{};
 };
 
 class CameraComponent : public IComponent, public Camera
