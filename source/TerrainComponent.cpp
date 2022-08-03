@@ -39,16 +39,26 @@ void TerrainComponent::Render()
 	m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), m_pGameobject->GetScene()->GetCamera());
 }
 
+void TerrainComponent::RegisterMembers()
+{
+	ClassMeta<TerrainComponent>::AddMemberPtr("height", &TerrainComponent::m_Height);
+	ClassMeta<TerrainComponent>::AddMemberPtr("Rows", &TerrainComponent::m_NrOfRows);
+	ClassMeta<TerrainComponent>::AddMemberPtr("Colums", &TerrainComponent::m_NrOfColumns);
+}
+
 void TerrainComponent::RenderGUI()
 {
-	if (ImGui::InputFloat("height", &m_Height))
-		Remesh();
+	ClassMeta<TerrainComponent>::RenderGUI<TerrainComponent>(*this);
+}
 
-	if (ImGui::InputInt("Rows", &m_NrOfRows))
-		Remesh();
+void TerrainComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
+{
+	ClassMeta<TerrainComponent>::Serialize<TerrainComponent>(*this, writer);
+}
 
-	if (ImGui::InputInt("Colums", &m_NrOfColumns))
-		Remesh();
+void TerrainComponent::Deserialize(const rapidjson::Value& value)
+{
+	ClassMeta<TerrainComponent>::Deserialize(*this, value);
 }
 
 void TerrainComponent::ParseHeightMap()

@@ -11,7 +11,12 @@ public:
 	void Start() override;
 	void Render() override;
 
+	void RegisterMembers() override;
+
 	void RenderGUI() override;
+
+	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>&);
+	virtual void Deserialize(const rapidjson::Value&);
 
 private:
 	void ParseHeightMap();
