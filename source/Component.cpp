@@ -21,6 +21,10 @@ IComponent::IComponent()
 {
 }
 
+IComponent::~IComponent()
+{
+}
+
 void IComponent::Render()
 {
 }

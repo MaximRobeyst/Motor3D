@@ -49,11 +49,20 @@ Mesh::~Mesh()
 	//delete m_pMaterial;
 
 	if (m_pIndexBuffer)
+	{
 		m_pIndexBuffer->Release();
+		m_pIndexBuffer = nullptr;
+	}
 	if (m_pVertexBuffer)
+	{
 		m_pVertexBuffer->Release();
+		m_pVertexBuffer = nullptr;
+	}
 	if (m_pVertexLayout)
+	{
 		m_pVertexLayout->Release();
+		m_pVertexLayout = nullptr;
+	}
 }
 
 Mesh::Mesh(const Mesh& other)

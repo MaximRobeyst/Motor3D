@@ -43,7 +43,7 @@
     <Filter Include="Engine Files\Debuging">
       <UniqueIdentifier>{c49f26af-6b4a-48b1-9fa3-1df33119b958}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGuiExt">
+    <Filter Include="Extentions">
       <UniqueIdentifier>{df200bad-7179-4b2e-9f0f-1812cb6c39f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -205,7 +205,10 @@
       <Filter>Engine Files\Serialaztion</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiHelpers.h">
-      <Filter>ImGuiExt</Filter>
+      <Filter>Extentions</Filter>
+    </ClInclude>
+    <ClInclude Include="RapidJsonHelper.h">
+      <Filter>Extentions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -345,7 +348,10 @@
       <Filter>Engine Files\Serialaztion</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiHelpers.cpp">
-      <Filter>ImGuiExt</Filter>
+      <Filter>Extentions</Filter>
+    </ClCompile>
+    <ClCompile Include="RapidJsonHelper.cpp">
+      <Filter>Extentions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

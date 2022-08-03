@@ -19,7 +19,7 @@ class IComponent
 {
 public:
 	IComponent();
-	virtual ~IComponent() = default;
+	virtual ~IComponent();
 
 
 	virtual void Start() {};
@@ -28,7 +28,7 @@ public:
 
 	virtual void RegisterMembers() {};
 
-	virtual void RenderGUI() {};
+	virtual void RenderGUI() { };
 
 	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& ) {};
 	virtual void Deserialize(const rapidjson::Value&) {};
