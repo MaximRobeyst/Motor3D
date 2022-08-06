@@ -6,6 +6,7 @@
 #include "MaterialManager.h"
 #include "Texture.h"
 #include "TransformComponent.h"
+#include "MeshComponent.h"
 
 #include <fstream>
 #include <vector>
@@ -19,36 +20,38 @@ TerrainComponent::TerrainComponent(int width, int height, std::string heightMapF
 	, m_NrOfVertices{m_NrOfRows * m_NrOfColumns}
 	, m_HeightMapFile{heightMapFile}
 {
-	ParseHeightMap();
-	CreateGrid();
 }
 
 TerrainComponent::~TerrainComponent()
 {
-	delete m_pMesh;
+	//delete m_pMesh;
 }
 
 void TerrainComponent::Start()
 {
 	m_pTransform = m_pGameobject->GetComponent<TransformComponent>();
+	m_pMeshComponent = m_pGameobject->GetComponent<MeshComponent>();
+
+	ParseHeightMap();
+	CreateGrid();
 }
 
 void TerrainComponent::Render()
 {
-	m_pMesh->SetWorldMatrix(m_pTransform->GetWorldMatrix());
-	m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), m_pGameobject->GetScene()->GetCamera());
+	//m_pMesh->SetWorldMatrix(m_pTransform->GetWorldMatrix());
+	//m_pMesh->Render(MyEngine::GetSingleton()->GetDeviceContext(), m_pGameobject->GetScene()->GetCamera());
 }
 
 void TerrainComponent::RegisterMembers()
 {
-	ClassMeta<TerrainComponent>::AddMemberPtr("height", &TerrainComponent::m_Height);
+	ClassMeta<TerrainComponent>::AddMemberPtr("Height", &TerrainComponent::m_Height);
 	ClassMeta<TerrainComponent>::AddMemberPtr("Rows", &TerrainComponent::m_NrOfRows);
 	ClassMeta<TerrainComponent>::AddMemberPtr("Colums", &TerrainComponent::m_NrOfColumns);
 }
 
 void TerrainComponent::RenderGUI()
 {
-	ClassMeta<TerrainComponent>::RenderGUI<TerrainComponent>(*this);
+	ClassMeta<TerrainComponent>::RenderGUI<TerrainComponent>(*this, std::bind(&TerrainComponent::Remesh, this));
 }
 
 void TerrainComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
@@ -129,8 +132,8 @@ void TerrainComponent::CreateGrid()
 
 	// Set mesh from the mesh component
 
-	m_pMesh = new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), m_VertexArr, m_IndexArr, "Resources/terrain.obj", 0, MaterialManager::GetInstance()->GetMaterial("default"));
-	m_pMesh->GetMaterial("default")->SetDiffuseMap(new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/ireland_map.png"));
+	m_pMeshComponent->SetMesh(new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), m_VertexArr, m_IndexArr, "Resources/terrain.obj", 0, MaterialManager::GetInstance()->GetMaterial("default")));
+	m_pMeshComponent->GetMesh()->GetMaterial("default")->SetDiffuseMap(new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/ireland_map.png"));
 }
 
 void TerrainComponent::Remesh()

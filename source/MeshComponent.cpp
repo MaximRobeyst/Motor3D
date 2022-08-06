@@ -95,6 +95,16 @@ void MeshComponent::Deserialize(const rapidjson::Value& value)
 	p = nullptr;
 }
 
+void MeshComponent::SetMesh(Mesh* pMesh)
+{
+	m_pMesh = pMesh;
+}
+
+Mesh* MeshComponent::GetMesh() const
+{
+	return m_pMesh;
+}
+
 void MeshComponent::SetMesh(const std::string& name)
 {
 	if (m_pMesh == ResourceManager::GetInstance()->GetMesh(name)) return;

@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <functional>
 
 #include "ImGuiHelpers.h"
 #include "RapidJsonHelper.h"
@@ -14,7 +15,7 @@ class IMember
 public:
 	virtual ~IMember() = default;
 
-	virtual void RenderGUI(Class& obj, const std::string& name) = 0;
+	virtual bool RenderGUI(Class& obj, const std::string& name) = 0;
 	virtual void Serialize(Class& obj, rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, const std::string& name) = 0;
 	virtual void Deserialize(Class& obj, const rapidjson::Value& value, const std::string& name) = 0;
 };
@@ -30,9 +31,9 @@ public:
 
 	member_ptr_t<Class, T> GetPtr();
 
-	void RenderGUI(Class& obj, const std::string& name)
+	bool RenderGUI(Class& obj, const std::string& name)
 	{
-		ImGui::Input(name.c_str(), obj.*m_Ptr);
+		return ImGui::Input(name.c_str(), obj.*m_Ptr);
 	}
 
 	virtual void Serialize(Class& obj, rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, const std::string& name)
@@ -79,6 +80,19 @@ public:
 			const auto& memberPtr = pair.second;
 
 			memberPtr->RenderGUI(obj, name);
+		}
+	}
+
+	template<typename T>
+	static void RenderGUI(Class& obj, std::function<void()> changeFunction)
+	{
+		for (const auto& pair : m_Members)
+		{
+			const auto& name = pair.first;
+			const auto& memberPtr = pair.second;
+
+			if (memberPtr->RenderGUI(obj, name))
+				changeFunction();
 		}
 	}
 

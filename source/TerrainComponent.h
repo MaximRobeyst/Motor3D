@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Mesh.h"
 
+class MeshComponent;
 class TerrainComponent : public IComponent
 {
 public:
@@ -35,8 +36,8 @@ private:
 	std::vector<uint32_t> m_IndexArr{};
 
 	std::string m_HeightMapFile{};
-	Mesh* m_pMesh{};
 
 	TransformComponent* m_pTransform{};
+	MeshComponent* m_pMeshComponent{};
 };
 

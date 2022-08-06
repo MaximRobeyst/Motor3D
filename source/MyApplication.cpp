@@ -379,6 +379,7 @@ void MyApplication::Initialize()
 
 	auto terrainObject = new GameObject("Terrain Object");
 	m_pScene->AddGameObject(terrainObject);
+	terrainObject->AddComponent(new MeshComponent());
 	terrainObject->AddComponent(new TerrainComponent(64,64));
 
 	pMaterialManager->GetMaterial("lambert8SG")->SetDiffuseMap(
