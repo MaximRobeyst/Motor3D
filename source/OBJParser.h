@@ -94,7 +94,7 @@ static void CreateMesh(std::vector<Mesh*>& pMeshes,  Mesh_Struct& mesh, Scene* p
 		mesh.vertices,
 		mesh.indices,
 		filepath,
-		pMeshes.size(),
+		static_cast<int>(pMeshes.size()),
 		pScene->GetMaterial(mesh.materialName)
 	);
 	pMeshes.push_back(pMesh);
@@ -173,7 +173,7 @@ static void CreateMesh(std::vector<Mesh*>& pMeshes, Mesh_Struct& mesh, const std
 		mesh.vertices,
 		mesh.indices,
 		filepath,
-		pMeshes.size(),
+		static_cast<int>(pMeshes.size()),
 		materialManager->GetMaterial( (mesh.materialName.empty() ? "default" : mesh.materialName))
 	);
 	pMeshes.push_back(pMesh);

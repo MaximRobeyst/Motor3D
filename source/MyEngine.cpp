@@ -140,7 +140,7 @@ int MyEngine::Run(MyApplication* applicationPtr)
 
 
     OutputDebugString(L"DirectX is initialized\n");
-    m_pApplication->Initialize();
+    m_pApplication->BaseInitialize();
     SendMessageA(hWnd, WM_PAINT, 0, 0);
 
     // (5) load keyboard shortcuts, start the Windows message loop
@@ -347,7 +347,7 @@ bool MyEngine::GetInWindow() const
 
 void MyEngine::Start()
 {
-    m_pApplication->Start();
+    m_pApplication->BaseStart();
 }
 
 void MyEngine::Render()
@@ -374,7 +374,7 @@ void MyEngine::Render()
 #endif
 
 
-    m_pApplication->Render();
+    m_pApplication->BaseRender();
 
 #ifdef _DEBUG
     ImGui_ImplDX11_NewFrame();
@@ -445,5 +445,5 @@ void MyEngine::Render()
 
 void MyEngine::Update()
 {
-	m_pApplication->Update();
+	m_pApplication->BaseUpdate();
 }

@@ -30,19 +30,18 @@ public:
 	MyApplication& operator=(const MyApplication& yRef) = delete;
 	MyApplication& operator=(MyApplication&& yRef)		= delete;
 
-	//-------------------------------------------------
-	// Own methods								
-	//-------------------------------------------------
-	void Initialize();
+	virtual void Initialize() {};
+	virtual void Start() {};
+	virtual void Render() {};
+	virtual void Update() {};
 
-	void Start();
-	void Render();
+	void BaseInitialize();
+	void BaseStart();
+	void BaseRender();
 #ifdef _DEBUG
 	void RenderGUI();
 #endif
-	void Update();
-
-	void Unitialize();
+	void BaseUpdate();
 
 	Scene* GetScene();
 
@@ -59,37 +58,18 @@ public:
 	Camera* GetCamera() const;
 #endif //  _DEBUG
 
+protected:
+	Scene* m_pScene;
+	std::vector<Mesh*> m_pMeshes;
+
+#ifdef  _DEBUG
+	Camera* m_pCamera{ nullptr };
+	std::vector<EditorWindow*> m_pEditorWindows{};
+#endif //  _DEBUG
+
 private:
 #ifdef  _DEBUG
 	void ApplicationFiles(const std::string& path);
 	void DialogueFolder(int i, const std::string& path, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop);
 #endif //  _DEBUG
-
-	void SaveFile();
-	void LoadFile();
-
-	//-------------------------------------------------
-	// Datamembers								
-	//-------------------------------------------------
-	// 
-	// The application will be even smaller the only thing we will really need is a scene the application will
-	// call the functions of these scenes and wont really do anything else besides except for UI functionallity
-	// later on
-	Scene* m_pScene;
-
-	LitMaterial* m_pLitMaterial{ nullptr };
-	Material* m_pUnLitMaterial{ nullptr };
-	float m_Rotation{};
-
-	std::vector<PointLight> m_pLights;
-
-	//Mesh* m_pMesh{nullptr};
-
-#ifdef  _DEBUG
-	Camera* m_pCamera{ nullptr };
-	std::vector<EditorWindow*> m_pEditorWindows {};
-#endif //  _DEBUG
-
-
-	std::vector<Mesh*> m_pMeshes;
 };

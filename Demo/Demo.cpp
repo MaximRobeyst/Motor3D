@@ -3,6 +3,8 @@
 
 #include "framework.h"
 #include "Demo.h"
+#include "DemoApplication.h"
+
 
 #include <MyApplication.h>
 #include <chrono>
@@ -32,7 +34,7 @@ int APIENTRY wWinMain(_In_      HINSTANCE hInstance,
     srand(static_cast<unsigned int>(time(NULL)));
     MyEngine::Initialize(hInstance, hPrevInstance, nCmdShow);
 
-    int result = MyEngine::GetSingleton()->Run(new MyApplication());
+    int result = MyEngine::GetSingleton()->Run(new DemoApplication());
 
     delete MyEngine::GetSingleton();
 

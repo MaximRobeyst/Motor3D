@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Demo.h" />
+    <ClInclude Include="DemoApplication.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="PlaneComponent.h" />
     <ClInclude Include="Resource.h" />
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo.cpp" />
+    <ClCompile Include="DemoApplication.cpp" />
     <ClCompile Include="PlaneComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
