@@ -29,6 +29,8 @@ TerrainComponent::~TerrainComponent()
 
 void TerrainComponent::Start()
 {
+	m_NrOfVertices = m_NrOfRows * m_NrOfColumns;
+
 	m_pTransform = m_pGameobject->GetComponent<TransformComponent>();
 	m_pMeshComponent = m_pGameobject->GetComponent<MeshComponent>();
 

@@ -70,6 +70,21 @@ void DemoApplication::Initialize()
 		++i;
 	}
 
+	m_pMeshes.clear();
+	ParseOBJ("Resources/Models/biplane.obj", m_pMeshes);
+
+	for (auto& mesh : m_pMeshes)
+	{
+		gameobjects.emplace_back(new GameObject("Plane" + std::to_string(i)));
+
+		m_pScene->AddGameObject(gameobjects[i]);
+
+		gameobjects[i]->AddComponent(new MeshComponent(mesh));
+		gameobjects[i]->AddComponent(new Rotator(45.f, DirectX::XMFLOAT3{ 0,1,0 }));
+
+		++i;
+	}
+
 	auto spriteObject = new GameObject("Sprite");
 	m_pScene->AddGameObject(spriteObject);
 	auto spriteComponent = new SpriteComponent();

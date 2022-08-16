@@ -17,7 +17,8 @@ void ResourceManager::AddMesh(const std::string& name, Mesh* pMesh)
 	if (pMesh == nullptr) return;
 	if (m_pMeshes[name] != nullptr)
 	{
-		delete m_pMeshes[name];
+		//delete pMesh;
+		return;
 	}
 
 	m_pMeshes[name] = pMesh;

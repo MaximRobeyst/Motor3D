@@ -154,6 +154,8 @@ Material* Mesh::GetMaterial(const std::string&) const
 
 Mesh* Mesh::GetSubMesh(int index)
 {
+	if (m_pSubmeshes.empty() && index == 0) return this;
+
 	return m_pSubmeshes[index];
 }
 

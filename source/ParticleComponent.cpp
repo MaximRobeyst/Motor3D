@@ -15,6 +15,17 @@
 
 const Creator<IComponent, ParticleComponent> g_ParticleComponent{};
 
+ParticleComponent::ParticleComponent(int particleCount)
+	: m_pParticleArray{ new Particle[particleCount] }
+	, m_pParticleBuffer{ new VertexParticle[particleCount] }
+	, m_ParticleCount{ particleCount }
+	, m_MaxParticles{ particleCount }
+	, m_EmitterSettings{ }
+	, m_pTexture{ new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/uv_grid_2.png") }
+	, m_pMaterial{ new Material(MyEngine::GetSingleton()->GetDevice(), "Resources/ParticleRenderer.fx", "Particle_Material") }
+{
+}
+
 ParticleComponent::ParticleComponent(const std::string& textureFile, const ParticleEmmiterSettings& emmiterSettings, int particleCount)
 	: m_pParticleArray{new Particle[particleCount]}
 	, m_pParticleBuffer{new VertexParticle[particleCount]}

@@ -19,7 +19,7 @@ MeshComponent::MeshComponent(Mesh* pMesh)
 
 MeshComponent::~MeshComponent()
 {
-	delete m_pMesh;
+	//delete m_pMesh;
 }
 
 void MeshComponent::Start()

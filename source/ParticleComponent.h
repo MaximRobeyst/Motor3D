@@ -49,7 +49,7 @@ class Material;
 class ParticleComponent : public IComponent
 {
 public:
-	ParticleComponent() = default;
+	ParticleComponent(int particleCount = 50);
 	ParticleComponent(const std::string& assetFile, const ParticleEmmiterSettings& emmiterSettings, int particleCount = 50);
 	~ParticleComponent();
 
