@@ -10,6 +10,7 @@
 #include <sstream>
 #include <comdef.h>
 #include <imgui.h>
+#include "Utils.h"
 
 const Creator<IComponent, SpriteComponent> g_TransformCreator{};
 
@@ -19,8 +20,6 @@ SpriteComponent::SpriteComponent()
 
 SpriteComponent::~SpriteComponent()
 {
-	delete m_pTexture;
-
 	if (m_pTextureResource)
 	{
 		m_pTextureResource->Release();
@@ -91,8 +90,8 @@ void SpriteComponent::Start()
 	}
 
 	//Transform Matrix
-	const float scaleX = (MyEngine::GetSingleton()->GetWindowWidth() > 0) ? 2.0f / float(MyEngine::GetSingleton()->GetWindowWidth()) : 0;
-	const float scaleY = (MyEngine::GetSingleton()->GetWindowHeight() > 0) ? 2.0f / float(MyEngine::GetSingleton()->GetWindowHeight()) : 0;
+	const float scaleX = (MyEngine::GetSingleton()->GetWindowWidth() > 0) ? 2.0f / static_cast<float>(MyEngine::GetSingleton()->GetWindowWidth()) : 0;
+	const float scaleY = (MyEngine::GetSingleton()->GetWindowHeight() > 0) ? 2.0f / static_cast<float>(MyEngine::GetSingleton()->GetWindowHeight()) : 0;
 
 	m_Transform = DirectX::XMFLOAT4X4{
 		scaleX, 0,       0, 0,
@@ -128,7 +127,7 @@ void SpriteComponent::Render()
 
 	HRESULT hResult = S_OK;
 	SpriteVertex vertex{};
-	vertex.TransformData = DirectX::XMFLOAT4{ m_pTransformComponent->GetPosition().x, m_pTransformComponent->GetPosition().y, m_pTransformComponent->GetPosition().z, m_pTransformComponent->GetRotation().z};
+	vertex.TransformData = DirectX::XMFLOAT4{ m_pTransformComponent->GetPosition().x, m_pTransformComponent->GetPosition().y, m_pTransformComponent->GetPosition().z, m_pTransformComponent->GetRotation().z * static_cast<float>(TO_RADIANS)};
 	vertex.TransformData2 = DirectX::XMFLOAT4{ m_Pivot.x,m_Pivot.y, m_pTransformComponent->GetScale().x, m_pTransformComponent->GetScale().y };
 	vertex.Color = m_Color;
 

@@ -129,9 +129,6 @@
     <ClInclude Include="MaterialManager.h">
       <Filter>Engine Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>Engine Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
@@ -209,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="RapidJsonHelper.h">
       <Filter>Extentions</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Engine Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -311,9 +311,6 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Engine Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Engine Files</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>Engine Files\Engine Components</Filter>
     </ClCompile>
@@ -352,6 +349,9 @@
     </ClCompile>
     <ClCompile Include="RapidJsonHelper.cpp">
       <Filter>Extentions</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Engine Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

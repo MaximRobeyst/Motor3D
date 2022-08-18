@@ -5,6 +5,18 @@
 
 ResourceManager* ResourceManager::m_pResourceManager{};
 
+ResourceManager::~ResourceManager()
+{
+	for (auto meshPair : m_pMeshes)
+		delete meshPair.second;
+
+	for (auto texturePair : m_pTextures)
+		delete texturePair.second;
+
+	m_pMeshes.clear();
+	m_pTextures.clear();
+}
+
 ResourceManager* ResourceManager::GetInstance()
 {
 	if (m_pResourceManager == nullptr) m_pResourceManager = new ResourceManager();
@@ -17,8 +29,7 @@ void ResourceManager::AddMesh(const std::string& name, Mesh* pMesh)
 	if (pMesh == nullptr) return;
 	if (m_pMeshes[name] != nullptr)
 	{
-		//delete pMesh;
-		return;
+		delete m_pMeshes[name];
 	}
 
 	m_pMeshes[name] = pMesh;

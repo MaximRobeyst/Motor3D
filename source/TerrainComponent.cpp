@@ -134,7 +134,7 @@ void TerrainComponent::CreateGrid()
 
 	// Set mesh from the mesh component
 
-	m_pMeshComponent->SetMesh(new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), m_VertexArr, m_IndexArr, "Resources/terrain.obj", 0, MaterialManager::GetInstance()->GetMaterial("default")));
+	m_pMeshComponent->SetMesh(new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), m_VertexArr, m_IndexArr, m_pGameobject->GetName(), 0, MaterialManager::GetInstance()->GetMaterial("default")));
 	m_pMeshComponent->GetMesh()->GetMaterial("default")->SetDiffuseMap(new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/ireland_map.png"));
 }
 

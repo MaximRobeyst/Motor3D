@@ -9,6 +9,7 @@ class Texture;
 class ResourceManager
 {
 public:
+	~ResourceManager();
 	static ResourceManager* GetInstance();
 
 	void AddMesh(const std::string& name, Mesh* pMesh);
