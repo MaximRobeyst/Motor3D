@@ -38,97 +38,18 @@ void TransformComponent::RegisterMembers()
 void TransformComponent::RenderGUI()
 {
 	ClassMeta<TransformComponent>::RenderGUI<TransformComponent>(*this);
-
-	//bool changes{ false };
-	//
-	////ImGui::InputFloat3("Forward", &m_Forward.x);
-	////ImGui::InputFloat3("Right", &m_Right.x);
-	////ImGui::InputFloat3("Up", &m_Up.x);
-	//
-	//float position[] = { m_Position.x, m_Position.y, m_Position.z };
-	//if (ImGui::InputFloat3("Position", position))
-	//{
-	//	m_Position.x = position[0];
-	//	m_Position.y = position[1];
-	//	m_Position.z = position[2];
-	//	changes = true;
-	//}
-	//
-	//float rotation[] = { m_Rotation.x * static_cast<float>(TO_REGREES), m_Rotation.y * static_cast<float>(TO_REGREES), m_Rotation.z * static_cast<float>(TO_REGREES) };
-	//if (ImGui::InputFloat3("Rotation", rotation))
-	//{
-	//	m_Rotation.x = rotation[0] * static_cast<float>(TO_RADIANS);
-	//	m_Rotation.y = rotation[1] * static_cast<float>(TO_RADIANS);
-	//	m_Rotation.z = rotation[2] * static_cast<float>(TO_RADIANS);
-	//	changes = true;
-	//}
-	//
-	//float scale[] = { m_Scale.x, m_Scale.y, m_Scale.z };
-	//if (ImGui::InputFloat3("Scale", scale))
-	//{
-	//	m_Scale.x = scale[0];
-	//	m_Scale.y = scale[1];
-	//	m_Scale.z = scale[2];
-	//	changes = true;
-	//}
-	//
-	//if (changes)
-	//{
-	//	GetWorldMatrix();
-	//	UpdateDirections();
-	//}
-
 }
 
 void TransformComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer)
 {
 
 	ClassMeta<TransformComponent>::Serialize<TransformComponent>(*this, writer);
-
-	//writer.Key("Position");
-	//writer.StartArray();
-	//writer.Double(static_cast<double>(m_Position.x));
-	//writer.Double(static_cast<double>(m_Position.y));
-	//writer.Double(static_cast<double>(m_Position.z));
-	//writer.EndArray();
-	//
-	//writer.Key("Rotation");
-	//writer.StartArray();
-	//writer.Double(static_cast<double>(m_Rotation.x));
-	//writer.Double(static_cast<double>(m_Rotation.y));
-	//writer.Double(static_cast<double>(m_Rotation.z));
-	//writer.EndArray();
-	//
-	//writer.Key("Scale");
-	//writer.StartArray();
-	//writer.Double(static_cast<double>(m_Scale.x));
-	//writer.Double(static_cast<double>(m_Scale.y));
-	//writer.Double(static_cast<double>(m_Scale.z));
-	//writer.EndArray();
 }
 
 void TransformComponent::Deserialize(const rapidjson::Value& value)
 {
 	m_pGameobject->RemoveComponent(m_pGameobject->GetComponent<TransformComponent>());
 	ClassMeta<TransformComponent>::Deserialize(*this, value);
-
-	//m_Position = DirectX::XMFLOAT3{
-	//	static_cast<float>(value["Position"].GetArray()[0].GetDouble()),
-	//	static_cast<float>(value["Position"].GetArray()[1].GetDouble()) ,
-	//	static_cast<float>(value["Position"].GetArray()[2].GetDouble())
-	//};
-	//
-	//m_Rotation = DirectX::XMFLOAT3{
-	//	static_cast<float>(value["Rotation"].GetArray()[0].GetDouble()),
-	//	static_cast<float>(value["Rotation"].GetArray()[1].GetDouble()) ,
-	//	static_cast<float>(value["Rotation"].GetArray()[2].GetDouble())
-	//};
-	//
-	//m_Scale = DirectX::XMFLOAT3{
-	//	static_cast<float>(value["Scale"].GetArray()[0].GetDouble()),
-	//	static_cast<float>(value["Scale"].GetArray()[1].GetDouble()) ,
-	//	static_cast<float>(value["Scale"].GetArray()[2].GetDouble())
-	//};
 }
 
 DirectX::XMFLOAT4X4 TransformComponent::GetWorldMatrix()
