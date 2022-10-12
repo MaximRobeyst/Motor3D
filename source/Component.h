@@ -34,6 +34,7 @@ public:
 	virtual void Deserialize(const rapidjson::Value&) {};
 
 	void SetGameobject(GameObject* pGameobject);
+	GameObject* GetGameObject() const;
 
 protected:
 	GameObject* m_pGameobject{};
@@ -82,24 +83,6 @@ protected:
 
 	DirectX::XMFLOAT2 m_PrevMousePos{};
 };
-
-class RigidBodyComponent : public IComponent
-{
-public:
-	RigidBodyComponent(DirectX::XMFLOAT3 velocity = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 acceleration = DirectX::XMFLOAT3{}, DirectX::XMFLOAT3 gravity = DirectX::XMFLOAT3{});
-	void Update() override;
-
-	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>&);
-	virtual void Deserialize(const rapidjson::Value&);
-
-	void UpdateTransform(TransformComponent* tc);	// temp function
-
-private:
-	DirectX::XMFLOAT3 m_Velocity{};
-	DirectX::XMFLOAT3 m_Acceleration{};
-	DirectX::XMFLOAT3 m_Gravity{};
-};
-
 
 class Rotator : public IComponent
 {

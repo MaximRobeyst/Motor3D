@@ -3,6 +3,9 @@
 #include <vector>
 #include "Material.h"
 
+#include "PhysXManager.h"
+#include "PhysxProxy.h"
+
 typedef int ImGuiTreeNodeFlags;
 
 // The scene keeps track of all the components and entities it will also be able to load in save files and save to files
@@ -34,6 +37,7 @@ public:
 	void SetCamera(CameraComponent* pCameraComponent);
 	Camera* GetCamera() const;
 	GameObject* GetSelectedObject() const;
+	PhysxProxy* GetPhysXProxy() const;
 
 private:
 	void RenderGameobjectSceneGraph(GameObject* pGameobject,int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop);
@@ -45,5 +49,7 @@ private:
 
 	GameObject* m_pSelectedGameobject{};
 	CameraComponent* m_pCameraComponent;
+
+	PhysxProxy* m_pPhysxProxy{};
 };
 

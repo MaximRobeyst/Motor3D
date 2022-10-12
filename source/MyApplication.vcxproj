@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\rapidjson;$(SolutionDir)include\vld;$(SolutionDir)include\dx11effects;$(SolutionDir)3rdParty\imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\PhysX\include;$(SolutionDir)3rdParty\rapidjson;$(SolutionDir)include\vld;$(SolutionDir)include\dx11effects;$(SolutionDir)3rdParty\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -99,10 +99,10 @@
       <AdditionalDependencies>dx11effects_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>dx11effects.lib;xinput.lib;d3d10.lib;d3dcompiler.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;dx11effects.lib;xinput.lib;d3d10.lib;d3dcompiler.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\dx11effects\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\PhysX\lib\debug;$(SolutionDir)lib\dx11effects\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -113,7 +113,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\rapidjson;$(SolutionDir)include\vld;$(SolutionDir)include\dx11effects;$(SolutionDir)3rdParty\imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\PhysX\include;$(SolutionDir)3rdParty\rapidjson;$(SolutionDir)include\vld;$(SolutionDir)include\dx11effects;$(SolutionDir)3rdParty\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -122,10 +122,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dx11effects.lib;xinput.lib;d3d10.lib;d3dcompiler.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalDependencies>dx11effects.lib;PhysX_64.lib;xinput.lib;d3d10.lib;d3dcompiler.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\dx11effects\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\PhysX\lib\release;$(SolutionDir)lib\dx11effects\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\rapidjson;$(SolutionDir)3rdParty\vld\include;$(SolutionDir)3rdParty\dx11effects\include;$(SolutionDir)3rdParty\imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\PhysX\include;$(SolutionDir)3rdParty\rapidjson;$(SolutionDir)3rdParty\vld\include;$(SolutionDir)3rdParty\dx11effects\include;$(SolutionDir)3rdParty\imgui</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -145,11 +145,15 @@
       <AdditionalDependencies>dx11effects_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>dx11effects_d.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalDependencies>PhysX_64.lib;dx11effects_d.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\dx11effects\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\PhysX\lib\debug;$(SolutionDir)3rdParty\dx11effects\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -159,7 +163,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\rapidjson;$(SolutionDir)include\vld;$(SolutionDir)include\dx11effects;$(SolutionDir)3rdParty\imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\PhysX\include;$(SolutionDir)3rdParty\rapidjson;$(SolutionDir)include\vld;$(SolutionDir)include\dx11effects;$(SolutionDir)3rdParty\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -168,10 +172,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dx11effects.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalDependencies>dx11effects.lib;PhysX_64.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\dx11effects\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\PhysX\lib\release;$(SolutionDir)lib\dx11effects\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -196,6 +200,7 @@
     <ClInclude Include="DX11Renderer.h" />
     <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="EngineCommand.h" />
+    <ClInclude Include="EnumHelpers.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTime.h" />
@@ -207,11 +212,18 @@
     <ClInclude Include="LogWindow.h" />
     <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="OverlordSimulationFilterShader.h" />
     <ClInclude Include="ParticleComponent.h" />
+    <ClInclude Include="PhysxAllocator.h" />
+    <ClInclude Include="PhysxErrorCallback.h" />
+    <ClInclude Include="PhysxHelper.h" />
+    <ClInclude Include="PhysXManager.h" />
+    <ClInclude Include="PhysxProxy.h" />
     <ClInclude Include="RapidJsonHelper.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="RigidbodyComponent.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Serialization.h" />
     <ClInclude Include="ServiceLocator.h" />
@@ -264,10 +276,15 @@
     <ClCompile Include="MaterialManager.cpp" />
     <ClCompile Include="MeshComponent.cpp" />
     <ClCompile Include="ParticleComponent.cpp" />
+    <ClCompile Include="PhysxErrorCallback.cpp" />
+    <ClCompile Include="PhysxHelper.cpp" />
+    <ClCompile Include="PhysXManager.cpp" />
+    <ClCompile Include="PhysxProxy.cpp" />
     <ClCompile Include="RapidJsonHelper.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="RigidbodyComponent.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Serialization.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />

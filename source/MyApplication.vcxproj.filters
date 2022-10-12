@@ -46,6 +46,9 @@
     <Filter Include="Extentions">
       <UniqueIdentifier>{df200bad-7179-4b2e-9f0f-1812cb6c39f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Physics">
+      <UniqueIdentifier>{607fc7db-1c6b-4156-ac8c-24acedbd3fca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -210,6 +213,30 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Engine Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="RigidbodyComponent.h">
+      <Filter>Engine Files\Engine Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXManager.h">
+      <Filter>Engine Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysxProxy.h">
+      <Filter>Engine Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysxHelper.h">
+      <Filter>Engine Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumHelpers.h">
+      <Filter>Extentions</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysxAllocator.h">
+      <Filter>Engine Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysxErrorCallback.h">
+      <Filter>Engine Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="OverlordSimulationFilterShader.h">
+      <Filter>Engine Files\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyEngine.cpp">
@@ -352,6 +379,21 @@
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Engine Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidbodyComponent.cpp">
+      <Filter>Engine Files\Engine Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXManager.cpp">
+      <Filter>Engine Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysxProxy.cpp">
+      <Filter>Engine Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysxHelper.cpp">
+      <Filter>Engine Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysxErrorCallback.cpp">
+      <Filter>Engine Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

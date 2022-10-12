@@ -10,10 +10,16 @@ class ResourceManager
 {
 public:
 	~ResourceManager();
+	ResourceManager(const ResourceManager& yRef) = delete;
+	ResourceManager(ResourceManager&& yRef) = delete;
+	ResourceManager& operator=(const ResourceManager& yRef) = delete;
+	ResourceManager& operator=(ResourceManager&& yRef) = delete;
+
 	static ResourceManager* GetInstance();
 
 	void AddMesh(const std::string& name, Mesh* pMesh);
 	Mesh* GetMesh(const std::string& name);
+	Mesh* GetMeshConst(const std::string& name) const;
 	void AddTexture(const std::string& name, Texture* pTexture);
 	Texture* GetTexture(const std::string& name);
 

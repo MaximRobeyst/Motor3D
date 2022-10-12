@@ -12,7 +12,6 @@
 #include "TransformComponent.h"
 #include "GameTime.h"
 
-const Creator<IComponent, RigidBodyComponent> g_RigidbodyCreator{};
 const Creator<IComponent, Rotator> g_RotatorComponent{};
 const Creator<IComponent, CameraComponent> g_CameraComponent{};
 
@@ -38,30 +37,9 @@ void IComponent::SetGameobject(GameObject* gameobject)
 	m_pGameobject = gameobject;
 }
 
-
-RigidBodyComponent::RigidBodyComponent(DirectX::XMFLOAT3 velocity, DirectX::XMFLOAT3 acceleration, DirectX::XMFLOAT3 gravity)
-	: IComponent()
-	, m_Velocity{velocity}
-	, m_Acceleration{acceleration}
-	, m_Gravity{gravity}
+GameObject* IComponent::GetGameObject() const
 {
-}
-
-void RigidBodyComponent::Update()
-{
-}
-
-void RigidBodyComponent::Serialize(rapidjson::PrettyWriter<rapidjson::StringBuffer>&)
-{
-}
-
-void RigidBodyComponent::Deserialize(const rapidjson::Value&)
-{
-}
-
-void RigidBodyComponent::UpdateTransform(TransformComponent* tc)
-{
-	tc->SetPosition(tc->GetPosition());
+	return m_pGameobject;
 }
 
 Rotator::Rotator(float rotationSpeed, DirectX::XMFLOAT3 axis)
@@ -76,7 +54,7 @@ void Rotator::Update()
 {
 	if (!m_Enabled) return;
 
-	m_Rotation += (ToRadians(m_RotationSpeed) * GameTime::GetInstance().GetElapsed());
+	m_Rotation += (m_RotationSpeed) * GameTime::GetInstance().GetElapsed();
 
 	auto axis = DirectX::XMLoadFloat3(&m_Axis);
 	auto rot = DirectX::XMLoadFloat(&m_Rotation);

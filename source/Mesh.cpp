@@ -9,6 +9,15 @@
 #include "ResourceManager.h"
 
 
+Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name)
+	: m_pMaterial{ MaterialManager::GetInstance()->GetMaterial("default")}
+{
+
+
+	ResourceManager::GetInstance()->AddMesh(name, this);
+	Initialize(pDevice, hWnd, vertices, indices);
+}
+
 // The mesh causes a memory leak that i cant find at the moment and i think it has something to with the material
 // i have been looking for it for a while and i'm gonna move on for not future me should be able to find it 
 Mesh::Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Material* pMaterial)

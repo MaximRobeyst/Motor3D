@@ -14,7 +14,10 @@
 #include "LitMaterial.h"
 #include "Texture.h"
 
+#include "ResourceManager.h"
 #include "MaterialManager.h"
+#include "Logger.h"
+#include "Utils.h"
 
 struct Mesh_Struct 
 {
@@ -98,6 +101,202 @@ static void CreateMesh(std::vector<Mesh*>& pMeshes,  Mesh_Struct& mesh, Scene* p
 		pScene->GetMaterial(mesh.materialName)
 	);
 	pMeshes.push_back(pMesh);
+}
+
+static Mesh* CreateSphere(float radius, int steps)
+{
+	auto resourceManager = ResourceManager::GetInstance();
+	std::string name = "Cube(" + std::to_string(radius) + ", " + std::to_string(steps)  + ")";
+	if (resourceManager->GetMeshConst(name) != nullptr)
+		return resourceManager->GetMeshConst(name);
+
+	// Vertices
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
+
+	const auto vertCount = steps * (steps - 1) + 2;
+	const float deltaTheta = F_PI / steps;
+	const float deltaPhi = (G_PI * 2.0f) / steps;
+	float theta = 0;
+	float phi = 0;
+
+	vertices.emplace_back(DirectX::XMFLOAT3{ 0, radius, 0 }, DirectX::XMFLOAT3{ 0,1,0 });
+
+	for (auto i = 0; i < steps - 1; ++i)
+	{
+		theta += deltaTheta;
+		for (auto j = 0; j < steps; ++j)
+		{
+			phi += deltaPhi;
+			DirectX::XMFLOAT3 pos;
+			pos.x = radius * sin(theta) * cos(phi);
+			pos.z = radius * sin(theta) * sin(phi);
+			pos.y = radius * cos(theta);
+
+			const DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
+			DirectX::XMFLOAT3 normal;
+			DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize(vPos));
+
+			vertices.emplace_back(pos, normal);
+		}
+	}
+	vertices.emplace_back(DirectX::XMFLOAT3{ 0, -radius, 0 }, DirectX::XMFLOAT3{ 0,-1,0 });
+
+	for (auto i = 1; i < steps + 1; ++i)
+	{
+		indices.emplace_back(i);
+
+		auto v1 = i + 1;
+		if (i % steps == 0)
+			v1 -= steps;
+
+		indices.emplace_back(v1);
+		indices.emplace_back(0);
+	}
+
+	//MIDDLE
+	for (auto i = 1; i < vertCount - 1 - steps; ++i)
+	{
+		const auto v0 = i;
+		auto v1 = i + 1;
+
+		if (i % steps == 0)
+			v1 -= steps;
+
+		const auto v2 = v1 + steps;
+		const auto v3 = v0 + steps;
+
+		indices.emplace_back(v0);
+		indices.emplace_back(v1);
+		indices.emplace_back(v2);
+		indices.emplace_back(v2);
+		indices.emplace_back(v3);
+		indices.emplace_back(v0);
+	}
+
+	//BOTTOM
+	for (auto i = vertCount - steps - 1; i < vertCount - 1; ++i)
+	{
+		indices.emplace_back(i);
+
+		auto v1 = i + 1;
+		if (i % steps == 0)
+			v1 -= steps;
+
+		indices.emplace_back(v1);
+		indices.emplace_back(vertCount - 1);
+	}
+
+	return new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), vertices, indices, name);
+}
+
+static Mesh* CreateCube(float width, float height, float depth)
+{
+	auto resourceManager = ResourceManager::GetInstance();
+
+	std::string name = "Cube(" + std::to_string(width) + ", " + std::to_string(height) + ", " + std::to_string(depth) + ")";
+	if (resourceManager->GetMeshConst(name) != nullptr)
+		return resourceManager->GetMeshConst(name);
+
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
+
+	const float halfWidth = width / 2.f;
+	const float halfHeight = height / 2.f;
+	const float halfDepth = depth / 2.f;
+
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, halfHeight, -halfDepth}, DirectX::XMFLOAT3{0,0,-1} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, halfHeight, -halfDepth}, DirectX::XMFLOAT3{0,0,-1} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, -halfHeight, -halfDepth}, DirectX::XMFLOAT3{0,0,-1} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, -halfHeight, -halfDepth}, DirectX::XMFLOAT3{0,0,-1} });
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 3));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 1));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, halfHeight, halfDepth}, DirectX::XMFLOAT3{0,0,-1} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, halfHeight, halfDepth}, DirectX::XMFLOAT3{0,0,-1} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, -halfHeight, halfDepth}, DirectX::XMFLOAT3{0,0,-1} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, -halfHeight, halfDepth}, DirectX::XMFLOAT3{0,0,-1} });
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 3));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 1));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, halfHeight, halfDepth}, DirectX::XMFLOAT3{0,0,1} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, halfHeight, halfDepth}, DirectX::XMFLOAT3{0,0,1} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, -halfHeight, halfDepth}, DirectX::XMFLOAT3{0,0,1} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, -halfHeight, halfDepth}, DirectX::XMFLOAT3{0,0,1} });
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 3));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 1));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, halfHeight, halfDepth}, DirectX::XMFLOAT3{-1,0,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, halfHeight, -halfDepth}, DirectX::XMFLOAT3{-1,0,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, -halfHeight, -halfDepth}, DirectX::XMFLOAT3{-1,0,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, -halfHeight, halfDepth}, DirectX::XMFLOAT3{-1,0,0} });
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 3));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 1));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, halfHeight, -halfDepth}, DirectX::XMFLOAT3{1,0,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, halfHeight, halfDepth}, DirectX::XMFLOAT3{1,0,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, -halfHeight, halfDepth}, DirectX::XMFLOAT3{1,0,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, -halfHeight, -halfDepth}, DirectX::XMFLOAT3{1,0,0} });
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 3));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 1));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, halfHeight, halfDepth}, DirectX::XMFLOAT3{0,1,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, halfHeight, halfDepth}, DirectX::XMFLOAT3{0,1,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, halfHeight, -halfDepth}, DirectX::XMFLOAT3{0,1,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, halfHeight, -halfDepth}, DirectX::XMFLOAT3{0,1,0} });
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 3));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 1));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, -halfHeight, -halfDepth}, DirectX::XMFLOAT3{0,-1,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, -halfHeight, -halfDepth}, DirectX::XMFLOAT3{0,-1,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{halfWidth, -halfHeight, halfDepth}, DirectX::XMFLOAT3{0,-1,0} });
+	vertices.emplace_back(Vertex{ DirectX::XMFLOAT3{-halfWidth, -halfHeight, halfDepth}, DirectX::XMFLOAT3{0,-1,0} });
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 3));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 2));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 1));
+	indices.emplace_back(static_cast<uint32_t>(vertices.size() - 4));
+
+	return new Mesh(MyEngine::GetSingleton()->GetDevice(), MyEngine::GetSingleton()->GetWindowHandle(), vertices, indices, name);
 }
 
 static void CreateMesh(std::vector<Mesh*>& pMeshes, Mesh_Struct& mesh, const std::string& filepath)

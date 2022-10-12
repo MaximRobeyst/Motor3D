@@ -20,6 +20,7 @@
 #include "TransformComponent.h"
 #include "ParticleComponent.h"
 #include "TerrainComponent.h"
+#include <RigidbodyComponent.h>
 
 #include "Logger.h"
 
@@ -29,6 +30,49 @@
 #include "Scene.h"
 
 void DemoApplication::Initialize()
+{
+	//LoadBaseScene();
+	LoadPongScene();
+}
+
+void DemoApplication::LoadPongScene()
+{
+	m_pScene = new Scene();
+	auto pCamera = new GameObject("Camera", DirectX::XMFLOAT3{ 0, 0, -9.0f });
+	pCamera->AddComponent(new CameraComponent(F_PI / 4.f, static_cast<float>(MyEngine::GetSingleton()->GetWindowWidth()) / static_cast<float>(MyEngine::GetSingleton()->GetWindowHeight()), 100.f, 0.1f));
+	m_pScene->AddGameObject(pCamera);
+
+	auto pMaterialManager = MaterialManager::GetInstance();
+	pMaterialManager->AddMaterial("default", new Material(MyEngine::GetSingleton()->GetDevice(), "Resources/material_unlit.fx", "default"));
+	pMaterialManager->GetMaterial("default")->SetDiffuseMap(
+		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/uv_grid_2.png", MyEngine::GetSingleton()->GetDeviceContext()));
+
+	auto pDefaultMaterial = PxGetPhysics().createMaterial(.5f, .5f, 1.f);
+	auto pRigidBody = new RigidBodyComponent(true);
+	auto pPeddle = new GameObject("Peddle", DirectX::XMFLOAT3{ 5.f, 0.f, 0.f });
+	pPeddle->AddComponent(new MeshComponent(CreateCube(.75f, 2.f, .75f)));
+	pPeddle->AddComponent(pRigidBody);
+	auto colliderId = pRigidBody->AddCollider(physx::PxBoxGeometry{ 0.75f / 2.f, 1.f, .75f / 2.f }, *pDefaultMaterial, true);
+
+	m_pScene->AddGameObject(pPeddle);
+
+	pRigidBody = new RigidBodyComponent(true);
+	pPeddle = new GameObject("Peddle 2", DirectX::XMFLOAT3{ -5.f, 0.f, 0.f });
+	pPeddle->AddComponent(new MeshComponent(CreateCube(.75f, 2.f, .75f)));
+	pPeddle->AddComponent(pRigidBody);
+	colliderId = pRigidBody->AddCollider(physx::PxBoxGeometry{ 0.75f / 2.f, 1.f, .75f / 2.f }, *pDefaultMaterial, true);
+
+	m_pScene->AddGameObject(pPeddle);
+
+	pRigidBody = new RigidBodyComponent(true);
+	auto pBall = new GameObject("Ball");
+	pBall->AddComponent(new MeshComponent(CreateSphere(0.25f, 10)));
+	pBall->AddComponent(pRigidBody);
+
+	m_pScene->AddGameObject(pBall);
+}
+
+void DemoApplication::LoadBaseScene()
 {
 	//ParseOBJ("Resources/vehicle.obj", vertices, indices);
 	Logger::GetInstance()->Log(LogLevel::Debug, "Log test");

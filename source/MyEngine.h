@@ -59,6 +59,7 @@ public:
 	void SetInWindow(bool value);
 	bool GetInWindow() const;
 
+
 private:
 	void Start();
 	void Render();

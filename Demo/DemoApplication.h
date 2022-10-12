@@ -7,5 +7,7 @@ public:
 	void Initialize() override;
 
 private:
+	void LoadPongScene();
+	void LoadBaseScene();
 };
 

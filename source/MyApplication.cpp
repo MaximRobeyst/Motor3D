@@ -47,6 +47,7 @@ MyApplication::~MyApplication()
 
 	delete MaterialManager::GetInstance();
 	delete ResourceManager::GetInstance();
+	delete PhysXManager::GetInstance();
 
 #ifdef _DEBUG
 	delete m_pCamera;

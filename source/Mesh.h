@@ -26,6 +26,7 @@ struct Vertex
 class Mesh final
 {
 public:
+	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name);
 	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::string& filePath, Material* pMaterial);				// Constructor
 	Mesh(ID3D11Device* pDevice, HWND hWnd, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& filePath, int submeshId, Material* pMaterial);				// Constructor
 	~Mesh();				// Destructor

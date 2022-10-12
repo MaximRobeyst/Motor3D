@@ -27,7 +27,8 @@ public:
 	DirectX::XMFLOAT3 GetPosition() const;
 	void SetPosition(DirectX::XMFLOAT3 position);
 
-	DirectX::XMFLOAT3 GetRotation() const;
+	DirectX::XMFLOAT4 GetRotation() const;
+	void SetRotation(float x, float y, float z);
 	void SetRotation(DirectX::XMFLOAT3 rotation);
 
 	DirectX::XMFLOAT3 GetScale() const;
@@ -48,7 +49,7 @@ private:
 	bool m_Dirty{ true };
 
 	DirectX::XMFLOAT3 m_Position;
-	DirectX::XMFLOAT3 m_Rotation;
+	DirectX::XMFLOAT4 m_Rotation;
 	DirectX::XMFLOAT3 m_Scale;
 
 	DirectX::XMFLOAT4X4 m_WorldMatrix;

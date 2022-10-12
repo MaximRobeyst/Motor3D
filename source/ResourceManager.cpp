@@ -52,6 +52,14 @@ Mesh* ResourceManager::GetMesh(const std::string& name)
 	return m_pMeshes[name];
 }
 
+Mesh* ResourceManager::GetMeshConst(const std::string& name) const
+{
+	if(m_pMeshes.count(name) > 0)
+		return m_pMeshes.at(name);
+	return nullptr;
+}
+
+
 void ResourceManager::AddTexture(const std::string& name, Texture* pTexture)
 {
 	if (pTexture == nullptr) return;

@@ -27,6 +27,10 @@ public:
 
 	DirectX::XMFLOAT2 GetAbsoluteRotation() const { return m_AbsoluteRotation; }
 
+	DirectX::XMFLOAT3 GetPosition() const { return m_Position; }
+	DirectX::XMFLOAT3 GetForward() const { return m_Forward; }
+	DirectX::XMFLOAT3 GetUp() const { return m_Up; }
+
 	void UpdateCamera();
 	void KeyDown(WPARAM wparam);
 	void KeyUp(WPARAM wparam);

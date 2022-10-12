@@ -8,7 +8,7 @@
 #define F_PI 3.1415926f
 #define G_PI 3.14159265358979323846
 
-#define TO_REGREES (180.0 / G_PI)
+#define TO_DEGREES (180.0 / G_PI)
 #define TO_RADIANS (G_PI / 180.0)
 
 #undef min
@@ -53,4 +53,15 @@ constexpr T Clamp(const T a, T min, T max)
 inline float RandomFloat(float max = 1.f, float min = 0.f)
 {
 	return ((max-min) * float(rand() / RAND_MAX) + min);
+}
+
+inline DirectX::XMFLOAT3 QuaternionToEuler(DirectX::XMFLOAT4 q)
+{
+	DirectX::XMFLOAT3 euler{};
+
+	euler.y = atan2f(2.f * q.x * q.w + 2.f * q.y * q.z, 1.f - 2.f * (q.z * q.z + q.w * q.w));     // Yaw 
+	euler.x = asinf(2.f * (q.x * q.z - q.w * q.y));                             // Pitch 
+	euler.z = atan2f(2.f * q.x * q.y + 2.f * q.z * q.w, 1.f - 2.f * (q.y * q.y + q.z * q.z));      // Roll 
+
+	return euler;
 }

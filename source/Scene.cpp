@@ -40,6 +40,9 @@ Scene::~Scene()
 	for (auto iter = m_pMaterials.begin(); iter != m_pMaterials.end(); ++iter)
 		delete iter->second;
 
+	if(m_pPhysxProxy != nullptr)
+		delete m_pPhysxProxy;
+
 	m_pMaterials.clear();
 	m_pGameObjects.clear();
 }
@@ -68,6 +71,9 @@ Material* Scene::GetLatestMaterial()
 
 void Scene::Start()
 {
+	m_pPhysxProxy = new PhysxProxy();
+	m_pPhysxProxy->Initialize(this);
+
 	for (auto iter = m_pGameObjects.begin(); iter != m_pGameObjects.end(); iter++)
 	{
 		(*iter)->Start();
@@ -82,6 +88,7 @@ void Scene::Render(Camera* pCamera)
 	{
 		(*iter)->Render(pCamera);
 	}
+	//m_pPhysxProxy->Draw();
 }
 
 void Scene::RenderGUI()
@@ -128,6 +135,7 @@ void Scene::Update()
 	{
 		(*iter)->Update();
 	}
+	m_pPhysxProxy->Update();
 }
 
 void Scene::Serialize(const std::string& filename)
@@ -207,6 +215,11 @@ Camera* Scene::GetCamera() const
 GameObject* Scene::GetSelectedObject() const
 {
 	return m_pSelectedGameobject;
+}
+
+PhysxProxy* Scene::GetPhysXProxy() const
+{
+	return m_pPhysxProxy;
 }
 
 void Scene::RenderGameobjectSceneGraph(GameObject* pGameobject, int i, ImGuiTreeNodeFlags node_flags, int& node_clicked, bool test_drag_and_drop)
