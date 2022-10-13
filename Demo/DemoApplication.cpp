@@ -31,8 +31,8 @@
 
 void DemoApplication::Initialize()
 {
-	//LoadBaseScene();
-	LoadPongScene();
+	LoadBaseScene();
+	//LoadPongScene();
 }
 
 void DemoApplication::LoadPongScene()

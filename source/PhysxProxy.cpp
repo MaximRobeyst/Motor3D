@@ -43,8 +43,7 @@ void PhysxProxy::Initialize(Scene* pParent)
 
 	if (!m_pPhysxScene) return; //Prevent C6011
 	m_pControllerManager = PxCreateControllerManager(*m_pPhysxScene);
-	if (!m_pControllerManager)
-		Logger::GetInstance()->LogErrorAndBreak("FailedFailed to create controller manager!");
+	assert(m_pControllerManager != nullptr);
 
 	m_IsInitialized = true;
 }

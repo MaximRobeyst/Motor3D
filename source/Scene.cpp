@@ -16,6 +16,8 @@
 
 Scene::Scene()
 {
+	m_pPhysxProxy = new PhysxProxy();
+	m_pPhysxProxy->Initialize(this);
 }
 
 void Scene::AddGameObject(GameObject* pGameObject)
@@ -71,8 +73,6 @@ Material* Scene::GetLatestMaterial()
 
 void Scene::Start()
 {
-	m_pPhysxProxy = new PhysxProxy();
-	m_pPhysxProxy->Initialize(this);
 
 	for (auto iter = m_pGameObjects.begin(); iter != m_pGameObjects.end(); iter++)
 	{
