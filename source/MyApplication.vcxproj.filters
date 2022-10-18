@@ -237,6 +237,9 @@
     <ClInclude Include="OverlordSimulationFilterShader.h">
       <Filter>Engine Files\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="DebugRenderer.h">
+      <Filter>Engine Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyEngine.cpp">
@@ -394,6 +397,9 @@
     </ClCompile>
     <ClCompile Include="PhysxErrorCallback.cpp">
       <Filter>Engine Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderer.cpp">
+      <Filter>Engine Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

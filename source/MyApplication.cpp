@@ -33,6 +33,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include "DebugRenderer.h"
 
 #define MY_ENGINE MyEngine::GetSingleton()
 
@@ -45,9 +46,6 @@ MyApplication::~MyApplication()
 {
 	m_pMeshes.clear();
 
-	delete MaterialManager::GetInstance();
-	delete ResourceManager::GetInstance();
-	delete PhysXManager::GetInstance();
 
 #ifdef _DEBUG
 	delete m_pCamera;
@@ -62,6 +60,11 @@ MyApplication::~MyApplication()
 #endif // _DEBUG
 
 	delete m_pScene;
+
+	delete MaterialManager::GetInstance();
+	delete ResourceManager::GetInstance();
+	delete PhysXManager::GetInstance();
+	delete DebugRenderer::GetInstance();
 }
 
 //-------------------------------------------------

@@ -197,6 +197,7 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="DebugCamera.h" />
+    <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="DX11Renderer.h" />
     <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="EngineCommand.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
+    <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="DX11Renderer.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="EngineCommand.cpp" />

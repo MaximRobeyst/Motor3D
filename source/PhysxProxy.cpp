@@ -8,6 +8,7 @@
 #include "GameTime.h"
 #include "MyEngine.h"
 #include "Scene.h"
+#include "DebugRenderer.h"
 
 using namespace DirectX;
 
@@ -91,7 +92,7 @@ void PhysxProxy::Update() const
 
 void PhysxProxy::Draw() const
 {
-	//DebugRenderer::DrawPhysX(m_pPhysxScene);
+	DebugRenderer::GetInstance()->DrawPhysX(m_pPhysxScene);
 }
 
 bool PhysxProxy::Raycast(const physx::PxVec3& origin, const physx::PxVec3& unitDir, physx::PxReal distance, physx::PxRaycastCallback& hitCall, physx::PxHitFlags hitFlags, const physx::PxQueryFilterData& filterData, physx::PxQueryFilterCallback* filterCall, const physx::PxQueryCache* cache) const

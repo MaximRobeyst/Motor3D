@@ -13,6 +13,7 @@
 #include "Component.h"
 #include "MaterialManager.h"
 #include "MyApplication.h"
+#include "DebugRenderer.h"
 
 Scene::Scene()
 {
@@ -73,7 +74,6 @@ Material* Scene::GetLatestMaterial()
 
 void Scene::Start()
 {
-
 	for (auto iter = m_pGameObjects.begin(); iter != m_pGameObjects.end(); iter++)
 	{
 		(*iter)->Start();
@@ -88,7 +88,8 @@ void Scene::Render(Camera* pCamera)
 	{
 		(*iter)->Render(pCamera);
 	}
-	//m_pPhysxProxy->Draw();
+	m_pPhysxProxy->Draw();
+	DebugRenderer::GetInstance()->Draw();
 }
 
 void Scene::RenderGUI()
