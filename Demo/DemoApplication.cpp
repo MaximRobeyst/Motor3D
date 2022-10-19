@@ -28,11 +28,17 @@
 #include "LogWindow.h"
 
 #include "Scene.h"
+#include "DebugRenderer.h"
 
 void DemoApplication::Initialize()
 {
 	//LoadBaseScene();
 	LoadPongScene();
+}
+
+void DemoApplication::Update()
+{
+	DebugRenderer::GetInstance()->DrawLine(DirectX::XMFLOAT3{ 0,0,0 }, DirectX::XMFLOAT3{ 0,1,0 }, DirectX::XMFLOAT4{ 1,0,0,0 });
 }
 
 void DemoApplication::LoadPongScene()

@@ -38,7 +38,7 @@ float4 PS(VS_OUTPUT input):SV_TARGET
 
 technique11 Default
 {
-	pass one
+	pass p0
 	{
 		SetRasterizerState(NoCulling);
 		SetDepthStencilState(EnableDepth, 0);

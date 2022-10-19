@@ -8,6 +8,7 @@
 #include "MyApplication.h"
 #include "Material.h"
 #include "Logger.h"
+#include "Scene.h"
 
 DebugRenderer* DebugRenderer::m_pInstance{nullptr};
 
@@ -64,9 +65,6 @@ bool DebugRenderer::InitializeBuffer(std::vector<DebugVertex>& vertices, ID3D11B
 
 	if (*pBuffer == nullptr)
 	{
-		if (*pBuffer != nullptr)
-			(*pBuffer)->Release();
-
 		//Vertexbuffer
 		D3D11_BUFFER_DESC buffDesc{};
 		buffDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -109,9 +107,9 @@ void DebugRenderer::DrawVertices(std::vector<DebugVertex>& vertices, ID3D11Buffe
 	constexpr UINT offset = 0;
 
 	pDeviceContext->IASetVertexBuffers(0, 1, &*pBuffer, &stride, &offset);
-	pDeviceContext->IAGetInputLayout(&m_pInputLayout);
+	pDeviceContext->IASetInputLayout(m_pInputLayout);
 
-	auto viewProj = MyEngine::GetSingleton()->GetApplication()->GetCamera()->GetViewProjectionMatrix();
+	auto viewProj = MyEngine::GetSingleton()->GetApplication()->GetScene()->GetCamera()->GetViewProjectionMatrix();
 	m_pMatrixVariable->SetMatrix(&viewProj._11);
 
 	D3DX11_TECHNIQUE_DESC techDesc{};
@@ -120,7 +118,7 @@ void DebugRenderer::DrawVertices(std::vector<DebugVertex>& vertices, ID3D11Buffe
 	for (unsigned int i = 0; i < techDesc.Passes; ++i)
 	{
 		m_pTechnique->GetPassByIndex(i)->Apply(0, pDeviceContext);
-		pDeviceContext->Draw((UINT)m_pDebugVertices.size(), 0);
+		pDeviceContext->Draw(static_cast<UINT>(vertices.size()), 0);
 	}
 
 	vertices.clear();

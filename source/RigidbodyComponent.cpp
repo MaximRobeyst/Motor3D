@@ -86,6 +86,18 @@ void RigidBodyComponent::RemoveCollider(const ColliderInfo & colliderInfo)
 	m_Colliders.erase(it);
 }
 
+void RigidBodyComponent::Start()
+{
+	if (!m_pActor)
+		CreateActor();
+
+	for (const auto& cci : m_ColliderCreationInfos)
+	{
+		_AddCollider(*cci.pGeometry, *cci.pMaterial, cci.isTrigger, cci.localPose);
+	}
+	m_ColliderCreationInfos.clear();
+}
+
 void RigidBodyComponent::SetKinematic(bool isKinematic)
 {
 	if (m_IsStatic && isKinematic) {
