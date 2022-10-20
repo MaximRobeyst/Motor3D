@@ -121,13 +121,13 @@ void PhysxProxy::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
 
 		if (triggerComponent != nullptr && otherComponent != nullptr)
 		{
-			//GameObject* trigger = triggerComponent->GetGameObject();
-			//GameObject* other = otherComponent->GetGameObject();
+			GameObject* trigger = triggerComponent->GetGameObject();
+			GameObject* other = otherComponent->GetGameObject();
 
-			//if (pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
-			//	trigger->OnTrigger(trigger, other, physx::PxTriggerAction::ENTER);
-			//else if (pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
-			//	trigger->OnTrigger(trigger, other, physx::PxTriggerAction::LEAVE);
+			if (pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
+				trigger->OnTriggerEnter(other);
+			else if (pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
+				trigger->OnTriggerExit( other);
 		}
 	}
 }

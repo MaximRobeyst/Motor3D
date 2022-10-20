@@ -47,6 +47,9 @@ public:
 
 	void RenderGUI();
 
+	void OnTriggerEnter(GameObject* pOther);
+	void OnTriggerExit(GameObject* pOther);
+
 	std::string GetName() const;
 	TransformComponent* GetTransform();
 

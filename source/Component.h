@@ -33,6 +33,9 @@ public:
 	virtual void Serialize(rapidjson::PrettyWriter< rapidjson::StringBuffer>& ) {};
 	virtual void Deserialize(const rapidjson::Value&) {};
 
+	virtual void OnTriggerEnter(GameObject*) {}
+	virtual void OnTriggerExit(GameObject*) {}
+
 	void SetGameobject(GameObject* pGameobject);
 	GameObject* GetGameObject() const;
 

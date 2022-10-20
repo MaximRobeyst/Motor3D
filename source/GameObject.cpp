@@ -152,6 +152,33 @@ void GameObject::RenderGUI()
 	}
 }
 
+void GameObject::OnTriggerEnter(GameObject* pOther)
+{
+	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
+	{
+		(*iter)->OnTriggerEnter(pOther);
+	}
+
+	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter) 
+	{
+		(*iter)->OnTriggerEnter(pOther);
+	}
+}
+
+void GameObject::OnTriggerExit(GameObject* pOther)
+{
+	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
+	{
+		(*iter)->OnTriggerExit(pOther);
+	}
+
+
+	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
+	{
+		(*iter)->OnTriggerExit(pOther);
+	}
+}
+
 std::string GameObject::GetName() const
 {
 	return m_Name;

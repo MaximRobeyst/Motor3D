@@ -98,6 +98,16 @@ void RigidBodyComponent::Start()
 	m_ColliderCreationInfos.clear();
 }
 
+void RigidBodyComponent::OnTriggerEnter(GameObject* pOther)
+{
+	Logger::GetInstance()->LogDebug("Triggered entered with " + pOther->GetName());
+}
+
+void RigidBodyComponent::OnTriggerExit(GameObject* pOther)
+{
+	Logger::GetInstance()->LogDebug("Triggered exited with " + pOther->GetName());
+}
+
 void RigidBodyComponent::SetKinematic(bool isKinematic)
 {
 	if (m_IsStatic && isKinematic) {

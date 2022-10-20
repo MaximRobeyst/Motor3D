@@ -95,6 +95,9 @@ public:
 
 	void Start() override;
 
+	void OnTriggerEnter(GameObject* pOther);
+	void OnTriggerExit(GameObject* pOther);
+
 	bool IsStatic()  const { return m_IsStatic; }
 	bool IsDynamic()  const { return !m_IsStatic; }
 	bool IsKinematic() const { return m_IsKinematic; }
