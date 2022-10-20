@@ -85,6 +85,9 @@ void GameObject::Update()
 
 	for (auto iter = m_pChildren.begin(); iter != m_pChildren.end(); ++iter)
 		(*iter)->Update();
+
+	if (m_MarkedDelete)
+		GameObject::FinalDelete(this);
 }
 
 void GameObject::RenderGUI()
@@ -154,6 +157,8 @@ void GameObject::RenderGUI()
 
 void GameObject::OnTriggerEnter(GameObject* pOther)
 {
+	if (!m_Enabled || !pOther->GetEnabled()) return;
+
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
 	{
 		(*iter)->OnTriggerEnter(pOther);
@@ -167,6 +172,8 @@ void GameObject::OnTriggerEnter(GameObject* pOther)
 
 void GameObject::OnTriggerExit(GameObject* pOther)
 {
+	if (!m_Enabled || !pOther->GetEnabled()) return;
+
 	for (auto iter = m_pComponents.begin(); iter != m_pComponents.end(); ++iter)
 	{
 		(*iter)->OnTriggerExit(pOther);
@@ -211,13 +218,14 @@ void GameObject::SetParent(GameObject* parent)
 	m_pParent = parent;
 
 	if (m_pParent != nullptr)
+	{
 		m_pParent->AddChild(this);
+		GetTransform()->SetParent(m_pParent->GetTransform());
+		m_pScene = m_pParent->GetScene();
+	}
 
 	if (m_pParent == nullptr)
 		m_pScene->AddGameObject(this);
-
-	GetTransform()->SetParent(m_pParent->GetTransform());
-	m_pScene = m_pParent->GetScene();
 
 }
 
@@ -306,6 +314,19 @@ void GameObject::SetEnabled(bool value)
 bool GameObject::GetEnabled() const
 {
 	return m_Enabled;
+}
+
+void GameObject::Destoy(GameObject* pGameobject)
+{
+	pGameobject->m_MarkedDelete = true;
+}
+
+void GameObject::FinalDelete(GameObject* pGameobject)
+{
+	pGameobject->SetParent(nullptr);
+	pGameobject->GetScene()->RemoveGameobject(pGameobject);
+
+	delete pGameobject;
 }
 
 void GameObject::AddChild(GameObject* child)

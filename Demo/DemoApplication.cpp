@@ -23,12 +23,14 @@
 #include <RigidbodyComponent.h>
 
 #include "Logger.h"
+#include "BallComponent.h"
 
 #include "EditorWindow.h"
 #include "LogWindow.h"
 
 #include "Scene.h"
 #include "DebugRenderer.h"
+#include "BrickComponent.h"
 
 void DemoApplication::Initialize()
 {
@@ -54,26 +56,51 @@ void DemoApplication::LoadPongScene()
 		new Texture(MyEngine::GetSingleton()->GetDevice(), "Resources/uv_grid_2.png", MyEngine::GetSingleton()->GetDeviceContext()));
 
 	auto pDefaultMaterial = PxGetPhysics().createMaterial(.5f, .5f, 1.f);
-	auto pRigidBody = new RigidBodyComponent(true);
-	auto pPeddle = new GameObject("Peddle", DirectX::XMFLOAT3{ 5.f, 0.f, 0.f });
-	pPeddle->AddComponent(new MeshComponent(CreateCube(.75f, 2.f, .75f)));
-	pPeddle->AddComponent(pRigidBody);
-	auto colliderId = pRigidBody->AddCollider(physx::PxBoxGeometry{ 0.75f / 2.f, 1.f, .75f / 2.f }, *pDefaultMaterial, true);
+	auto pRigidBody = new RigidBodyComponent(false);
+	pRigidBody->SetKinematic(true);
+	auto pPlayer = new GameObject("Player", DirectX::XMFLOAT3{ 0.f, -2.f, 0.f });
+	pPlayer->AddComponent(new MeshComponent(CreateCube(0.5, 0.1f, 0.5f)));
+	pPlayer->AddComponent(pRigidBody);
+	pRigidBody->AddCollider(physx::PxBoxGeometry{ 0.25f, 0.05f, 0.25f }, *pDefaultMaterial, true);
 
-	m_pScene->AddGameObject(pPeddle);
+	constexpr int gridHeight = 10;
+	constexpr int gridWidth = 5;
 
-	pRigidBody = new RigidBodyComponent(true);
-	pPeddle = new GameObject("Peddle 2", DirectX::XMFLOAT3{ -5.f, 0.f, 0.f });
-	pPeddle->AddComponent(new MeshComponent(CreateCube(.75f, 2.f, .75f)));
-	pPeddle->AddComponent(pRigidBody);
-	colliderId = pRigidBody->AddCollider(physx::PxBoxGeometry{ 0.75f / 2.f, 1.f, .75f / 2.f }, *pDefaultMaterial, true);
+	//float startPos = -gridHeight / 2.f;
+	//float startPosY = -gridHeight / 2.f + 3.0f;
 
-	m_pScene->AddGameObject(pPeddle);
 
-	pRigidBody = new RigidBodyComponent(true);
-	auto pBall = new GameObject("Ball");
-	pBall->AddComponent(new MeshComponent(CreateSphere(0.25f, 10)));
+	GameObject* pGrid = new GameObject("Grid", DirectX::XMFLOAT3{-4.0f, 0.0f, 0.0f});
+	m_pScene->AddGameObject(pGrid);
+
+	for (int i = 0; i < gridHeight; ++i)
+	{
+		for (int j = 0; j < gridWidth; ++j)
+		{
+			auto pBrick = new GameObject("Grid", DirectX::XMFLOAT3{static_cast<float>(i), static_cast<float>(j) * 0.5f, 0.f});
+			pRigidBody = new RigidBodyComponent(true);
+
+			pBrick->AddComponent(new MeshComponent(CreateCube(0.5, 0.1f, 0.5f)));
+			pBrick->AddComponent(pRigidBody);
+			pRigidBody->AddCollider(physx::PxBoxGeometry{ 0.25f, 0.05f, 0.25f }, *pDefaultMaterial, true);
+
+			pBrick->AddComponent(new BrickComponent());
+
+			pBrick->SetParent(pGrid);
+
+		}
+	}
+
+	m_pScene->AddGameObject(pPlayer);
+
+	pRigidBody = new RigidBodyComponent(false);
+	pRigidBody->SetKinematic(true);
+	auto pBall = new GameObject("Ball", DirectX::XMFLOAT3{0,-1,0});
+	pBall->AddComponent(new MeshComponent(CreateSphere(0.1f, 10)));
 	pBall->AddComponent(pRigidBody);
+	pRigidBody->AddCollider(physx::PxSphereGeometry(0.1f), *pDefaultMaterial, false);
+
+	pBall->AddComponent(new BallComponent());
 
 	m_pScene->AddGameObject(pBall);
 }

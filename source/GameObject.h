@@ -68,7 +68,12 @@ public:
 	void SetEnabled(bool value);
 	bool GetEnabled() const;
 
+	static void Destoy(GameObject* pGameobject);
+
+
 private:
+	static void FinalDelete(GameObject* pGameobject);
+
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 
@@ -83,6 +88,8 @@ private:
 	std::string m_Name;
 	bool m_Enabled{ true };
 	bool m_Started{ false };
+
+	bool m_MarkedDelete{ false };
 
 	GameObject* m_pParent;
 	std::vector<GameObject*> m_pChildren;

@@ -132,9 +132,10 @@ void Scene::RenderGUI()
 
 void Scene::Update()
 {
-	for (auto iter = m_pGameObjects.begin(); iter != m_pGameObjects.end(); iter++)
+
+	for (int i = 0; i < m_pGameObjects.size(); ++i)
 	{
-		(*iter)->Update();
+		m_pGameObjects[i]->Update();
 	}
 	m_pPhysxProxy->Update();
 }

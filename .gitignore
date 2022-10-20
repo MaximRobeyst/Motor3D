@@ -1,4 +1,5 @@
 
+.vs\MyApplication\FileContentIndex
 .vs\MyApplication
 .vs\
 source/MyApplication.vcxproj
@@ -334,3 +335,4 @@ source/x64/Release/
 .vs/MyApplication/FileContentIndex/0933f9ca-9000-4878-8799-d9c99b7820b9.vsidx
 .vs/MyApplication/FileContentIndex/67c25866-ba81-4026-ae03-48846e2b3661.vsidx
 .vs/MyApplication/FileContentIndex/bb044c2e-d61a-419c-aa7d-1eae740c494e.vsidx
+*.vsidx

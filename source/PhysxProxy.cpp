@@ -125,9 +125,15 @@ void PhysxProxy::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
 			GameObject* other = otherComponent->GetGameObject();
 
 			if (pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
+			{
 				trigger->OnTriggerEnter(other);
+				other->OnTriggerEnter(trigger);
+			}
 			else if (pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
-				trigger->OnTriggerExit( other);
+			{
+				trigger->OnTriggerExit(other);
+				other->OnTriggerExit(trigger);
+			}
 		}
 	}
 }

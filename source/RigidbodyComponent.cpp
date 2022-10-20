@@ -86,6 +86,11 @@ void RigidBodyComponent::RemoveCollider(const ColliderInfo & colliderInfo)
 	m_Colliders.erase(it);
 }
 
+ColliderInfo& RigidBodyComponent::GetCollider(UINT colliderId)
+{
+	return m_Colliders[colliderId];
+}
+
 void RigidBodyComponent::Start()
 {
 	if (!m_pActor)
@@ -100,12 +105,12 @@ void RigidBodyComponent::Start()
 
 void RigidBodyComponent::OnTriggerEnter(GameObject* pOther)
 {
-	Logger::GetInstance()->LogDebug("Triggered entered with " + pOther->GetName());
+	Logger::GetInstance()->LogDebug(GetGameObject()->GetName() + " Triggered entered with " + pOther->GetName());
 }
 
 void RigidBodyComponent::OnTriggerExit(GameObject* pOther)
 {
-	Logger::GetInstance()->LogDebug("Triggered exited with " + pOther->GetName());
+	Logger::GetInstance()->LogDebug(GetGameObject()->GetName() + " Triggered exited with " + pOther->GetName());
 }
 
 void RigidBodyComponent::SetKinematic(bool isKinematic)
@@ -205,4 +210,33 @@ void RigidBodyComponent::SetConstraint(RigidBodyConstraint flag, bool enable)
 		if (!enable) m_InitialConstraints |= flag;
 		else m_InitialConstraints &= ~flag;
 	}
+}
+
+void RigidBodyComponent::Translate(const DirectX::XMFLOAT3& position) const
+{
+	physx::PxTransform pTransform = m_pActor->getGlobalPose();
+	pTransform.p = PhysxHelper::ToPxVec3(position);
+
+	m_pActor->setGlobalPose(pTransform);
+
+
+}
+
+void RigidBodyComponent::Rotate(const DirectX::XMFLOAT4& rotation) const
+{
+	physx::PxTransform pTransform = m_pActor->getGlobalPose();
+	pTransform.q = PhysxHelper::ToPxQuat(rotation);
+
+	m_pActor->setGlobalPose(pTransform);
+}
+
+DirectX::XMFLOAT3 RigidBodyComponent::GetPosition() const
+{
+	return PhysxHelper::ToXMFLOAT3(m_pActor->getGlobalPose().p);
+}
+
+DirectX::XMFLOAT4 RigidBodyComponent::GetRotation() const
+{
+	auto rot = m_pActor->getGlobalPose().q;
+	return DirectX::XMFLOAT4{ rot.x, rot.y, rot.z, rot.w };
 }

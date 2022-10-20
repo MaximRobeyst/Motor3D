@@ -5,6 +5,8 @@
 #include <imgui.h>
 #include <DirectXMath.h>
 
+#include "RigidbodyComponent.h"
+
 const Creator<IComponent, TransformComponent> g_TransformCreator{};
 
 TransformComponent::TransformComponent(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 rotation, DirectX::XMFLOAT3 scale)
@@ -21,6 +23,7 @@ void TransformComponent::Start()
 	GetWorldMatrix();
 	UpdateDirections();
 
+	m_pRigidbodyComponent = m_pGameobject->GetComponent<RigidBodyComponent>();
 }
 
 void TransformComponent::Update()
@@ -109,6 +112,10 @@ void TransformComponent::SetPosition(DirectX::XMFLOAT3 position)
 {
 	m_Position = position;
 	m_Dirty = true;
+
+	if (m_pRigidbodyComponent == nullptr) return;
+
+	m_pRigidbodyComponent->Translate(GetPosition());
 }
 
 DirectX::XMFLOAT4 TransformComponent::GetRotation() const
@@ -129,6 +136,10 @@ void TransformComponent::SetRotation(float x, float y, float z)
 {
 	DirectX::XMStoreFloat4(&m_Rotation, DirectX::XMQuaternionRotationRollPitchYaw(DirectX::XMConvertToRadians(x), DirectX::XMConvertToRadians(y), DirectX::XMConvertToRadians(z)));
 	m_Dirty = true;
+
+	if (m_pRigidbodyComponent == nullptr) return;
+
+	m_pRigidbodyComponent->Rotate(GetRotation());
 }
 
 void TransformComponent::SetRotation(DirectX::XMFLOAT3 rotation)

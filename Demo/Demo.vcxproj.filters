@@ -16,6 +16,9 @@
     <Filter Include="GameComponents">
       <UniqueIdentifier>{c1cb0a12-1e21-4f08-98ad-ea071dfe05e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{63162290-bec5-4cbe-9b27-039b1f62e5b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -30,28 +33,40 @@
     <ClInclude Include="Demo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlaneComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DemoApplication.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="PlayerComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="BallComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BrickComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoApplication.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlaneComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DemoApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BallComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

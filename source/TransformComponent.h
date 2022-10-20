@@ -7,6 +7,7 @@
 #include <document.h>
 #include <DirectXMath.h>
 
+class RigidBodyComponent;
 class TransformComponent : public IComponent
 {
 public:
@@ -57,6 +58,8 @@ private:
 	DirectX::XMFLOAT3 m_Forward;
 	DirectX::XMFLOAT3 m_Right;
 	DirectX::XMFLOAT3 m_Up;
+
+	RigidBodyComponent* m_pRigidbodyComponent{};
 };
 
 

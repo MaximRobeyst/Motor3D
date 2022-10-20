@@ -160,18 +160,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BallComponent.h" />
+    <ClInclude Include="BrickComponent.h" />
     <ClInclude Include="Demo.h" />
     <ClInclude Include="DemoApplication.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="PlaneComponent.h" />
+    <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BallComponent.cpp" />
+    <ClCompile Include="BrickComponent.cpp" />
     <ClCompile Include="Demo.cpp" />
     <ClCompile Include="DemoApplication.cpp" />
     <ClCompile Include="PlaneComponent.cpp" />
+    <ClCompile Include="PlayerComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Demo.rc" />
