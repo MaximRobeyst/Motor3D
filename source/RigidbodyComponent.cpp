@@ -17,6 +17,7 @@ RigidBodyComponent::~RigidBodyComponent()
 {
 	if (m_pActor != nullptr)
 	{
+		m_pActor->getScene()->removeActor(*m_pActor);
 		if (!m_pActor->getScene()) m_pActor->release();
 	}
 }
